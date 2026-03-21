@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SureTrack v8.0 | Arbitrage Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg: #0d1117; --card: #161b22; --primary: #00ff41; --secondary: #58a6ff; --text: #c9d1d9; --accent: #f0883e; }
+        body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
+        header { padding: 20px; background: var(--card); border-bottom: 1px solid #30363d; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--primary); font-size: 1.1rem; letter-spacing: -0.5px; }
+        .live-dot { height: 8px; width: 8px; background: var(--primary); border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        
+        #scanner-list { padding: 15px; }
+        .bet-card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 18px; margin-bottom: 12px; position: relative; }
+        .profit-tag { position: absolute; top: 15px; right: 15px; color: var(--primary); font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.1rem; }
+        .match-info { font-size: 0.9rem; font-weight: 500; margin-bottom: 15px; display: block; color: #8b949e; }
+        .match-title { font-size: 1rem; font-weight: 700; margin-bottom: 15px; display: block; color: white; width: 80%; }
+        
+        .odds-row { display: flex; gap: 10px; }
+        .odd-item { flex: 1; background: #0d1117; padding: 12px; border-radius: 8px; border: 1px solid #21262d; text-align: center; }
+        .b-name { font-size: 0.7rem; color: #8b949e; display: block; margin-bottom: 4px; }
+        .o-val { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: var(--secondary); font-weight: 700; }
+
+        .ad-strip { background: linear-gradient(90deg, #1e252e, #161b22); border: 1px dashed var(--accent); border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; cursor: pointer; }
+        .ad-strip i { font-size: 1.5rem; color: var(--accent); margin-right: 15px; }
+        .ad-content b { color: var(--accent); font-size: 0.9rem; }
+        .ad-content p { font-size: 0.8rem; margin: 4px 0 0 0; color: #8b949e; }
+
+        nav { position: fixed; bottom: 0; width: 100%; background: var(--card); border-top: 1px solid #30363d; display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
+        .nav-link { text-align: center; color: #8b949e; text-decoration: none; font-size: 0.65rem; transition: 0.2s; }
+        .nav-link i { display: block; font-size: 1.3rem; margin-bottom: 5px; }
+        .nav-link.active { color: var(--primary); }
+
+        .v-footer { text-align: center; font-size: 0.65rem; color: #484f58; padding: 20px 0; font-family: 'JetBrains Mono', monospace; }
+        .loading { text-align: center; padding: 50px; color: #8b949e; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">SureTrack v8.0</div>
+    <div style="font-size: 0.75rem; color: #8b949e;"><span class="live-dot"></span>SCANNING...</div>
+</header>
+
+<div id="scanner-list">
+    <div class="loading"><i class="fas fa-circle-notch fa-spin"></i> 데이터를 동기화 중입니다...</div>
+</div>
+
+<div class="v-footer">
+    [통계] v8.0 SureTrack Golden Master | AI Arbitrage Intelligence System
+</div>
+
+<nav>
+    <a href="#" class="nav-link active"><i class="fa-solid fa-bolt"></i>SCANNER</a>
+    <a href="#" class="nav-link"><i class="fa-solid fa-calculator"></i>CALC</a>
+    <a href="#" class="nav-link"><i class="fa-solid fa-layer-group"></i>PORTFOLIO</a>
+    <a href="#" class="nav-link"><i class="fa-solid fa-award"></i>PREMIUM</a>
+    <a href="#" class="nav-link"><i class="fa-solid fa-chart-pie"></i>STATS</a>
+</nav>
+
+<script>
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyjjB47-Aw92qQ4_UJsPYrVaGnVRhxLpEH0cBCSvV-5CW-pwcCKwBpQy1Non3Nx8brk/exec';
+
+    async function fetchData() {
+        try {
+            const response = await fetch(GAS_URL);
+            const data = await response.json();
+            renderUI(data);
+        } catch (e) {
+            document.getElementById('scanner-list').innerHTML = `<div class="loading">연결 실패: GAS 배포 설정을 확인하세요.</div>`;
+        }
+    }
+
+    function renderUI(items) {
+        const list = document.getElementById('scanner-list');
+        list.innerHTML = '';
+
+        if (!items || items.length === 0) {
+            list.innerHTML = `<div class="loading">현재 발견된 슈어벳 기회가 없습니다.</div>`;
+            return;
+        }
+
+        items.forEach((item, i) => {
+            // 3번째 카드마다 광고 삽입 로직
+            if (i > 0 && i % 3 === 0) {
+                list.innerHTML += `
+                    <div class="ad-strip" onclick="window.open('https://www.pinnacle.com', '_blank')">
+                        <i class="fa-solid fa-bullhorn"></i>
+                        <div class="ad-content">
+                            <b>Pinnacle Official Partner</b>
+                            <p>전 세계 1위 배당률, 지금 바로 가입하고 혜택받기</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const card = `
+                <div class="bet-card">
+                    <div class="profit-tag">+${item['수익률(%)']}</div>
+                    <span class="match-info">${item['종목']} | ${new Date(item['시작시간']).toLocaleString('ko-KR', {hour: '2-digit', minute:'2-digit'})}</span>
+                    <span class="match-title">${item['경기명']}</span>
+                    <div class="odds-row">
+                        <div class="odd-item">
+                            <span class="b-name">${item['북마커A']}</span>
+                            <span class="o-val">${item['배당A']}</span>
+                        </div>
+                        <div class="odd-item">
+                            <span class="b-name">${item['북마커B']}</span>
+                            <span class="o-val">${item['배당B']}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            list.innerHTML += card;
+        });
+    }
+
+    fetchData();
+    setInterval(fetchData, 60000); // 1분마다 리스트 갱신
+</script>
+
+</body>
+</html>
