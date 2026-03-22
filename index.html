@@ -3,63 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SureTrack v8.3</title>
+    <title>SureTrack v8.4</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #0d1117; --card: #161b22; --primary: #00ff41; --secondary: #58a6ff; --text: #c9d1d9; --border: #30363d; --accent: #f0883e; --danger: #ff4136; }
-        body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
         
-        /* [v8.3] 헤더 및 상태 표시등 */
-        header { padding: 15px 20px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Noto Sans KR', sans-serif; 
+            margin: 0; 
+            padding-bottom: 90px; 
+            overflow-x: hidden; 
+        }
+
+        /* [v8.4] 헤더 및 상태 표시등 수정 */
+        header { 
+            padding: 15px 16px; 
+            background: var(--card); 
+            border-bottom: 1px solid var(--border); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+        }
         .logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--primary); font-size: 1.1rem; }
-        .status-container { display: flex; align-items: center; font-size: 0.7rem; color: #8b949e; font-family: 'JetBrains Mono'; }
+        .status-container { display: flex; align-items: center; font-size: 0.75rem; color: #8b949e; font-family: 'JetBrains Mono'; font-weight: 700; }
         
-        /* [요구사항] 초록/빨강 깜빡이는 원형 도트 */
+        /* [요구사항] 초록/빨강 교차 깜빡이 효과 수정 */
         .live-status-dot {
-            height: 8px;
-            width: 8px;
+            height: 10px;
+            width: 10px;
             border-radius: 50%;
             display: inline-block;
             margin-right: 8px;
-            animation: pulse-color 2s infinite;
+            animation: blinking-dot 1.2s infinite alternate;
         }
-        @keyframes pulse-color {
-            0% { background-color: var(--primary); box-shadow: 0 0 5px var(--primary); }
-            50% { background-color: var(--danger); box-shadow: 0 0 5px var(--danger); }
-            100% { background-color: var(--primary); box-shadow: 0 0 5px var(--primary); }
+        @keyframes blinking-dot {
+            0% { background-color: var(--primary); box-shadow: 0 0 8px var(--primary); }
+            100% { background-color: var(--danger); box-shadow: 0 0 8px var(--danger); }
         }
 
         /* 탭 관리 */
-        .tab-content { display: none; padding: 10px; animation: fadeIn 0.3s ease; }
+        .tab-content { display: none; padding: 12px 0; animation: fadeIn 0.3s ease; }
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* [v8.3] 카드 UI 고정 (가변 그리드 포함) */
-        .bet-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; margin: 12px; position: relative; transition: 0.2s; border-left: 4px solid var(--primary); }
+        /* [요구사항] 카드 너비 좌우 딱 맞게 최적화 */
+        .bet-card { 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            padding: 18px; 
+            margin: 0 10px 12px 10px; /* 좌우 여백 최소화하여 꽉 차게 설정 */
+            position: relative; 
+            transition: 0.2s; 
+            border-left: 4px solid var(--primary);
+            box-sizing: border-box;
+        }
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
         .market-badge { font-size: 0.65rem; background: rgba(88, 166, 255, 0.1); padding: 3px 8px; border-radius: 4px; color: var(--secondary); font-weight: 700; border: 1px solid rgba(88, 166, 255, 0.2); }
         
-        /* [요구사항] 수익률 옆 계산기 아이콘 재배치 */
+        /* 수익률 옆 계산기 아이콘 유지 */
         .header-right { display: flex; align-items: center; gap: 10px; }
         .profit-tag { color: var(--primary); font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.1rem; }
-        .calc-icon-inline { color: var(--accent); cursor: pointer; font-size: 1.1rem; transition: 0.2s; }
+        .calc-icon-inline { color: var(--accent); cursor: pointer; font-size: 1.1rem; transition: 0.2s; padding: 2px; }
         .calc-icon-inline:active { transform: scale(1.3); }
 
         .match-time { font-size: 0.75rem; color: #8b949e; display: block; margin-top: 5px; }
         .match-title { display: block; margin: 12px 0; font-weight: 700; color: white; font-size: 1rem; line-height: 1.4; }
         
-        /* 그리드 시스템 (v8.2.5 무결성 유지) */
+        /* 가변 그리드 시스템 (v8.2.5 무결성 유지) */
         .odds-row { display: grid; gap: 8px; margin-top: 10px; }
         .grid-2 { grid-template-columns: 1fr 1fr; }
         .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
         
-        .odd-item { background: #0d1117; padding: 12px 5px; border-radius: 10px; text-align: center; border: 1px solid #21262d; }
+        .odd-item { background: #0d1117; padding: 12px 4px; border-radius: 10px; text-align: center; border: 1px solid #21262d; }
         .o-target { display: block; font-size: 0.7rem; color: #8b949e; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .o-val { color: var(--primary); font-weight: 700; font-family: 'JetBrains Mono'; font-size: 1.05rem; }
 
         /* 계산기 스타일 */
-        .calc-container { background: var(--card); border-radius: 15px; padding: 20px; border: 1px solid var(--border); margin: 10px; }
+        .calc-container { background: var(--card); border-radius: 15px; padding: 20px; border: 1px solid var(--border); margin: 0 10px; }
         .calc-input { width: 100%; background: #0d1117; border: 1px solid var(--border); border-radius: 10px; padding: 14px; color: white; margin-bottom: 15px; box-sizing: border-box; font-size: 1.1rem; font-family: 'JetBrains Mono'; }
         .res-box { background: rgba(0, 255, 65, 0.05); padding: 18px; border-radius: 12px; border: 1px solid rgba(0, 255, 65, 0.2); }
 
@@ -75,7 +102,7 @@
 <body>
 
 <header>
-    <div class="logo">SureTrack v8.3</div>
+    <div class="logo">SureTrack v8.4</div>
     <div class="status-container">
         <span class="live-status-dot"></span>
         SCANNING LIVE
@@ -101,12 +128,12 @@
         <label style="font-size:0.8rem; color:#8b949e">Seed Money (Total)</label>
         <input type="number" id="total" class="calc-input" value="1000000" oninput="runCalc()">
         
-        <div id="calc-res" class="res-box"></div>
+        <div id="calc-res" class="res-box">배당 정보를 선택하세요.</div>
     </div>
 </div>
 
 <div class="v-footer">
-    v8.3 SureTrack Golden Master | AI Arbitrage Intelligence
+    v8.4 SureTrack Golden Master | AI Arbitrage Intelligence
 </div>
 
 <nav>
@@ -117,7 +144,6 @@
 </nav>
 
 <script>
-    // 하쿠님의 최종 GAS URL
     const URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
     function go(t, e) {
@@ -140,7 +166,6 @@
                 const card = document.createElement('div');
                 card.className = 'bet-card';
                 
-                // 마켓 텍스트 변환
                 const marketText = item['마켓타입'] === 'H2H' ? '1X2 (승무패)' : 'TOTAL (언오바)';
                 const timeStr = item['시작시간'] ? new Date(item['시작시간']).toLocaleString('ko-KR', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : '';
 
@@ -160,7 +185,6 @@
                         <div class="odd-item"><span class="o-target">${is3Way ? item['타겟C'] : item['타겟B']}</span><span class="o-val">${is3Way ? item['배당C'] : item['배당B']}</span></div>
                     </div>
                 `;
-                // 카드 전체 클릭 시에도 계산기 연동
                 card.onclick = () => openCalc(item['배당A'], item['배당B'], item['배당C']);
                 div.appendChild(card);
             });
@@ -169,18 +193,15 @@
 
     function openCalc(a, b, c) {
         document.getElementById('o1').value = a;
-        if(c && c !== "") { // 3Way (Home-Draw-Away)
+        if(c && c !== "") {
             document.getElementById('o3').value = b;
             document.getElementById('o2').value = c;
             document.getElementById('o3').style.display = 'block';
             document.getElementById('label-o3').style.display = 'block';
-            document.getElementById('label-o3').innerText = "Odd B (Draw)";
-            document.getElementById('label-o2').innerText = "Odd C (Away)";
-        } else { // 2Way (Over-Under)
+        } else {
             document.getElementById('o2').value = b;
             document.getElementById('o3').style.display = 'none';
             document.getElementById('label-o3').style.display = 'none';
-            document.getElementById('label-o2').innerText = "Odd B (Under)";
         }
         go('calc');
         runCalc();
