@@ -3,191 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SureTrack v8.1</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>SureTrack v8.2</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #0d1117; --card: #161b22; --primary: #00ff41; --secondary: #58a6ff; --text: #c9d1d9; --accent: #f0883e; --border: #30363d; --totals: #ff41b4; --h2h: #58a6ff; }
-        body { background: var(--bg); color: var(--text); font-family: 'Noto Sans KR', sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
-        header { padding: 15px 20px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--primary); font-size: 1.1rem; }
-        .live-dot { height: 8px; width: 8px; background: var(--primary); border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        :root { --bg: #0d1117; --card: #161b22; --primary: #00ff41; --secondary: #58a6ff; --text: #c9d1d9; --border: #30363d; --accent: #f0883e; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding-bottom: 90px; }
+        header { padding: 15px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+        
+        /* 가변형 그리드 레이아웃 핵심 */
+        .odds-row { display: grid; gap: 8px; margin-top: 10px; }
+        .grid-2 { grid-template-columns: 1fr 1fr; }
+        .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
 
-        .tab-content { display: none; padding: 15px; animation: fadeIn 0.3s ease; }
+        .bet-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin: 15px; position: relative; }
+        .market-badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; background: #238636; color: white; font-weight: bold; }
+        .profit-tag { color: var(--primary); font-weight: bold; font-size: 1.1rem; float: right; }
+        .match-title { display: block; margin-top: 10px; font-weight: bold; color: white; }
+        
+        .odd-item { background: #0d1117; padding: 10px 5px; border-radius: 8px; text-align: center; border: 1px solid #21262d; }
+        .o-target { display: block; font-size: 0.7rem; color: var(--secondary); margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .o-val { color: var(--primary); font-weight: bold; font-size: 1rem; }
+
+        /* 계산기 탭 */
+        .tab-content { display: none; padding: 20px; }
         .active-tab { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .calc-input { width: 100%; background: #0d1117; border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: white; margin-bottom: 15px; box-sizing: border-box; }
+        .res-box { background: rgba(0, 255, 65, 0.05); padding: 15px; border-radius: 12px; border: 1px solid var(--primary); }
 
-        /* 카드 UI 고정 및 가독성 향상 */
-        .bet-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 12px; position: relative; transition: 0.2s; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        
-        /* [개선] 마켓 배지 한국어 변환 스타일 */
-        .market-badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; color: white; font-weight: 700; }
-        .badge-h2h { background: var(--h2h); }
-        .badge-totals { background: var(--totals); }
-        .badge-default { background: var(--border); }
-
-        .profit-tag { color: var(--primary); font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.1rem; }
-        .match-time { font-size: 0.75rem; color: #8b949e; display: block; margin-bottom: 4px; }
-        .match-title { font-weight: 700; color: white; display: block; margin-bottom: 15px; font-size: 1rem; }
-        
-        .odds-row { display: flex; gap: 8px; }
-        .odd-item { flex: 1; background: #0d1117; padding: 12px 10px; border-radius: 8px; text-align: center; border: 1px solid #21262d; }
-        .o-target { display: block; font-size: 0.75rem; color: var(--primary); margin-bottom: 6px; font-weight: 500; }
-        .o-val { color: var(--secondary); font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; }
-        
-        .calc-icon { color: var(--accent); cursor: pointer; font-size: 1.1rem; margin-left: 10px; }
-
-        .calc-container { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
-        input { width: 100%; background: #0d1117; border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: white; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; box-sizing: border-box; margin-top: 5px; margin-bottom: 15px; }
-        .res-box { background: rgba(0, 255, 65, 0.05); border-radius: 12px; padding: 15px; border: 1px solid rgba(0,255,65,0.2); }
-
-        nav { position: fixed; bottom: 0; width: 100%; background: var(--card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
-        .nav-link { text-align: center; color: #8b949e; text-decoration: none; font-size: 0.65rem; }
-        .nav-link i { display: block; font-size: 1.3rem; margin-bottom: 5px; }
+        nav { position: fixed; bottom: 0; width: 100%; background: var(--card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; }
+        .nav-link { color: #8b949e; text-decoration: none; font-size: 0.7rem; text-align: center; cursor: pointer; }
+        .nav-link i { display: block; font-size: 1.2rem; margin-bottom: 4px; }
         .nav-link.active { color: var(--primary); }
-
-        .v-footer { text-align: center; font-size: 0.65rem; color: #484f58; padding: 20px 0; font-family: 'JetBrains Mono', monospace; }
-        .loading { text-align: center; padding: 50px; color: #8b949e; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo">SureTrack v8.1</div>
-    <div style="font-size: 0.7rem; color: #8b949e;"><span class="live-dot"></span>SCANNING LIVE</div>
+    <b style="color:var(--primary)">SureTrack v8.2</b>
+    <span style="font-size: 0.7rem">SCANNING LIVE</span>
 </header>
 
 <div id="tab-scanner" class="tab-content active-tab">
-    <div id="scanner-list"></div>
+    <div id="list"></div>
 </div>
 
 <div id="tab-calc" class="tab-content">
-    <div class="calc-container">
-        <h3 style="color:var(--primary); margin:0 0 10px 0;">Arbitrage Calculator</h3>
-        <label style="font-size:0.8rem;">Odd A</label><input type="number" id="odd1" step="0.01" oninput="calculate()">
-        <label style="font-size:0.8rem;">Odd B</label><input type="number" id="odd2" step="0.01" oninput="calculate()">
-        <label style="font-size:0.8rem;">Seed Money</label><input type="number" id="total" value="1000000" oninput="calculate()">
-        <div class="res-box" id="calc-result">배당률과 금액을 입력하세요.</div>
+    <div style="background:var(--card); padding:20px; border-radius:12px; border:1px solid var(--border)">
+        <h3 style="color:var(--primary); margin-top:0">Arbitrage Calculator</h3>
+        <label>Odd A</label><input type="number" id="o1" class="calc-input" oninput="runCalc()">
+        <label>Odd B</label><input type="number" id="o2" class="calc-input" oninput="runCalc()">
+        <label id="label-o3" style="display:none">Odd C (Draw)</label><input type="number" id="o3" class="calc-input" style="display:none" oninput="runCalc()">
+        <label>Seed Money</label><input type="number" id="total" class="calc-input" value="1000000" oninput="runCalc()">
+        <div id="calc-res" class="res-box">데이터를 선택하세요.</div>
     </div>
 </div>
 
-<div class="v-footer">v8.1 SureTrack Golden Master | AI Arbitrage Intelligence System</div>
-
 <nav>
-    <div class="nav-link active" onclick="switchTab('scanner', event)"><i class="fa-solid fa-bolt"></i>SCANNER</div>
-    <div class="nav-link" onclick="switchTab('calc', event)"><i class="fa-solid fa-calculator"></i>CALC</div>
-    <div class="nav-link"><i class="fa-solid fa-layer-group"></i>HISTORY</div>
-    <div class="nav-link"><i class="fa-solid fa-chart-pie"></i>STATS</div>
+    <div class="nav-link active" onclick="go('scanner')"><i class="fa fa-bolt"></i>SCANNER</div>
+    <div class="nav-link" onclick="go('calc')"><i class="fa fa-calculator"></i>CALC</div>
+    <div class="nav-link"><i class="fa fa-history"></i>HISTORY</div>
+    <div class="nav-link"><i class="fa fa-chart-pie"></i>STATS</div>
 </nav>
 
 <script>
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
+    const URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
-    // [개선] 마켓 키워드를 한국어 친화적으로 변환
-    function getMarketDisplay(key) {
-        const map = {
-            'H2H': { text: '승패/승무패', class: 'badge-h2h' },
-            'TOTALS': { text: '언더오버', class: 'badge-totals' },
-            'SPREADS': { text: '핸디캡', class: 'badge-default' }
-        };
-        return map[key] || { text: key, class: 'badge-default' };
-    }
-
-    // [개선] 베팅 타겟 텍스트 정제 (H2H인 경우 '승리' 추가)
-    function formatTarget(target, market) {
-        if (!target) return '옵션';
-        if (market === 'H2H') return target + " 승리";
-        return target;
-    }
-
-    function switchTab(tab, event) {
+    function go(t) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-        document.getElementById('tab-'+tab).classList.add('active-tab');
-        if(event) event.currentTarget.classList.add('active');
-        else document.querySelector('nav div:nth-child(2)').classList.add('active');
+        document.getElementById('tab-'+t).classList.add('active-tab');
+        event.currentTarget.classList.add('active');
     }
 
-    async function fetchData() {
-        try {
-            const res = await fetch(GAS_URL);
-            const data = await res.json();
-            renderScanner(data);
-        } catch (e) {
-            document.getElementById('scanner-list').innerHTML = `<div class="loading">데이터 로딩 실패</div>`;
-        }
-    }
-
-    function renderScanner(items) {
-        const list = document.getElementById('scanner-list');
-        list.innerHTML = '';
-        if(!items || items.length === 0) {
-            list.innerHTML = `<div class="loading">현재 슈어벳 기회가 없습니다.</div>`;
-            return;
-        }
-
-        items.forEach(item => {
-            const mInfo = getMarketDisplay(item['마켓타입']);
+    async function load() {
+        const res = await fetch(URL);
+        const data = await res.json();
+        const div = document.getElementById('list');
+        div.innerHTML = '';
+        data.forEach(item => {
+            const is3Way = item['배당C'] !== "";
             const card = document.createElement('div');
             card.className = 'bet-card';
-            card.onclick = () => openCalc(item['배당A'], item['배당B']);
-
+            card.onclick = () => open(item['배당A'], item['배당B'], item['배당C']);
+            
             card.innerHTML = `
-                <div class="card-header">
-                    <span class="market-badge ${mInfo.class}">${mInfo.text}</span>
-                    <div style="display:flex; align-items:center;">
-                        <span class="profit-tag">+${item['수익률(%)']}%</span>
-                        <i class="fa-solid fa-calculator calc-icon"></i>
-                    </div>
-                </div>
-                <span class="match-time">${item['시작시간'] ? new Date(item['시작시간']).toLocaleString('ko-KR', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : ''}</span>
+                <span class="profit-tag">+${item['수익률(%)']}%</span>
+                <span class="market-badge">${item['마켓타입'] === 'H2H' ? '1X2 (승무패)' : 'TOTAL (언오바)'}</span>
                 <span class="match-title">${item['경기명']}</span>
-                <div class="odds-row">
-                    <div class="odd-item">
-                        <span class="o-target">${formatTarget(item['타겟A'], item['마켓타입'])}</span>
-                        <span class="o-val">${item['배당A']}</span>
-                    </div>
-                    <div class="odd-item">
-                        <span class="o-target">${formatTarget(item['타겟B'], item['마켓타입'])}</span>
-                        <span class="o-val">${item['배당B']}</span>
-                    </div>
+                <div class="odds-row ${is3Way ? 'grid-3' : 'grid-2'}">
+                    <div class="odd-item"><span class="o-target">${item['타겟A']}</span><span class="o-val">${item['배당A']}</span></div>
+                    <div class="odd-item"><span class="o-target">${item['타겟B']}</span><span class="o-val">${item['배당B']}</span></div>
+                    ${is3Way ? `<div class="odd-item"><span class="o-target">${item['타겟C']}</span><span class="o-val">${item['배당C']}</span></div>` : ''}
                 </div>
             `;
-            list.appendChild(card);
+            div.appendChild(card);
         });
     }
 
-    function openCalc(a, b) {
-        document.getElementById('odd1').value = a;
-        document.getElementById('odd2').value = b;
-        switchTab('calc');
-        calculate();
+    function open(a, b, c) {
+        document.getElementById('o1').value = a;
+        document.getElementById('o2').value = b;
+        document.getElementById('o3').value = c || "";
+        document.getElementById('o3').style.display = c ? 'block' : 'none';
+        document.getElementById('label-o3').style.display = c ? 'block' : 'none';
+        go('calc');
+        runCalc();
     }
 
-    function calculate() {
-        const a = parseFloat(document.getElementById('odd1').value);
-        const b = parseFloat(document.getElementById('odd2').value);
-        const t = parseFloat(document.getElementById('total').value);
-        if(!a || !b || !t) return;
-        const p = (1/a) + (1/b);
-        const b1 = (t * (1/a)) / p;
-        const b2 = t - b1;
-        const prof = (t/p) - t;
-        const rate = (1/p - 1) * 100;
+    function runCalc() {
+        const a = parseFloat(document.getElementById('o1').value);
+        const b = parseFloat(document.getElementById('o2').value);
+        const c = parseFloat(document.getElementById('o3').value) || 0;
+        const total = parseFloat(document.getElementById('total').value);
+        
+        let sumInv = (1/a) + (1/b) + (c ? (1/c) : 0);
+        let b1 = (total * (1/a)) / sumInv;
+        let b2 = (total * (1/b)) / sumInv;
+        let b3 = c ? (total * (1/c)) / sumInv : 0;
+        let p = (total / sumInv) - total;
 
-        document.getElementById('calc-result').innerHTML = `
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>A 배팅액:</span> <b>${Math.floor(b1).toLocaleString()}원</b></div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>B 배팅액:</span> <b>${Math.floor(b2).toLocaleString()}원</b></div>
-            <div style="margin-top:10px; border-top:1px solid #30363d; padding-top:10px; color:var(--primary); display:flex; justify-content:space-between; font-size:1.1rem;">
-                <span>확정 수익:</span> <b>+${Math.floor(prof).toLocaleString()}원 (${rate.toFixed(2)}%)</b>
-            </div>
+        document.getElementById('calc-res').innerHTML = `
+            <div style="display:flex; justify-content:space-between"><span>A 배팅:</span> <b>${Math.floor(b1).toLocaleString()}원</b></div>
+            <div style="display:flex; justify-content:space-between"><span>B 배팅:</span> <b>${Math.floor(b2).toLocaleString()}원</b></div>
+            ${c ? `<div style="display:flex; justify-content:space-between"><span>C 배팅:</span> <b>${Math.floor(b3).toLocaleString()}원</b></div>` : ''}
+            <div style="margin-top:10px; color:var(--primary); font-size:1.1rem">확정 수익: +${Math.floor(p).toLocaleString()}원</div>
         `;
     }
 
-    fetchData();
-    setInterval(fetchData, 60000);
+    load();
+    setInterval(load, 60000);
 </script>
 </body>
 </html>
