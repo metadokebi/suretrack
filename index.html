@@ -19,96 +19,134 @@
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* [v8.1 고정] 카드 디자인 */
-        .bet-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 12px; position: relative; }
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .market-badge { font-size: 0.65rem; background: var(--border); padding: 2px 6px; border-radius: 4px; color: var(--secondary); font-weight: 700; font-family: 'JetBrains Mono'; }
-        .match-time { font-size: 0.7rem; color: #8b949e; display: block; margin-top: 4px; }
+        /* v8.1 고정 카드 UI */
+        .bet-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 12px; position: relative; transition: 0.2s; }
+        .bet-card:active { transform: scale(0.98); background: #1c2128; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px; }
+        .market-badge { font-size: 0.65rem; background: rgba(88, 166, 255, 0.15); padding: 3px 8px; border-radius: 4px; color: var(--secondary); font-weight: 700; font-family: 'JetBrains Mono'; border: 1px solid rgba(88, 166, 255, 0.3); }
         .profit-tag { color: var(--primary); font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1rem; }
-        .match-title { font-weight: 700; color: white; display: block; margin: 10px 0; font-size: 0.95rem; }
+        .match-time { font-size: 0.7rem; color: #8b949e; display: block; margin-bottom: 10px; }
+        .match-title { font-weight: 700; color: white; display: block; margin: 5px 0 15px 0; font-size: 0.95rem; }
         
         .odds-row { display: flex; gap: 8px; }
-        .odd-item { flex: 1; background: #0d1117; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #21262d; position: relative; }
-        .o-target { display: block; font-size: 0.7rem; color: var(--primary); margin-bottom: 4px; font-weight: 500; }
-        .o-val { color: var(--secondary); font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 1rem; }
-        .calc-icon { color: var(--accent); position: absolute; top: 18px; right: 18px; cursor: pointer; font-size: 1.1rem; transition: 0.2s; }
-        .calc-icon:active { transform: scale(1.2); }
+        .odd-item { flex: 1; background: #0d1117; padding: 12px 10px; border-radius: 8px; text-align: center; border: 1px solid #21262d; position: relative; }
+        .o-target { display: block; font-size: 0.75rem; color: var(--primary); margin-bottom: 6px; font-weight: 500; }
+        .o-val { color: var(--secondary); font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; }
+        
+        /* 계산기 아이콘 (수익률 옆 고정) */
+        .calc-icon { color: var(--accent); cursor: pointer; font-size: 1.1rem; transition: 0.2s; margin-left: 10px; vertical-align: middle; }
 
-        /* 계산기 스타일 고정 */
+        /* 계산기 탭 */
         .calc-container { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
-        input { width: 100%; background: #0d1117; border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: white; font-family: 'JetBrains Mono', monospace; margin-top: 5px; box-sizing: border-box; }
+        label { display: block; font-size: 0.8rem; color: #8b949e; margin-bottom: 5px; margin-top: 15px; }
+        input { width: 100%; background: #0d1117; border: 1px solid var(--border); border-radius: 8px; padding: 12px; color: white; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; box-sizing: border-box; }
         .res-box { background: rgba(0, 255, 65, 0.05); border-radius: 12px; padding: 15px; margin-top: 20px; border: 1px solid rgba(0,255,65,0.2); }
 
-        /* 하단 메뉴 고정 (v7.1 규격) */
+        /* 하단 메뉴 고정 */
         nav { position: fixed; bottom: 0; width: 100%; background: var(--card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
-        .nav-link { text-align: center; color: #8b949e; text-decoration: none; font-size: 0.65rem; }
+        .nav-link { text-align: center; color: #8b949e; text-decoration: none; font-size: 0.65rem; cursor: pointer; }
         .nav-link i { display: block; font-size: 1.3rem; margin-bottom: 5px; }
         .nav-link.active { color: var(--primary); }
 
         .v-footer { text-align: center; font-size: 0.65rem; color: #484f58; padding: 20px 0; font-family: 'JetBrains Mono', monospace; }
+        .loading { text-align: center; padding: 50px; color: #8b949e; }
     </style>
 </head>
 <body>
 
 <header>
     <div class="logo">SureTrack v8.1</div>
-    <div id="status" style="font-size: 0.7rem; color: #8b949e;"><span class="live-dot"></span>SCANNING</div>
+    <div style="font-size: 0.7rem; color: #8b949e;"><span class="live-dot"></span>SCANNING LIVE</div>
 </header>
 
 <div id="tab-scanner" class="tab-content active-tab">
-    <div id="scanner-list"></div>
+    <div id="scanner-list">
+        <div class="loading"><i class="fas fa-circle-notch fa-spin"></i> 데이터 동기화 중...</div>
+    </div>
 </div>
 
 <div id="tab-calc" class="tab-content">
     <div class="calc-container">
-        <h3 style="color:var(--primary); margin:0 0 15px 0;">Arbitrage Calculator</h3>
-        <label style="font-size:0.8rem;">Odd A</label><input type="number" id="odd1" oninput="calculate()">
-        <label style="font-size:0.8rem;">Odd B</label><input type="number" id="odd2" oninput="calculate()">
-        <label style="font-size:0.8rem;">Seed Money</label><input type="number" id="total" value="1000000" oninput="calculate()">
-        <div class="res-box" id="calc-result">금액을 입력하세요.</div>
+        <h3 style="color:var(--primary); margin:0 0 10px 0;">Arbitrage Calculator</h3>
+        <label>Odd A</label><input type="number" id="odd1" step="0.01" oninput="calculate()">
+        <label>Odd B</label><input type="number" id="odd2" step="0.01" oninput="calculate()">
+        <label>Seed Money</label><input type="number" id="total" value="1000000" oninput="calculate()">
+        <div class="res-box" id="calc-result">배당률과 시드머니를 입력하세요.</div>
     </div>
 </div>
 
 <div class="v-footer">v8.1 SureTrack Golden Master | AI Arbitrage Intelligence System</div>
 
 <nav>
-    <div class="nav-link active" onclick="switchTab('scanner')"><i class="fa-solid fa-bolt"></i>SCANNER</div>
-    <div class="nav-link" onclick="switchTab('calc')"><i class="fa-solid fa-calculator"></i>CALC</div>
+    <div class="nav-link active" onclick="switchTab('scanner', event)"><i class="fa-solid fa-bolt"></i>SCANNER</div>
+    <div class="nav-link" onclick="switchTab('calc', event)"><i class="fa-solid fa-calculator"></i>CALC</div>
     <div class="nav-link"><i class="fa-solid fa-layer-group"></i>HISTORY</div>
     <div class="nav-link"><i class="fa-solid fa-chart-pie"></i>STATS</div>
 </nav>
 
 <script>
+    // 하쿠님의 최신 GAS URL
     const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
-    function switchTab(t) {
+    function switchTab(tab, event) {
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active-tab'));
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-        document.getElementById('tab-'+t).classList.add('active-tab');
-        event.currentTarget.classList.add('active');
+        document.getElementById('tab-'+tab).classList.add('active-tab');
+        if(event) event.currentTarget.classList.add('active');
+        else document.querySelector('nav div:nth-child(2)').classList.add('active');
     }
 
     async function fetchData() {
-        const res = await fetch(GAS_URL);
-        const data = await res.json();
+        try {
+            const res = await fetch(GAS_URL);
+            const data = await res.json();
+            renderScanner(data);
+        } catch (e) {
+            document.getElementById('scanner-list').innerHTML = `<div class="loading">연결 실패: GAS 설정을 확인하세요.</div>`;
+        }
+    }
+
+    function renderScanner(items) {
         const list = document.getElementById('scanner-list');
         list.innerHTML = '';
-        data.forEach(item => {
+        if(!items || items.length === 0) {
+            list.innerHTML = `<div class="loading">현재 발견된 기회가 없습니다.</div>`;
+            return;
+        }
+
+        items.forEach(item => {
             const card = document.createElement('div');
             card.className = 'bet-card';
+            // 카드 클릭 시 계산기로 이동
+            card.onclick = (e) => {
+                openCalc(item['배당A'], item['배당B']);
+            };
+
+            // undefined 방지를 위해 기본값 설정
+            const market = item['마켓타입'] || 'N/A';
+            const targetA = item['타겟A'] || 'Option A';
+            const targetB = item['타겟B'] || 'Option B';
+            const time = item['시작시간'] ? new Date(item['시작시간']).toLocaleString('ko-KR', {hour:'2-digit', minute:'2-digit'}) : '--:--';
+
             card.innerHTML = `
                 <div class="card-header">
-                    <div>
-                        <span class="market-badge">${item['마켓타입']}</span>
-                        <span class="match-time">${new Date(item['시작시간']).toLocaleString('ko-KR', {hour:'2-digit', minute:'2-digit'})}</span>
+                    <span class="market-badge">${market}</span>
+                    <div style="display:flex; align-items:center;">
+                        <span class="profit-tag">+${item['수익률(%)']}%</span>
+                        <i class="fa-solid fa-calculator calc-icon"></i>
                     </div>
-                    <span class="profit-tag">+${item['수익률(%)']}%</span>
                 </div>
-                <i class="fa-solid fa-calculator calc-icon" onclick="openCalc(${item['배당A']}, ${item['배당B']})"></i>
+                <span class="match-time">${time}</span>
                 <span class="match-title">${item['경기명']}</span>
                 <div class="odds-row">
-                    <div class="odd-item"><span class="o-target">${item['타겟A']}</span><span class="o-val">${item['배당A']}</span></div>
-                    <div class="odd-item"><span class="o-target">${item['타겟B']}</span><span class="o-val">${item['배당B']}</span></div>
+                    <div class="odd-item">
+                        <span class="o-target">${targetA}</span>
+                        <span class="o-val">${item['배당A']}</span>
+                    </div>
+                    <div class="odd-item">
+                        <span class="o-target">${targetB}</span>
+                        <span class="o-val">${item['배당B']}</span>
+                    </div>
                 </div>
             `;
             list.appendChild(card);
@@ -131,11 +169,13 @@
         const b1 = (t * (1/a)) / p;
         const b2 = t - b1;
         const prof = (t/p) - t;
+        const rate = (1/p - 1) * 100;
+
         document.getElementById('calc-result').innerHTML = `
-            <div style="display:flex; justify-content:space-between;"><span>A 배팅:</span> <b>${Math.floor(b1).toLocaleString()}원</b></div>
-            <div style="display:flex; justify-content:space-between;"><span>B 배팅:</span> <b>${Math.floor(b2).toLocaleString()}원</b></div>
-            <div style="margin-top:10px; border-top:1px solid #30363d; padding-top:10px; color:var(--primary); display:flex; justify-content:space-between;">
-                <span>확정 수익:</span> <b>+${Math.floor(prof).toLocaleString()}원</b>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Bookie A 배팅:</span> <b>${Math.floor(b1).toLocaleString()}원</b></div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>Bookie B 배팅:</span> <b>${Math.floor(b2).toLocaleString()}원</b></div>
+            <div style="margin-top:10px; border-top:1px solid #30363d; padding-top:10px; color:var(--primary); display:flex; justify-content:space-between; font-size:1.1rem;">
+                <span>확정 수익:</span> <b>+${Math.floor(prof).toLocaleString()}원 (${rate.toFixed(2)}%)</b>
             </div>
         `;
     }
