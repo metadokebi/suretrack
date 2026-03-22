@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SureTrack v8.5.1</title>
+    <title>SureTrack v8.6</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
     <style>
@@ -13,16 +13,11 @@
 
         header { padding: 15px 16px; background: var(--card); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .logo { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--primary); font-size: 1.1rem; }
-        
         .status-container { display: flex; align-items: center; font-size: 0.75rem; color: #8b949e; font-family: 'JetBrains Mono'; font-weight: 700; }
         
-        /* [요구사항] 초록/빨강 실시간 교차 깜빡이 */
+        /* [v8.5.1 고정] 초록/빨강 실시간 교차 깜빡이 */
         .live-status-dot {
-            height: 10px;
-            width: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
+            height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 8px;
             animation: pulse-exchange 1.2s infinite ease-in-out;
         }
         @keyframes pulse-exchange {
@@ -35,27 +30,25 @@
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* [요구사항] 좌우 너비 꽉 채운 카드 UI */
+        /* [v8.4 고정] 좌우 너비 꽉 채운 카드 UI */
         .bet-card { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            border-radius: 12px; 
-            padding: 18px; 
-            margin: 0 10px 12px 10px; 
-            position: relative; 
-            border-left: 5px solid var(--primary);
-            box-sizing: border-box;
+            background: var(--card); border: 1px solid var(--border); border-radius: 12px; 
+            padding: 18px; margin: 0 10px 12px 10px; position: relative; 
+            border-left: 5px solid var(--primary); box-sizing: border-box;
         }
         
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .market-badge { font-size: 0.65rem; background: rgba(88, 166, 255, 0.1); padding: 3px 8px; border-radius: 4px; color: var(--secondary); font-weight: 700; border: 1px solid rgba(88, 166, 255, 0.2); }
         
-        /* [요구사항] 수익률 옆 계산기 아이콘 배치 */
+        /* [v8.5 고정] 수익률 옆 계산기 아이콘 */
         .header-right { display: flex; align-items: center; gap: 8px; }
         .profit-tag { color: var(--primary); font-family: 'JetBrains Mono'; font-weight: 700; font-size: 1.15rem; }
         .calc-icon-inline { color: var(--accent); cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
 
-        .match-title { display: block; margin: 12px 0; font-weight: 700; color: white; font-size: 1.05rem; line-height: 1.4; }
+        .match-title { display: block; margin: 12px 0 4px 0; font-weight: 700; color: white; font-size: 1.05rem; line-height: 1.4; }
+        
+        /* [v8.6 신규] 경기 시간 스타일 */
+        .match-time { font-size: 0.75rem; color: #8b949e; display: block; margin-bottom: 12px; font-family: 'JetBrains Mono'; }
         
         /* 그리드 시스템 (2Way, 3Way 가변형) */
         .odds-row { display: grid; gap: 8px; margin-top: 10px; }
@@ -76,7 +69,7 @@
         .calc-input { width: 100%; background: #0d1117; border: 1px solid var(--border); border-radius: 10px; padding: 14px; color: white; margin-bottom: 15px; font-size: 1.1rem; font-family: 'JetBrains Mono'; }
 
         nav { position: fixed; bottom: 0; width: 100%; background: var(--card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0; z-index: 1000; }
-        .nav-link { color: #8b949e; text-decoration: none; font-size: 0.65rem; text-align: center; }
+        .nav-link { color: #8b949e; text-decoration: none; font-size: 0.65rem; text-align: center; cursor: pointer; }
         .nav-link i { display: block; font-size: 1.35rem; margin-bottom: 5px; }
         .nav-link.active { color: var(--primary); }
         .v-footer { text-align: center; font-size: 0.65rem; color: #484f58; padding: 25px 0; font-family: 'JetBrains Mono'; }
@@ -85,7 +78,7 @@
 <body>
 
 <header>
-    <div class="logo">SureTrack v8.5.1</div>
+    <div class="logo">SureTrack v8.6</div>
     <div class="status-container"><span class="live-status-dot"></span>SCANNING LIVE</div>
 </header>
 
@@ -115,10 +108,9 @@
     <div class="nav-link" onclick="go('stats', event)"><i class="fa-solid fa-chart-pie"></i>STATS</div>
 </nav>
 
-<div class="v-footer">v8.5.1 SureTrack Golden Master | AI Arbitrage Intelligence</div>
+<div class="v-footer">v8.6 SureTrack Golden Master | AI Arbitrage Intelligence</div>
 
 <script>
-    // 하쿠님의 최종 GAS URL
     const URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
     function go(t, e) {
@@ -140,10 +132,18 @@
     function render(items) {
         const div = document.getElementById('list');
         div.innerHTML = '';
+
+        // [v8.6] 시간순 정렬 (가까운 시간 우선)
+        items.sort((a, b) => new Date(a['시작시간']) - new Date(b['시작시간']));
+
         items.forEach(item => {
             const is3Way = item['배당C'] !== "" && item['배당C'] !== undefined;
             const card = document.createElement('div');
             card.className = 'bet-card';
+            
+            // 시간 포맷팅
+            const timeStr = item['시작시간'] ? new Date(item['시작시간']).toLocaleString('ko-KR', {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'}) : '시간 정보 없음';
+
             card.innerHTML = `
                 <div class="card-header">
                     <span class="market-badge">${item['마켓타입'] === 'H2H' ? '1X2 (승무패)' : 'TOTAL (언오바)'}</span>
@@ -153,6 +153,7 @@
                     </div>
                 </div>
                 <span class="match-title">${item['경기명']}</span>
+                <span class="match-time"><i class="fa-regular fa-clock"></i> ${timeStr}</span>
                 <div class="odds-row ${is3Way ? 'grid-3' : 'grid-2'}">
                     <div class="odd-item"><span class="o-target">${item['타겟A']}</span><span class="o-val">${parseFloat(item['배당A']).toFixed(2)}</span></div>
                     ${is3Way ? `<div class="odd-item"><span class="o-target">무승부</span><span class="o-val" style="color:var(--accent)">${parseFloat(item['배당B']).toFixed(2)}</span></div>` : ''}
