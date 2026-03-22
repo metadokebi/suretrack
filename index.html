@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SureTrack v8.8 Golden Master</title>
+    <title>SureTrack v8.9 Golden Master</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
     <style>
@@ -30,7 +30,7 @@
         .active-tab { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* [v8.5.1 고정] 좌우 꽉 찬 카드 UI */
+        /* [v8.4 고정] 좌우 너비 꽉 채운 카드 UI */
         .bet-card { 
             background: var(--card); border: 1px solid var(--border); border-radius: 12px; 
             padding: 18px; margin: 0 10px 12px 10px; position: relative; 
@@ -59,13 +59,13 @@
         .o-target { display: block; font-size: 0.7rem; color: #8b949e; margin-bottom: 4px; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .o-val { color: var(--primary); font-weight: 700; font-family: 'JetBrains Mono'; font-size: 1.1rem; margin-bottom: 8px; }
 
-        /* [v8.8 신규] 북마커 로고 스타일 */
+        /* [v8.9 신규] 북마커 로고 스타일 개선 */
         .bookie-logo { 
-            height: 14px; 
-            max-width: 80%; 
+            height: 16px; 
+            max-width: 85%; 
             object-fit: contain; 
-            filter: grayscale(1) brightness(1.5); /* 디자인 통일감을 위해 회색톤 처리 */
-            opacity: 0.7;
+            filter: brightness(0) invert(1); /* 완전한 화이트 로고로 변환 */
+            opacity: 0.8;
             margin-top: 2px;
         }
 
@@ -86,7 +86,7 @@
 <body>
 
 <header>
-    <div class="logo">SureTrack v8.8</div>
+    <div class="logo">SureTrack v8.9</div>
     <div class="status-container"><span class="live-status-dot"></span>SCANNING LIVE</div>
 </header>
 
@@ -116,17 +116,15 @@
     <div class="nav-link" onclick="go('stats', event)"><i class="fa-solid fa-chart-pie"></i>STATS</div>
 </nav>
 
-<div class="v-footer">v8.8 SureTrack Golden Master | AI Intelligence</div>
+<div class="v-footer">v8.9 SureTrack Golden Master | AI Intelligence</div>
 
 <script>
     const URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
-    // [v8.8 신규] 북마커 이름으로 로고 URL 생성하는 헬퍼 함수
+    // [v8.9 신규] 가장 확실한 Google S2 파비콘 엔진으로 교체
     function getBookieLogo(name) {
         if (!name) return "";
         const cleanName = name.toLowerCase().replace(/\s+/g, '');
-        // 로고 서비스(Clearbit 등)를 이용하여 도메인 기반 로고 자동 생성
-        // 주요 사이트들은 도메인 매핑, 그 외는 텍스트 대체 가능
         const domains = {
             'pinnacle': 'pinnacle.com',
             'bet365': 'bet365.com',
@@ -141,7 +139,8 @@
             '888sport': '888sport.com'
         };
         const domain = domains[cleanName] || `${cleanName}.com`;
-        return `https://logo.clearbit.com/${domain}?size=64`;
+        // Google의 파비콘 API를 사용하여 가장 안정적으로 이미지를 가져옵니다.
+        return `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
     }
 
     function go(t, e) {
@@ -192,18 +191,21 @@
                     <div class="odd-item">
                         <span class="o-target">${item['타겟A']}</span>
                         <span class="o-val">${parseFloat(item['배당A']).toFixed(2)}</span>
-                        <img class="bookie-logo" src="${getBookieLogo(item['북A'])}" onerror="this.src='https://via.placeholder.com/60x15/161b22/8b949e?text=${item['북A']}'" alt="${item['북A']}">
+                        <img class="bookie-logo" src="${getBookieLogo(item['북A'])}" onerror="this.parentElement.querySelector('.logo-alt').style.display='block'; this.style.display='none';" alt="">
+                        <span class="logo-alt" style="display:none; font-size:0.6rem; color:#8b949e;">${item['북A']}</span>
                     </div>
                     ${is3Way ? `
                         <div class="odd-item">
                             <span class="o-target">무승부</span>
                             <span class="o-val" style="color:var(--accent)">${parseFloat(item['배당B']).toFixed(2)}</span>
-                            <img class="bookie-logo" src="${getBookieLogo(item['북B'])}" onerror="this.src='https://via.placeholder.com/60x15/161b22/8b949e?text=${item['북B']}'" alt="${item['북B']}">
+                            <img class="bookie-logo" src="${getBookieLogo(item['북B'])}" onerror="this.parentElement.querySelector('.logo-alt').style.display='block'; this.style.display='none';" alt="">
+                            <span class="logo-alt" style="display:none; font-size:0.6rem; color:#8b949e;">${item['북B']}</span>
                         </div>` : ''}
                     <div class="odd-item">
                         <span class="o-target">${is3Way ? item['타겟C'] : item['타겟B']}</span>
                         <span class="o-val">${is3Way ? parseFloat(item['배당C']).toFixed(2) : parseFloat(item['배당B']).toFixed(2)}</span>
-                        <img class="bookie-logo" src="${getBookieLogo(is3Way ? item['북C'] : item['북B'])}" onerror="this.src='https://via.placeholder.com/60x15/161b22/8b949e?text=${is3Way ? item['북C'] : item['북B']}'" alt="${is3Way ? item['북C'] : item['북B']}">
+                        <img class="bookie-logo" src="${getBookieLogo(is3Way ? item['북C'] : item['북B'])}" onerror="this.parentElement.querySelector('.logo-alt').style.display='block'; this.style.display='none';" alt="">
+                        <span class="logo-alt" style="display:none; font-size:0.6rem; color:#8b949e;">${is3Way ? item['북C'] : item['북B']}</span>
                     </div>
                 </div>
             `;
