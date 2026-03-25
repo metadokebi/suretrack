@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Surebet v7.1 Golden Master</title>
+    <title>Surebet v7.1 Golden Master (Ultimate)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -16,23 +16,24 @@
         .premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
         .elite-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
         
-        /* icon.horse & Badge Logic */
+        /* icon.horse Logic */
         .logo-container { position: relative; width: 36px; height: 36px; flex-shrink: 0; }
         .initial-badge { width: 36px; height: 36px; background: #1e293b; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #475569; text-transform: uppercase; }
         .logo-img { position: absolute; top: 0; left: 0; width: 36px; height: 36px; border-radius: 10px; object-fit: contain; z-index: 10; opacity: 0; transition: opacity 0.3s; }
 
-        /* Main Feed Center Logo Style */
-        .center-logo-box { display: flex; justify-content: center; align-items: center; gap: 20px; padding: 15px; background: rgba(0,0,0,0.2); }
+        /* Bookies Hover Effect */
+        .bookie-card { transition: all 0.2s ease; border: 1px solid rgba(255,255,255,0.03); cursor: pointer; }
+        .bookie-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.08); border-color: rgba(99, 102, 241, 0.4); }
+        .bookie-card:active { transform: scale(0.97); }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 600; }
         .nav-item.active { color: #818cf8; }
         .version-tag { font-size: 10px; color: #475569; font-weight: bold; text-align: center; padding: 25px; letter-spacing: 1px; }
 
-        /* Calc Style */
-        .calc-mode-btn { flex: 1; padding: 12px; font-size: 11px; font-weight: 800; border-radius: 12px; background: rgba(255,255,255,0.05); color: #64748b; transition: all 0.2s; }
-        .calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
-        .input-row { display: flex; flex-direction: column; gap: 8px; }
+        /* License Icon Style */
+        .license-icon { width: 24px; height: 24px; filter: grayscale(1) brightness(1.5); opacity: 0.7; }
+        .center-logo-box { display: flex; justify-content: center; align-items: center; gap: 20px; padding: 15px; background: rgba(0,0,0,0.2); }
     </style>
 </head>
 <body>
@@ -42,13 +43,13 @@
             <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]"></div>
             <h1 class="text-lg font-black tracking-tighter italic uppercase">Surebet <span class="text-indigo-400">GM v7.1</span></h1>
         </div>
-        <div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 italic tracking-tighter">0.00 TON</div>
+        <div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 italic tracking-tighter italic">5,720.50 TON</div>
     </header>
 
     <main id="home-tab" class="tab-content active p-4">
         <div class="flex justify-between items-center mb-4 px-1">
-            <h2 class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Global Arbitrage Feed</h2>
-            <button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black uppercase">Refresh</button>
+            <h2 class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Live Arbitrage Stream</h2>
+            <button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black uppercase">Refresh Feed</button>
         </div>
         <div id="api-match-container" class="space-y-4"></div>
         <div class="version-tag">v7.1 TON Golden Master</div>
@@ -57,44 +58,26 @@
     <section id="calc-tab" class="tab-content p-4">
         <div class="glass rounded-[32px] p-6 border-indigo-500/20 shadow-2xl">
             <div class="flex gap-2 mb-6 bg-black/30 p-1.5 rounded-2xl">
-                <button id="mode-2way" onclick="setCalcMode(2)" class="calc-mode-btn active uppercase italic">2-Way (U/O)</button>
-                <button id="mode-3way" onclick="setCalcMode(3)" class="calc-mode-btn uppercase italic">3-Way (1X2)</button>
+                <button id="mode-2way" onclick="setCalcMode(2)" class="calc-mode-btn active p-3 flex-1 rounded-xl text-[11px] font-black uppercase italic transition-all">2-Way</button>
+                <button id="mode-3way" onclick="setCalcMode(3)" class="calc-mode-btn p-3 flex-1 rounded-xl text-[11px] font-black uppercase italic transition-all">3-Way (1X2)</button>
             </div>
-
             <div class="space-y-6">
-                <div class="input-row">
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1 italic">Total Stake Investment</label>
-                    <input type="number" id="calc-seed" oninput="runCalculation()" placeholder="Enter Seed Amount" class="w-full bg-slate-950 border-2 border-slate-800 p-5 rounded-2xl text-3xl font-black text-white focus:border-indigo-500 outline-none">
+                <div class="flex flex-col gap-2">
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic ml-1">Stake Amount</label>
+                    <input type="number" id="calc-seed" oninput="runCalculation()" placeholder="Enter Seed" class="w-full bg-slate-950 border-2 border-slate-800 p-5 rounded-2xl text-3xl font-black text-white focus:border-indigo-500 outline-none">
                 </div>
-
                 <div class="space-y-4">
-                    <div class="input-row">
-                        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Odds A (Home/Over)</label>
-                        <input type="number" id="odds-a" oninput="runCalculation()" step="0.01" class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl text-xl font-black text-indigo-400 outline-none focus:border-indigo-500">
-                    </div>
-                    <div class="input-row">
-                        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Odds B (Away/Under)</label>
-                        <input type="number" id="odds-b" oninput="runCalculation()" step="0.01" class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl text-xl font-black text-indigo-400 outline-none focus:border-indigo-500">
-                    </div>
-                    <div class="input-row hidden" id="odds-c-box">
-                        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Odds C (Draw)</label>
-                        <input type="number" id="odds-c" oninput="runCalculation()" step="0.01" class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl text-xl font-black text-indigo-400 outline-none focus:border-indigo-500">
-                    </div>
+                    <input type="number" id="odds-a" oninput="runCalculation()" step="0.01" placeholder="Odds A" class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl text-xl font-black text-indigo-400 outline-none">
+                    <input type="number" id="odds-b" oninput="runCalculation()" step="0.01" placeholder="Odds B" class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl text-xl font-black text-indigo-400 outline-none">
+                    <input type="number" id="odds-c" oninput="runCalculation()" step="0.01" placeholder="Odds C (Draw)" class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl text-xl font-black text-indigo-400 outline-none hidden">
                 </div>
-
-                <div id="calc-results" class="space-y-2 opacity-20 transition-all duration-300">
-                    <div class="flex justify-between p-4 bg-slate-900/80 rounded-xl border border-white/5 text-xs font-bold uppercase">
-                        <span class="text-slate-500">Stake A</span><span id="res-a" class="text-white font-mono">0</span>
-                    </div>
-                    <div class="flex justify-between p-4 bg-slate-900/80 rounded-xl border border-white/5 text-xs font-bold uppercase">
-                        <span class="text-slate-500">Stake B</span><span id="res-b" class="text-white font-mono">0</span>
-                    </div>
-                    <div class="flex justify-between p-4 bg-slate-900/80 rounded-xl border border-white/5 text-xs font-bold uppercase hidden" id="res-c-box">
-                        <span class="text-slate-500">Stake C</span><span id="res-c" class="text-white font-mono">0</span>
-                    </div>
-                    <div class="premium-gradient p-6 rounded-2xl mt-4 shadow-xl">
-                        <div class="flex justify-between text-[10px] font-black text-white/60 uppercase"><span>Profitability ROI</span><span id="res-roi">0.00%</span></div>
-                        <div class="flex justify-between text-2xl font-black text-white mt-1 italic uppercase tracking-tighter"><span>Expected Profit</span><span id="res-profit">0</span></div>
+                <div id="calc-results" class="space-y-3 opacity-20">
+                    <div class="flex justify-between p-4 bg-slate-900/80 rounded-xl border border-white/5 text-[11px] font-bold uppercase"><span class="text-slate-500">Stake A</span><span id="res-a">0</span></div>
+                    <div class="flex justify-between p-4 bg-slate-900/80 rounded-xl border border-white/5 text-[11px] font-bold uppercase"><span class="text-slate-500">Stake B</span><span id="res-b">0</span></div>
+                    <div id="res-c-box" class="hidden flex justify-between p-4 bg-slate-900/80 rounded-xl border border-white/5 text-[11px] font-bold uppercase"><span class="text-slate-500">Stake C</span><span id="res-c">0</span></div>
+                    <div class="premium-gradient p-6 rounded-2xl mt-4">
+                        <div class="flex justify-between text-[10px] font-black text-white/60 uppercase"><span>ROI</span><span id="res-roi">0.00%</span></div>
+                        <div class="flex justify-between text-2xl font-black text-white mt-1 italic uppercase italic tracking-tighter"><span>Net Profit</span><span id="res-profit">0</span></div>
                     </div>
                 </div>
             </div>
@@ -103,12 +86,25 @@
     </section>
 
     <section id="bookies-tab" class="tab-content p-4">
-        <div class="glass p-6 rounded-[32px] mb-6 border-indigo-500/30 shadow-lg">
-            <h2 class="text-lg font-black italic text-indigo-400 mb-1 uppercase tracking-tighter italic">Suretrack Partners</h2>
-            <p class="text-[10px] text-slate-400 leading-relaxed font-semibold italic">
-                Strategic collaboration with global Tier-1 bookmakers. Verified by <span class="text-white">Suretrack Intelligence</span>. 
-                Licenses: <span class="text-indigo-300">MGA, UKGC, Curacao eGaming.</span>
+        <div class="glass p-6 rounded-[32px] mb-6 border-indigo-500/40 shadow-xl bg-indigo-950/10">
+            <h2 class="text-xl font-black italic text-indigo-400 mb-2 uppercase tracking-tighter">Suretrack B2B Partners</h2>
+            <p class="text-[10px] text-slate-400 leading-relaxed font-bold italic mb-5">
+                Powered by <span class="text-white">Suretrack B2B API</span>. We provide ultra-fast betting execution and real-time data synchronization through direct partnerships with global Tier-1 bookmakers.
             </p>
+            <div class="flex justify-around items-center pt-4 border-t border-white/10">
+                <div class="flex flex-col items-center gap-1">
+                    <img src="https://icon.horse/icon/mga.org.mt" class="license-icon">
+                    <span class="text-[8px] font-black text-slate-500">MGA</span>
+                </div>
+                <div class="flex flex-col items-center gap-1">
+                    <img src="https://icon.horse/icon/gamblingcommission.gov.uk" class="license-icon">
+                    <span class="text-[8px] font-black text-slate-500">UKGC</span>
+                </div>
+                <div class="flex flex-col items-center gap-1">
+                    <img src="https://icon.horse/icon/curacao-egaming.com" class="license-icon">
+                    <span class="text-[8px] font-black text-slate-500">CURACAO</span>
+                </div>
+            </div>
         </div>
 
         <div id="partner-list" class="space-y-2.5">
@@ -117,26 +113,48 @@
     </section>
 
     <section id="saas-tab" class="tab-content p-4">
-        <h2 class="text-2xl font-black text-center mb-8 italic uppercase tracking-tighter">Membership Plan</h2>
+        <h2 class="text-2xl font-black text-center mb-8 italic uppercase tracking-tighter">Choose Your Edge</h2>
         <div class="space-y-6">
-            <div class="glass p-6 rounded-3xl border-slate-700/50">
-                <h3 class="text-lg font-black text-slate-400 uppercase italic">Free Basic</h3>
-                <ul class="mt-4 space-y-2 text-[10px] text-slate-500 font-bold uppercase italic">
-                    <li>- ROI Limit < 1.0%</li>
-                    <li>- 10-Min Delayed Feed</li>
-                    <li>- Standard Web Links</li>
+            <div class="glass p-6 rounded-[32px] border-slate-700/50">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-black text-slate-400 uppercase italic">Free Basic</h3>
+                    <i class="fa-solid fa-seedling text-slate-600"></i>
+                </div>
+                <ul class="space-y-2.5 text-[10px] text-slate-500 font-bold uppercase italic border-b border-white/5 pb-5 mb-5">
+                    <li>• ROI Limit: Up to 1.0% Only</li>
+                    <li>• Feed Delay: 10 Minutes Lag</li>
+                    <li>• Links: Standard Web Redirect</li>
+                    <li>• Support: General Community</li>
                 </ul>
-                <div class="text-xl font-black mt-5 italic tracking-tighter uppercase">FREE</div>
+                <div class="text-2xl font-black italic tracking-tighter uppercase">FREE</div>
             </div>
-            <div class="premium-gradient p-6 rounded-3xl shadow-xl">
-                <h3 class="text-lg font-black text-white uppercase italic tracking-tighter">Pro Elite</h3>
-                <ul class="mt-4 space-y-2 text-[10px] text-white/80 font-bold uppercase italic">
-                    <li>- No ROI Limitation</li>
-                    <li>- Real-time Instant Feed</li>
-                    <li>- Direct Deep-Link Access</li>
-                    <li>- Stake Preset Saving</li>
+            <div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-black text-white uppercase italic">Pro Elite</h3>
+                    <span class="bg-white/20 text-[9px] px-2 py-1 rounded-md font-black">POPULAR</span>
+                </div>
+                <ul class="space-y-2.5 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-5 mb-5">
+                    <li>• ROI Limit: Unlimited High ROI</li>
+                    <li>• Feed Speed: Real-time Live Feed</li>
+                    <li>• Links: Direct Deep-Link Access</li>
+                    <li>• Features: Custom Seed Presets</li>
                 </ul>
-                <div class="text-xl font-black mt-5 italic">19.9 TON / mo</div>
+                <div class="text-2xl font-black italic uppercase">19.9 TON <span class="text-xs opacity-60">/ MO</span></div>
+                <i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i>
+            </div>
+            <div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden">
+                <div class="flex justify-between items-center mb-4 text-white">
+                    <h3 class="text-lg font-black uppercase italic">Elite Master</h3>
+                    <span class="bg-black/20 text-[9px] px-2 py-1 rounded-md font-black">VIP</span>
+                </div>
+                <ul class="space-y-2.5 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-5 mb-5">
+                    <li>• ROI: Unlimited + Elite AI Picks</li>
+                    <li>• Alerts: 0.1s Priority Notification</li>
+                    <li>• Login: Auto-Login Integration</li>
+                    <li>• Storage: Cloud History Auto-Sync</li>
+                </ul>
+                <div class="text-2xl font-black italic uppercase">49.9 TON <span class="text-xs opacity-60">/ MO</span></div>
+                <i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i>
             </div>
         </div>
         <div class="version-tag">v7.1 TON Golden Master</div>
@@ -153,11 +171,11 @@
     <script>
         const state = { balance: 5720.50, calcMode: 2 };
 
-        // [API Simulation]
+        // [API Simulation with Centered Logos]
         async function fetchMatches() {
             const container = document.getElementById('api-match-container');
             const data = [
-                { id: 1, sport: '⚽', country: 'ENGLAND', league: 'EPL', time: '21:00', home: 'Man City', away: 'Chelsea', oddsA: 2.18, oddsB: 2.05, roi: 4.52, bookA: 'Pinnacle', domainA: 'pinnacle.com', bookB: 'Bet365', domainB: 'bet365.com' },
+                { id: 1, sport: '⚽', country: 'ENGLAND', league: 'EPL', time: '21:00', home: 'Man City', away: 'Arsenal', oddsA: 2.18, oddsB: 2.05, roi: 4.52, bookA: 'Pinnacle', domainA: 'pinnacle.com', bookB: 'Bet365', domainB: 'bet365.com' },
                 { id: 2, sport: '🏀', country: 'USA', league: 'NBA', time: '10:30', home: 'Lakers', away: 'GSW', oddsA: 1.95, oddsB: 2.28, roi: 5.15, bookA: '1xBet', domainA: '1xbet.com', bookB: 'Stake', domainB: 'stake.com' }
             ];
             container.innerHTML = '';
@@ -184,53 +202,61 @@
                         </a>
                     </div>
                     <div class="p-4 flex justify-between items-center bg-slate-900/40">
-                        <div><div class="text-[8px] text-slate-600 font-black uppercase">EXPECTED ROI</div><div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m.roi}%</div></div>
+                        <div><div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">NET ROI</div><div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m.roi}%</div></div>
                         <button onclick="prepareCalc('${m.home} vs ${m.away}', ${m.oddsA}, ${m.oddsB})" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg shadow-indigo-600/30 flex items-center justify-center active:scale-90 transition-transform"><i class="fa-solid fa-calculator text-lg text-white"></i></button>
                     </div>`;
                 container.appendChild(card);
             });
         }
 
-        // [10+ Bookies List Generator]
+        // [20 Bookies Loader]
         function loadBookies() {
             const list = document.getElementById('partner-list');
             const bookies = [
-                { name: 'Pinnacle', domain: 'pinnacle.com', desc: 'Arbitrage friendly, lowest margins.' },
-                { name: 'Bet365', domain: 'bet365.com', desc: 'The most popular global sports brand.' },
-                { name: 'Stake', domain: 'stake.com', desc: 'Leading global crypto betting platform.' },
-                { name: '1xBet', domain: '1xbet.com', desc: 'Massive market variety and high odds.' },
-                { name: 'William Hill', domain: 'williamhill.com', desc: 'Tradition and reliability since 1934.' },
-                { name: 'Betway', domain: 'betway.com', desc: 'Top tier European betting experience.' },
-                { name: 'Bwin', domain: 'bwin.com', desc: 'Renowned global sportsbook with live streaming.' },
-                { name: 'Unibet', domain: 'unibet.com', desc: 'Expertise in European and Scandinavian markets.' },
-                { name: '888Sport', domain: '888sport.com', desc: 'Modern interface with dynamic live odds.' },
-                { name: 'Betfair', domain: 'betfair.com', desc: 'World largest sports betting exchange.' }
+                { name: 'Pinnacle', domain: 'pinnacle.com', tag: 'ARBITRAGE' },
+                { name: 'Bet365', domain: 'bet365.com', tag: 'TRUSTED' },
+                { name: 'Stake', domain: 'stake.com', tag: 'CRYPTO' },
+                { name: '1xBet', domain: '1xbet.com', tag: 'ODDS' },
+                { name: 'William Hill', domain: 'williamhill.com', tag: 'EST. 1934' },
+                { name: 'Betway', domain: 'betway.com', tag: 'GLOBAL' },
+                { name: 'Bwin', domain: 'bwin.com', tag: 'LIVE' },
+                { name: 'Unibet', domain: 'unibet.com', tag: 'EXPERT' },
+                { name: '888Sport', domain: '888sport.com', tag: 'MARKETS' },
+                { name: 'Betfair', domain: 'betfair.com', tag: 'EXCHANGE' },
+                { name: 'Ladbrokes', domain: 'ladbrokes.com', tag: 'UK LEGEND' },
+                { name: 'Coral', domain: 'coral.co.uk', tag: 'CLASSIC' },
+                { name: 'LeoVegas', domain: 'leovegas.com', tag: 'MOBILE' },
+                { name: 'BetVictor', domain: 'betvictor.com', tag: 'QUALITY' },
+                { name: 'Mr Green', domain: 'mrgreen.com', tag: 'PREMIUM' },
+                { name: '22Bet', domain: '22bet.com', tag: 'VARIETY' },
+                { name: 'Parimatch', domain: 'parimatch.com', tag: 'SPEED' },
+                { name: 'Dafabet', domain: 'dafabet.com', tag: 'ASIA NO.1' },
+                { name: 'Marathonbet', domain: 'marathonbet.com', tag: 'VALUES' },
+                { name: 'Cloudbet', domain: 'cloudbet.com', tag: 'BTC ONLY' }
             ];
             list.innerHTML = bookies.map(b => `
-                <div class="glass p-4 rounded-2xl flex items-center gap-4 border border-white/5 active:bg-white/5 transition-all">
+                <div class="glass p-4 rounded-2xl flex items-center gap-4 bookie-card">
                     <div class="logo-container"><div class="initial-badge">${b.name[0]}</div><img src="https://icon.horse/icon/${b.domain}" class="logo-img" onload="this.style.opacity=1"></div>
                     <div class="flex-1">
-                        <div class="flex justify-between items-center"><h4 class="font-black text-sm italic uppercase tracking-tighter">${b.name}</h4><i class="fa-solid fa-chevron-right text-[10px] text-slate-700"></i></div>
-                        <p class="text-[9px] text-slate-500 italic mt-0.5 font-medium">${b.desc}</p>
+                        <div class="flex justify-between items-center"><h4 class="font-black text-sm italic uppercase tracking-tighter">${b.name}</h4><span class="text-[8px] border border-white/20 px-1.5 py-0.5 rounded text-slate-500 font-black">${b.tag}</span></div>
+                        <p class="text-[9px] text-slate-600 italic font-bold">Secure Suretrack B2B Channel Active</p>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
         }
 
-        // [Calc Logic]
+        // [Calculation Logic]
         function setCalcMode(mode) {
             state.calcMode = mode;
             document.getElementById('mode-2way').classList.toggle('active', mode === 2);
             document.getElementById('mode-3way').classList.toggle('active', mode === 3);
-            document.getElementById('odds-c-box').classList.toggle('hidden', mode === 2);
+            document.getElementById('odds-c').classList.toggle('hidden', mode === 2);
             document.getElementById('res-c-box').classList.toggle('hidden', mode === 2);
             runCalculation();
         }
 
         function prepareCalc(name, a, b) {
             setCalcMode(2);
-            document.getElementById('odds-a').value = a;
-            document.getElementById('odds-b').value = b;
+            document.getElementById('odds-a').value = a; document.getElementById('odds-b').value = b;
             switchTab('calc', document.querySelectorAll('.nav-item')[1]);
             runCalculation();
         }
@@ -242,21 +268,17 @@
             const resDiv = document.getElementById('calc-results');
             if (seed <= 0 || a <= 0 || b <= 0) { resDiv.style.opacity = "0.2"; return; }
             resDiv.style.opacity = "1";
-            let stakeA, stakeB, stakeC = 0, totalP = 0;
-            if (state.calcMode === 2) {
-                totalP = (1/a) + (1/b);
-                stakeA = (seed / a) / totalP; stakeB = (seed / b) / totalP;
-            } else {
+            let sA, sB, sC = 0, tP = 0;
+            if (state.calcMode === 2) { tP = (1/a) + (1/b); sA = (seed/a)/tP; sB = (seed/b)/tP; }
+            else {
                 const c = parseFloat(document.getElementById('odds-c').value) || 0;
-                if (c <= 0) return;
-                totalP = (1/a) + (1/b) + (1/c);
-                stakeA = (seed / a) / totalP; stakeB = (seed / b) / totalP; stakeC = (seed / c) / totalP;
-                document.getElementById('res-c').innerText = Math.floor(stakeC).toLocaleString();
+                if (c <= 0) return; tP = (1/a) + (1/b) + (1/c);
+                sA = (seed/a)/tP; sB = (seed/b)/tP; sC = (seed/c)/tP;
+                document.getElementById('res-c').innerText = Math.floor(sC).toLocaleString();
             }
-            const profit = (seed / totalP) - seed;
-            const roi = ((1 / totalP) - 1) * 100;
-            document.getElementById('res-a').innerText = Math.floor(stakeA).toLocaleString();
-            document.getElementById('res-b').innerText = Math.floor(stakeB).toLocaleString();
+            const profit = (seed/tP)-seed; const roi = ((1/tP)-1)*100;
+            document.getElementById('res-a').innerText = Math.floor(sA).toLocaleString();
+            document.getElementById('res-b').innerText = Math.floor(sB).toLocaleString();
             document.getElementById('res-profit').innerText = Math.floor(profit).toLocaleString();
             document.getElementById('res-roi').innerText = roi.toFixed(2) + "%";
         }
@@ -269,11 +291,7 @@
             window.scrollTo(0,0);
         }
 
-        window.onload = () => {
-            document.getElementById('top-balance').innerText = state.balance.toLocaleString() + " TON";
-            fetchMatches();
-            loadBookies();
-        };
+        window.onload = () => { fetchMatches(); loadBookies(); };
     </script>
 </body>
 </html>
