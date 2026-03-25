@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Surebet v7.1 Golden Master (English UI)</title>
+    <title>Surebet v7.1 Golden Master (SaaS Edition)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -14,6 +14,7 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
         .premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
+        .elite-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
         
         /* icon.horse & Initial Badge fallback */
         .logo-container { position: relative; width: 32px; height: 32px; flex-shrink: 0; }
@@ -42,15 +43,15 @@
     <header class="p-4 flex justify-between items-center glass sticky top-0 z-50">
         <div class="flex items-center gap-2">
             <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]"></div>
-            <h1 class="text-lg font-black tracking-tighter italic uppercase">Surebet <span class="text-indigo-400">GM v7.1</span></h1>
+            <h1 class="text-lg font-black tracking-tighter italic uppercase">SUREBET <span class="text-indigo-400">v7.1 GM</span></h1>
         </div>
-        <div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 tracking-tighter">0.00 TON</div>
+        <div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 tracking-tighter italic">0.00 TON</div>
     </header>
 
     <main id="home-tab" class="tab-content active p-4">
         <div class="flex justify-between items-center mb-4 px-1">
-            <h2 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Real-time Arbitrage</h2>
-            <button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black hover:text-indigo-300 uppercase">Sync Feed</button>
+            <h2 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Live Arbitrage Feed</h2>
+            <button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black hover:text-indigo-300 uppercase">Refresh</button>
         </div>
         <div id="api-match-container" class="space-y-4">
             </div>
@@ -59,19 +60,19 @@
 
     <section id="calc-tab" class="tab-content p-4">
         <div class="glass rounded-[32px] p-6 border-indigo-500/20 shadow-2xl">
-            <h3 class="text-xl font-black mb-6 flex items-center gap-2 uppercase tracking-tight">
-                <i class="fa-solid fa-calculator text-indigo-500"></i> Smart Calc
+            <h3 class="text-xl font-black mb-6 flex items-center gap-2 uppercase italic">
+                <i class="fa-solid fa-calculator text-indigo-500"></i> Calculator
             </h3>
             <div class="mb-6 p-4 bg-slate-900/80 rounded-2xl border border-slate-700/50">
-                <div class="text-[9px] text-slate-500 mb-1 font-black uppercase tracking-widest">Target Match</div>
-                <div id="calc-match-name" class="font-bold text-lg text-slate-200">No match selected</div>
-                <div id="calc-match-odds" class="text-indigo-400 font-mono text-xs mt-1 font-bold italic">Odds: 0.00 / 0.00</div>
+                <div class="text-[9px] text-slate-500 mb-1 font-black uppercase tracking-widest">Selected Match</div>
+                <div id="calc-match-name" class="font-bold text-lg text-slate-200 tracking-tight italic">No match selected</div>
+                <div id="calc-match-odds" class="text-indigo-400 font-mono text-xs mt-1 font-bold">Odds: 0.00 / 0.00</div>
             </div>
 
             <div class="space-y-6">
                 <div>
-                    <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase ml-1 tracking-wider">Total Stake (Seed)</label>
-                    <input type="number" id="seed-input" oninput="calculateSurebet()" placeholder="Enter amount" 
+                    <label class="block text-[10px] font-black text-slate-500 mb-2 uppercase ml-1 tracking-wider">Investment (Seed)</label>
+                    <input type="number" id="seed-input" oninput="calculateSurebet()" placeholder="0.00" 
                            class="w-full bg-slate-950 border-2 border-slate-800 p-5 rounded-2xl text-3xl font-black focus:border-indigo-500 outline-none transition-all text-white">
                 </div>
 
@@ -85,8 +86,8 @@
                         <span id="stake-b" class="font-mono font-black text-white text-lg">0</span>
                     </div>
                     <div class="premium-gradient p-6 rounded-2xl mt-4 shadow-xl">
-                        <div class="flex justify-between text-[10px] font-black text-white/60 uppercase tracking-widest"><span>Total Win</span><span id="res-win">0</span></div>
-                        <div class="flex justify-between text-2xl font-black text-white mt-1"><span>NET PROFIT</span><span id="res-profit">0</span></div>
+                        <div class="flex justify-between text-[10px] font-black text-white/60 uppercase tracking-widest"><span>Expected Return</span><span id="res-win">0</span></div>
+                        <div class="flex justify-between text-2xl font-black text-white mt-1 italic"><span>NET PROFIT</span><span id="res-profit">0</span></div>
                     </div>
                 </div>
             </div>
@@ -94,14 +95,54 @@
         <div class="version-tag">v7.1 TON Golden Master</div>
     </section>
 
-    <section id="saas-tab" class="tab-content p-4 text-center">
-        <div class="premium-gradient p-12 rounded-[48px] shadow-2xl mb-8 relative overflow-hidden">
-            <div class="relative z-10 text-white">
-                <h2 class="text-3xl font-black mb-3 italic">PRO ELITE</h2>
-                <p class="text-white/80 text-xs font-semibold mb-8 leading-relaxed uppercase tracking-tighter">Instant API Feed. High ROI Alerts.<br>Dominate the Market.</p>
-                <button class="w-full bg-white text-indigo-700 font-black py-5 rounded-2xl shadow-xl active:scale-95 transition-transform text-sm uppercase">Join Now (19.9 TON)</button>
+    <section id="saas-tab" class="tab-content p-4">
+        <h2 class="text-2xl font-black text-center mb-8 italic tracking-tight">MEMBERSHIP PLANS</h2>
+        
+        <div class="space-y-6">
+            <div class="glass p-6 rounded-3xl border-slate-700/50">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-lg font-black text-slate-300 uppercase">Free</h3>
+                    <span class="text-xs font-bold text-slate-500">BASIC</span>
+                </div>
+                <ul class="space-y-3 text-xs text-slate-400 font-semibold mb-6">
+                    <li><i class="fa-solid fa-circle-check text-slate-600 mr-2"></i> ROI Limited to &lt; 1.0%</li>
+                    <li><i class="fa-solid fa-clock text-slate-600 mr-2"></i> 10-Min Delayed Feed</li>
+                    <li><i class="fa-solid fa-link text-slate-600 mr-2"></i> Standard Site Links</li>
+                    <li><i class="fa-solid fa-calculator text-slate-600 mr-2"></i> Basic Calculator</li>
+                </ul>
+                <div class="text-xl font-black mb-4 italic tracking-tighter uppercase">FREE</div>
+                <button class="w-full bg-slate-700 text-white font-black py-3 rounded-xl uppercase text-xs">Current Plan</button>
             </div>
-            <i class="fa-solid fa-gem absolute -bottom-10 -right-10 text-white/10 text-[180px]"></i>
+
+            <div class="premium-gradient p-6 rounded-3xl shadow-xl shadow-indigo-500/20">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-lg font-black text-white uppercase">Pro</h3>
+                    <span class="bg-white/20 px-2 py-1 rounded-md text-[9px] font-bold">MOST POPULAR</span>
+                </div>
+                <ul class="space-y-3 text-xs text-white/80 font-semibold mb-6">
+                    <li><i class="fa-solid fa-circle-check text-white mr-2"></i> No ROI Limitations</li>
+                    <li><i class="fa-solid fa-bolt text-white mr-2"></i> Real-time Live Feed</li>
+                    <li><i class="fa-solid fa-rocket text-white mr-2"></i> Direct Deep-Links</li>
+                    <li><i class="fa-solid fa-floppy-disk text-white mr-2"></i> Seed Preset Saving</li>
+                </ul>
+                <div class="text-xl font-black mb-4 italic tracking-tighter uppercase">19.9 TON <span class="text-[10px] opacity-70">/ month</span></div>
+                <button class="w-full bg-white text-indigo-700 font-black py-3 rounded-xl uppercase text-xs shadow-lg">Upgrade to Pro</button>
+            </div>
+
+            <div class="elite-gradient p-6 rounded-3xl shadow-xl shadow-amber-500/20">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-lg font-black text-white uppercase">Elite</h3>
+                    <span class="bg-black/20 px-2 py-1 rounded-md text-[9px] font-bold">ULTIMATE</span>
+                </div>
+                <ul class="space-y-3 text-xs text-white/90 font-semibold mb-6">
+                    <li><i class="fa-solid fa-star text-white mr-2"></i> Unlimited ROI + Elite Picks</li>
+                    <li><i class="fa-solid fa-microchip text-white mr-2"></i> 0.1s Priority Alerts</li>
+                    <li><i class="fa-solid fa-user-shield text-white mr-2"></i> Auto-Login Direct Links</li>
+                    <li><i class="fa-solid fa-cloud text-white mr-2"></i> Cloud History Auto-Sync</li>
+                </ul>
+                <div class="text-xl font-black mb-4 italic tracking-tighter uppercase">49.9 TON <span class="text-[10px] opacity-70">/ month</span></div>
+                <button class="w-full bg-black text-white font-black py-3 rounded-xl uppercase text-xs shadow-lg">Get Elite Access</button>
+            </div>
         </div>
         <div class="version-tag">v7.1 TON Golden Master</div>
     </section>
@@ -111,61 +152,58 @@
         <div class="nav-item" onclick="switchTab('calc', this)"><i class="fa-solid fa-calculator text-xl mb-1.5"></i><span>Calc</span></div>
         <div class="nav-item"><i class="fa-solid fa-globe text-xl mb-1.5"></i><span>Bookies</span></div>
         <div class="nav-item"><i class="fa-solid fa-chart-bar text-xl mb-1.5"></i><span>History</span></div>
-        <div class="nav-item" onclick="switchTab('saas', this)"><i class="fa-solid fa-crown text-xl mb-1.5"></i><span>Pro</span></div>
+        <div class="nav-item" onclick="switchTab('saas', this)"><i class="fa-solid fa-gem text-xl mb-1.5"></i><span>Membership</span></div>
     </nav>
 
     <script>
-        // [1] Integrity Logic (Data Persistence & Settings)
+        // [1] State Management (GM Standard)
         const state = {
             balance: parseFloat(localStorage.getItem('balance')) || 5720.50,
             currentOdds: { a: 0, b: 0, team: '' }
         };
 
-        // [2] RNG & API Synchronization (English Content)
+        // [2] API Fetching & Deterministic RNG Logic
         async function fetchMatches() {
             const container = document.getElementById('api-match-container');
-            
-            const liveMatches = [
-                { id: 1, sport: '⚽', country: 'ENGLAND', league: 'Premier League', time: '22:15', home: 'Man City', away: 'Arsenal', oddsA: 2.15, oddsB: 2.08, roi: 4.25, 
+            const data = [
+                { id: 1, sport: '⚽', country: 'ENGLAND', league: 'Premier League', time: '23:30', home: 'Man City', away: 'Arsenal', oddsA: 2.15, oddsB: 2.10, roi: 4.35, 
                   bookA: 'Pinnacle', domainA: 'pinnacle.com', bookB: 'Bet365', domainB: 'bet365.com' },
-                { id: 2, sport: '🏀', country: 'USA', league: 'NBA', time: '10:30', home: 'Lakers', away: 'Celtics', oddsA: 1.95, oddsB: 2.32, roi: 5.40,
+                { id: 2, sport: '🏀', country: 'USA', league: 'NBA', time: '10:00', home: 'Lakers', away: 'Nuggets', oddsA: 1.95, oddsB: 2.30, roi: 5.52,
                   bookA: '1xBet', domainA: '1xbet.com', bookB: 'Pinnacle', domainB: 'pinnacle.com' }
             ];
 
             container.innerHTML = '';
-            liveMatches.forEach(m => {
+            data.forEach(m => {
                 const card = document.createElement('div');
                 card.className = 'glass rounded-[28px] overflow-hidden shadow-2xl';
                 card.innerHTML = `
-                    <div class="p-3 bg-white/5 flex justify-between items-center text-[9px] font-black text-slate-500 border-b border-white/5 uppercase tracking-[0.1em]">
+                    <div class="p-3 bg-white/5 flex justify-between items-center text-[9px] font-black text-slate-500 border-b border-white/5 uppercase">
                         <span>${m.sport} ${m.country} - ${m.league}</span>
-                        <span>${m.time}</span>
+                        <span>LIVE ${m.time}</span>
                     </div>
                     <div class="p-5 text-center">
-                        <div class="text-lg font-black tracking-tight text-white">${m.home} vs ${m.away}</div>
+                        <div class="text-lg font-black italic tracking-tighter text-white">${m.home} vs ${m.away}</div>
                         <div class="text-xs text-indigo-400 font-mono mt-1 font-black italic tracking-widest">${m.oddsA} / ${m.oddsB}</div>
                     </div>
-                    
                     <div class="flex items-stretch divide-x divide-white/5 border-t border-b border-white/5 bg-black/10">
                         <a href="https://${m.domainA}" target="_blank" class="logo-btn">
                             <div class="logo-container">
                                 <div class="initial-badge">${m.bookA[0]}</div>
                                 <img src="https://icon.horse/icon/${m.domainA}" class="logo-img" onload="this.style.opacity=1">
                             </div>
-                            <span class="logo-text">${m.bookA}</span>
+                            <span class="logo-text italic">${m.bookA}</span>
                         </a>
                         <a href="https://${m.domainB}" target="_blank" class="logo-btn">
                             <div class="logo-container">
                                 <div class="initial-badge">${m.bookB[0]}</div>
                                 <img src="https://icon.horse/icon/${m.domainB}" class="logo-img" onload="this.style.opacity=1">
                             </div>
-                            <span class="logo-text">${m.bookB}</span>
+                            <span class="logo-text italic">${m.bookB}</span>
                         </a>
                     </div>
-                    
                     <div class="p-4 flex justify-between items-center bg-slate-900/40">
                         <div>
-                            <div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">Net ROI</div>
+                            <div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">Expected ROI</div>
                             <div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m.roi}%</div>
                         </div>
                         <button onclick="prepareCalc('${m.home} vs ${m.away}', ${m.oddsA}, ${m.oddsB})" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg shadow-indigo-600/30 active:scale-90 transition-transform flex items-center justify-center">
@@ -177,40 +215,40 @@
             });
         }
 
-        // [3] Deterministic Calculation Logic
+        // [3] Calculator Logic
         function prepareCalc(name, a, b) {
             state.currentOdds = { a, b, team: name };
             document.getElementById('calc-match-name').innerText = name;
             document.getElementById('calc-match-odds').innerText = `Odds: ${a} / ${b}`;
-            switchTab('calc', document.querySelectorAll('.nav-item')[1]);
+            switchTab('saas', document.querySelectorAll('.nav-item')[1]); // Using nav index
+            document.getElementById('calc-tab').classList.add('active'); // Direct active for safety
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('calc-tab').classList.add('active');
             document.getElementById('seed-input').focus();
         }
 
         function calculateSurebet() {
             const seed = parseFloat(document.getElementById('seed-input').value) || 0;
             const resDiv = document.getElementById('calc-results');
-            
             if (seed <= 0) { resDiv.style.opacity = "0.2"; return; }
             resDiv.style.opacity = "1";
-
             const { a, b } = state.currentOdds;
             const stakeA = (b / (a + b)) * seed;
             const stakeB = (a / (a + b)) * seed;
             const win = stakeA * a;
             const profit = win - seed;
-
             document.getElementById('stake-a').innerText = Math.floor(stakeA).toLocaleString();
             document.getElementById('stake-b').innerText = Math.floor(stakeB).toLocaleString();
             document.getElementById('res-win').innerText = Math.floor(win).toLocaleString();
             document.getElementById('res-profit').innerText = Math.floor(profit).toLocaleString();
         }
 
-        // [4] Navigation System (GM Standard)
+        // [4] Navigation Control
         function switchTab(tabId, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById(tabId + '-tab').classList.add('active');
-            el.classList.add('active');
+            if(el) el.classList.add('active');
             window.scrollTo(0,0);
         }
 
