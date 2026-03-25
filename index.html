@@ -65,7 +65,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 <div class="space-y-3">
 <input type="number" id="odds-a" oninput="runCalculation()" step="0.01" placeholder="Odds A" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none">
 <input type="number" id="odds-b" oninput="runCalculation()" step="0.01" placeholder="Odds B" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none">
-<input type="number" id="odds-c" oninput="runCalculation()" step="0.01" placeholder="Odds C" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none hidden">
+<input type="number" id="odds-c" oninput="runCalculation()" step="0.01" placeholder="Odds C (Draw)" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none hidden">
 </div>
 <div id="calc-results" class="space-y-2.5 opacity-20">
 <div class="flex justify-between p-3.5 bg-slate-900/80 rounded-xl border border-white/5 text-[11px] font-bold uppercase"><span class="text-slate-500">Stake A</span><span id="res-a">0</span></div>
@@ -108,8 +108,8 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 <h2 class="text-2xl font-black text-center mb-8 italic uppercase tracking-tighter">Membership</h2>
 <div class="space-y-6">
 <div class="glass p-6 rounded-[32px] border-slate-700/50"><h3 class="text-lg font-black text-slate-400 uppercase italic mb-4">Free Basic</h3><ul class="space-y-2 text-[10px] text-slate-500 font-bold uppercase italic border-b border-white/5 pb-4 mb-4"><li>• ROI Limit: 1.0%</li><li>• Delay: 10-Min Feed</li></ul><div class="text-2xl font-black italic uppercase">FREE</div></div>
-<div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• ROI Limit: Unlimited</li><li>• Speed: Real-time Live</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div><i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
-<div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• ROI: Max + Picks</li><li>• Alerts: 0.1s Priority</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div><i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
+<div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• ROI: Unlimited</li><li>• Speed: Real-time</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div><i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
+<div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• ROI: Max + Picks</li><li>• Alerts: 0.1s</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div><i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
 </div>
 <div class="version-tag">v9.1 TON Golden Master</div>
 </section>
@@ -128,23 +128,43 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQ
 
 function getMatchIdentity(lRaw, sRaw) {
 const s = (sRaw || "").toLowerCase(); const l = (lRaw || "").toLowerCase();
-let sEmoji = "🏆"; if(s.includes("soccer")) sEmoji = "⚽"; else if(s.includes("basketball")) sEmoji = "🏀"; else if(s.includes("baseball")) sEmoji = "⚾"; else if(s.includes("tennis")) sEmoji = "🎾";
-let gIcon = l.includes("women") ? "👩" : "👨";
-let lEmoji = "🌍"; if(l.includes("england") || l.includes("epl")) lEmoji = "🏴󠁧󠁢󠁥󠁮󠁧󠁿"; else if(l.includes("spain") || l.includes("la liga")) lEmoji = "🇪🇸"; else if(l.includes("usa") || l.includes("nba") || l.includes("mlb")) lEmoji = "🇺🇸"; else if(l.includes("germany")) lEmoji = "🇩🇪"; else if(l.includes("italy")) lEmoji = "🇮🇹";
-return { sEmoji, gIcon, lEmoji };
+let sEmoji = "🏆"; 
+if(s.includes("soccer")) sEmoji = "⚽"; 
+else if(s.includes("basketball")) sEmoji = "🏀"; 
+else if(s.includes("baseball")) sEmoji = "⚾"; 
+else if(s.includes("tennis")) sEmoji = "🎾";
+else if(s.includes("icehockey")) sEmoji = "🏒";
+
+let gText = l.includes("women") ? "Women" : "Men";
+let lEmoji = "🌍"; 
+if(l.includes("england") || l.includes("epl")) lEmoji = "🏴󠁧󠁢󠁥󠁮󠁧󠁿"; 
+else if(l.includes("spain") || l.includes("la liga")) lEmoji = "🇪🇸"; 
+else if(l.includes("usa") || l.includes("nba") || l.includes("mlb")) lEmoji = "🇺🇸"; 
+else if(l.includes("germany")) lEmoji = "🇩🇪"; 
+else if(l.includes("italy")) lEmoji = "🇮🇹";
+return { sEmoji, gText, lEmoji };
+}
+
+function formatKoreanTime(isoString) {
+if(!isoString || isoString === "LIVE") return "LIVE";
+try {
+const date = new Date(isoString);
+return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).replace('. ', '/').replace('.', '');
+} catch(e) { return "LIVE"; }
 }
 
 async function fetchMatches() {
 const container = document.getElementById('api-match-container');
-container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase">Syncing Live Stream...</div>`;
+container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase">Synchronizing Live Feed...</div>`;
 try {
 const res = await fetch(GAS_URL); const data = await res.json(); container.innerHTML = '';
 data.forEach(m => {
-const { sEmoji, gIcon, lEmoji } = getMatchIdentity(m['리그명'], m['종목']);
+const { sEmoji, gText, lEmoji } = getMatchIdentity(m['리그명'], m['종목']);
+const kTime = formatKoreanTime(m['시작시간']);
 const is3Way = m['배당C'] && m['배당C'] !== "";
 const card = document.createElement('div');
 card.className = 'glass rounded-[30px] overflow-hidden shadow-2xl';
-card.innerHTML = `<div class="p-4 bg-white/5 flex justify-between items-center text-[11px] font-black text-slate-400 border-b border-white/5 uppercase italic tracking-widest"><span>${sEmoji} ${m['리그명']||'INTL'} ${gIcon} ${lEmoji}</span><span class="text-indigo-400">${m['시작시간']||'LIVE'}</span></div><div class="p-5 text-center"><div class="text-lg font-black tracking-tighter text-white italic mb-3">${m['경기명']}</div><div class="text-[10px] font-black text-indigo-500 uppercase tracking-[0.3em] mb-2">${m['마켓타입']||'H2H'}</div><div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-2 rounded-xl border border-white/5">${m['배당A']} <span class="text-slate-700 mx-2">/</span> ${m['배당B']} ${is3Way ? '<span class="text-slate-700 mx-2">/</span> '+m['배당C'] : ''}</div></div><div class="center-logo-box border-t border-b border-white/5"><a href="https://${m['북A'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group"><div class="logo-container"><div class="initial-badge">${m['북A'][0]}</div><img src="https://icon.horse/icon/${m['북A'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[11px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북A']}</span></a><div class="text-slate-700 text-[9px] font-black italic">VS</div><a href="https://${m['북B'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group"><div class="logo-container"><div class="initial-badge">${m['북B'][0]}</div><img src="https://icon.horse/icon/${m['북B'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[11px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북B']}</span></a></div><div class="p-4 flex justify-between items-center bg-slate-900/50"><div><div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">EXPECTED ROI</div><div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m['수익률(%)']}%</div></div><button onclick="prepareCalc('${m['경기명']}', ${m['배당A']}, ${m['배당B']}, ${m['배당C'] || 0})" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform"><i class="fa-solid fa-calculator text-lg text-white"></i></button></div>`;
+card.innerHTML = `<div class="p-4 bg-white/5 flex justify-between items-center text-[11px] font-black text-slate-400 border-b border-white/5 uppercase italic tracking-widest"><span>${sEmoji} ${m['리그명']||'INTL'} ${gText} ${lEmoji}</span></div><div class="p-5 text-center"><div class="text-lg font-black tracking-tighter text-white italic">${m['경기명']}</div><div class="text-[10px] font-black text-indigo-400 mb-3">${kTime}</div><div class="text-[9px] font-black text-slate-600 uppercase tracking-[0.3em] mb-1.5">${m['마켓타입']||'1X2'}</div><div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-2 rounded-xl border border-white/5">${m['배당A']} <span class="text-slate-700 mx-2">/</span> ${m['배당B']} ${is3Way ? '<span class="text-slate-700 mx-2">/</span> '+m['배당C'] : ''}</div></div><div class="center-logo-box border-t border-b border-white/5"><a href="https://${m['북A'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group"><div class="logo-container"><div class="initial-badge">${m['북A'][0]}</div><img src="https://icon.horse/icon/${m['북A'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[11px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북A']}</span></a><div class="text-slate-700 text-[9px] font-black italic">VS</div><a href="https://${m['북B'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group"><div class="logo-container"><div class="initial-badge">${m['북B'][0]}</div><img src="https://icon.horse/icon/${m['북B'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[11px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북B']}</span></a></div><div class="p-4 flex justify-between items-center bg-slate-900/50"><div><div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">EXPECTED ROI</div><div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m['수익률(%)']}%</div></div><button onclick="prepareCalc('${m['경기명']}', ${m['배당A']}, ${m['배당B']}, ${m['배당C'] || 0})" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform"><i class="fa-solid fa-calculator text-lg text-white"></i></button></div>`;
 container.appendChild(card);
 });
 } catch(e) { container.innerHTML = '<div class="text-center py-20 text-red-500 font-black text-[10px]">SYNC ERROR</div>'; }
@@ -152,7 +172,7 @@ container.appendChild(card);
 
 function loadBookies() {
 const list = document.getElementById('partner-list');
-const partners = [{n:'Pinnacle',d:'pinnacle.com',t:'VIP'},{n:'Bet365',d:'bet365.com',t:'CORE'},{n:'Stake',d:'stake.com',t:'CRYPTO'},{n:'1xBet',d:'1xbet.com',t:'ODDS'},{n:'Betway',d:'betway.com',t:'GLOBAL'},{n:'Bwin',d:'bwin.com',t:'LIVE'},{n:'Unibet',d:'unibet.com',t:'PRO'},{n:'Betfair',d:'betfair.com',t:'EXCH'},{n:'William Hill',d:'williamhill.com',t:'UK'},{n:'Marathonbet',d:'marathonbet.com',t:'VAL'},{n:'Parimatch',d:'parimatch.com',t:'FAST'},{n:'LeoVegas',d:'leovegas.com',t:'MOBILE'},{n:'22Bet',d:'22bet.com',t:'WIDE'},{n:'BetVictor',d:'betvictor.com',t:'SHARP'},{n:'Dafabet',d:'dafabet.com',t:'ASIA'},{n:'Cloudbet',d:'cloudbet.com',t:'BTC'},{n:'Mr Green',d:'mrgreen.com',t:'PREM'},{n:'888Sport',d:'888sport.com',t:'DYN'},{n:'Ladbrokes',d:'ladbrokes.com',t:'UK'},{n:'Coral',d:'coral.co.uk',t:'EST'}];
+const partners = [{n:'Pinnacle',d:'pinnacle.com',t:'VIP'},{n:'Bet365',d:'bet365.com',t:'CORE'},{n:'Stake',d:'stake.com',t:'CRYPTO'},{n:'1xBet',d:'1xbet.com',t:'ODDS'},{n:'William Hill',d:'williamhill.com',t:'UK'},{n:'Betway',d:'betway.com',t:'GLOBAL'},{n:'Bwin',d:'bwin.com',t:'LIVE'},{n:'Unibet',d:'unibet.com',t:'PRO'},{n:'Betfair',d:'betfair.com',t:'EXCH'},{n:'Ladbrokes',d:'ladbrokes.com',t:'UK'},{n:'Coral',d:'coral.co.uk',t:'EST'},{n:'Marathonbet',d:'marathonbet.com',t:'VAL'},{n:'22Bet',d:'22bet.com',t:'WIDE'},{n:'BetVictor',d:'betvictor.com',t:'SHARP'},{n:'Dafabet',d:'dafabet.com',t:'ASIA'},{n:'Cloudbet',d:'cloudbet.com',t:'BTC'},{n:'Mr Green',d:'mrgreen.com',t:'PREM'},{n:'888Sport',d:'888sport.com',t:'DYN'},{n:'LeoVegas',d:'leovegas.com',t:'MOBILE'},{n:'Parimatch',d:'parimatch.com',t:'FAST'}];
 list.innerHTML = partners.map(p => `<div class="glass p-4 rounded-2xl flex items-center gap-5 bookie-card active:bg-white/5 transition-all"><div class="logo-container"><div class="initial-badge">${p.n[0]}</div><img src="https://icon.horse/icon/${p.d}" class="logo-img" onload="this.style.opacity=1"></div><div class="flex-1 text-left"><div class="flex justify-between items-center"><h4 class="font-black text-[14px] italic uppercase tracking-tighter">${p.n}</h4><span class="text-[8px] border border-white/20 px-2 py-0.5 rounded text-slate-500 font-black">${p.t}</span></div><p class="text-[9px] text-slate-600 italic font-bold uppercase tracking-tight">Verified B2B Channel</p></div></div>`).join('');
 }
 
