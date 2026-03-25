@@ -1,284 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SureTrack v9.1 Golden Master</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #020617; color: white; -webkit-tap-highlight-color: transparent; }
-        .tab-content { display: none; padding-bottom: 110px; min-height: 100vh; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* Neon Logo Style */
-        .neon-logo {
-            color: #f59e0b;
-            text-shadow: 0 0 5px #f59e0b, 0 0 15px #d97706;
-            font-weight: 900;
-            font-style: italic;
-        }
-
-        /* Red-Green Pulse Indicator */
-        .live-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            animation: pulse-rg 1.5s infinite;
-        }
-        @keyframes pulse-rg {
-            0% { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; }
-            50% { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; }
-            100% { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; }
-        }
-
-        .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
-        .premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
-        .elite-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-        
-        .logo-container { position: relative; width: 38px; height: 38px; flex-shrink: 0; }
-        .initial-badge { width: 38px; height: 38px; background: #1e293b; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #475569; text-transform: uppercase; }
-        .logo-img { position: absolute; top: 0; left: 0; width: 38px; height: 38px; border-radius: 10px; object-fit: contain; z-index: 10; opacity: 0; transition: opacity 0.3s; }
-
-        .center-logo-box { display: flex; justify-content: center; align-items: center; gap: 24px; padding: 18px; background: rgba(0,0,0,0.25); }
-        .bookie-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.03); cursor: pointer; }
-        .bookie-card:hover { transform: translateY(-4px); background: rgba(255,255,255,0.08); border-color: rgba(99, 102, 241, 0.4); }
-
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 80px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 11px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 700; }
-        .nav-item.active { color: #818cf8; }
-        .version-tag { font-size: 10px; color: #475569; font-weight: bold; text-align: center; padding: 30px; letter-spacing: 1.5px; opacity: 0.5; }
-
-        .calc-mode-btn { flex: 1; padding: 14px; font-size: 12px; font-weight: 900; border-radius: 15px; background: rgba(255,255,255,0.05); color: #64748b; }
-        .calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.5); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SureTrack v9.1 Golden Master</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+body { font-family: 'Inter', sans-serif; background-color: #020617; color: white; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+.tab-content { display: none; padding-bottom: 110px; min-height: 100vh; }
+.tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.neon-logo { color: #f59e0b; text-shadow: 0 0 5px #f59e0b, 0 0 15px #d97706; font-weight: 900; font-style: italic; }
+.live-dot { width: 10px; height: 10px; border-radius: 50%; animation: pulse-rg 1.5s infinite; }
+@keyframes pulse-rg { 0% { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; } 50% { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; } 100% { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; } }
+.glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+.premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
+.elite-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+.logo-container { position: relative; width: 34px; height: 34px; flex-shrink: 0; }
+.initial-badge { width: 34px; height: 34px; background: #1e293b; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #475569; text-transform: uppercase; }
+.logo-img { position: absolute; top: 0; left: 0; width: 34px; height: 34px; border-radius: 8px; object-fit: contain; z-index: 10; opacity: 0; transition: opacity 0.3s; }
+.center-logo-box { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 14px; background: rgba(0,0,0,0.2); }
+.bookie-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.03); cursor: pointer; }
+.bookie-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.08); border-color: rgba(99, 102, 241, 0.4); }
+.bottom-nav { position: fixed; bottom: 0; width: 100%; height: 80px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 700; }
+.nav-item.active { color: #818cf8; }
+.version-tag { font-size: 10px; color: #475569; font-weight: bold; text-align: center; padding: 25px; letter-spacing: 1.5px; opacity: 0.5; }
+.calc-mode-btn { flex: 1; padding: 12px; font-size: 11px; font-weight: 900; border-radius: 12px; background: rgba(255,255,255,0.05); color: #64748b; }
+.calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
+</style>
 </head>
 <body>
 
-    <header class="p-4 flex justify-between items-center glass sticky top-0 z-50">
-        <div class="flex items-center gap-3">
-            <div class="live-dot"></div>
-            <h1 class="text-2xl neon-logo tracking-tighter">SURETRACK</h1>
-        </div>
-        <div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-xs font-black text-indigo-300 italic tracking-tighter">0.00 TON</div>
-    </header>
+<header class="p-4 flex justify-between items-center glass sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<div class="live-dot"></div>
+<h1 class="text-2xl neon-logo tracking-tighter">SURETRACK</h1>
+</div>
+<div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 italic tracking-tighter">5,720.50 TON</div>
+</header>
 
-    <main id="home-tab" class="tab-content active p-4">
-        <div class="flex justify-between items-center mb-5 px-1">
-            <h2 class="text-[11px] font-black text-slate-500 uppercase tracking-widest italic">Live Arbitrage Stream</h2>
-            <button onclick="fetchMatches()" class="text-indigo-400 text-[11px] font-black uppercase border-b border-indigo-500/30 pb-0.5">Sync Feed</button>
-        </div>
-        <div id="api-match-container" class="space-y-5"></div>
-        <div class="version-tag">v9.1 TON Golden Master</div>
-    </main>
+<main id="home-tab" class="tab-content active p-4">
+<div class="flex justify-between items-center mb-4 px-1">
+<h2 class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Live Arbitrage Stream</h2>
+<button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black uppercase">Refresh Feed</button>
+</div>
+<div id="api-match-container" class="space-y-4"></div>
+<div class="version-tag">v9.1 TON Golden Master</div>
+</main>
 
-    <section id="calc-tab" class="tab-content p-4">
-        <div class="glass rounded-[40px] p-6 border-indigo-500/20 shadow-2xl">
-            <div class="flex gap-2 mb-8 bg-black/40 p-2 rounded-2xl">
-                <button id="mode-2way" onclick="setCalcMode(2)" class="calc-mode-btn active uppercase italic">2-Way</button>
-                <button id="mode-3way" onclick="setCalcMode(3)" class="calc-mode-btn uppercase italic">3-Way</button>
-            </div>
-            <div class="space-y-7">
-                <div class="flex flex-col gap-2.5">
-                    <label class="text-[11px] font-black text-slate-500 uppercase tracking-widest italic ml-1">Total Investment</label>
-                    <input type="number" id="calc-seed" oninput="runCalculation()" placeholder="0.00" class="w-full bg-slate-950 border-2 border-slate-800 p-5 rounded-3xl text-4xl font-black text-white focus:border-indigo-500 outline-none">
-                </div>
-                <div class="space-y-5">
-                    <input type="number" id="odds-a" oninput="runCalculation()" step="0.01" placeholder="Odds A" class="w-full bg-slate-900/50 border border-slate-700 p-5 rounded-2xl text-2xl font-black text-indigo-400 outline-none">
-                    <input type="number" id="odds-b" oninput="runCalculation()" step="0.01" placeholder="Odds B" class="w-full bg-slate-900/50 border border-slate-700 p-5 rounded-2xl text-2xl font-black text-indigo-400 outline-none">
-                    <input type="number" id="odds-c" oninput="runCalculation()" step="0.01" placeholder="Odds C (Draw)" class="w-full bg-slate-900/50 border border-slate-700 p-5 rounded-2xl text-2xl font-black text-indigo-400 outline-none hidden">
-                </div>
-                <div id="calc-results" class="space-y-3 opacity-20">
-                    <div class="flex justify-between p-5 bg-slate-900/80 rounded-2xl border border-white/5 text-[12px] font-black uppercase"><span class="text-slate-500">Stake A</span><span id="res-a">0</span></div>
-                    <div class="flex justify-between p-5 bg-slate-900/80 rounded-2xl border border-white/5 text-[12px] font-black uppercase"><span class="text-slate-500">Stake B</span><span id="res-b">0</span></div>
-                    <div id="res-c-box" class="hidden flex justify-between p-5 bg-slate-900/80 rounded-2xl border border-white/5 text-[12px] font-black uppercase"><span class="text-slate-500">Stake C</span><span id="res-c">0</span></div>
-                    <div class="premium-gradient p-7 rounded-3xl mt-6 shadow-xl shadow-indigo-500/20">
-                        <div class="flex justify-between text-[11px] font-black text-white/60 uppercase"><span>Expected ROI</span><span id="res-roi">0.00%</span></div>
-                        <div class="flex justify-between text-3xl font-black text-white mt-2 italic uppercase tracking-tighter"><span>Net Profit</span><span id="res-profit">0</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="version-tag">v9.1 TON Golden Master</div>
-    </section>
+<section id="calc-tab" class="tab-content p-4">
+<div class="glass rounded-[32px] p-6 border-indigo-500/20 shadow-2xl">
+<div class="flex gap-2 mb-6 bg-black/40 p-2 rounded-2xl">
+<button id="mode-2way" onclick="setCalcMode(2)" class="calc-mode-btn active uppercase italic">2-Way</button>
+<button id="mode-3way" onclick="setCalcMode(3)" class="calc-mode-btn uppercase italic">3-Way</button>
+</div>
+<div class="space-y-6">
+<div class="flex flex-col gap-2">
+<label class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic ml-1">Total Seed</label>
+<input type="number" id="calc-seed" oninput="runCalculation()" placeholder="0.00" class="w-full bg-slate-950 border-2 border-slate-800 p-4 rounded-2xl text-3xl font-black text-white focus:border-indigo-500 outline-none">
+</div>
+<div class="space-y-4">
+<input type="number" id="odds-a" oninput="runCalculation()" step="0.01" placeholder="Odds A" class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl text-xl font-black text-indigo-400 outline-none">
+<input type="number" id="odds-b" oninput="runCalculation()" step="0.01" placeholder="Odds B" class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl text-xl font-black text-indigo-400 outline-none">
+<input type="number" id="odds-c" oninput="runCalculation()" step="0.01" placeholder="Odds C" class="w-full bg-slate-900/50 border border-slate-700 p-4 rounded-xl text-xl font-black text-indigo-400 outline-none hidden">
+</div>
+<div id="calc-results" class="space-y-3 opacity-20">
+<div class="flex justify-between p-4 bg-slate-900/80 rounded-xl border border-white/5 text-[11px] font-bold uppercase"><span class="text-slate-500">Stake A</span><span id="res-a">0</span></div>
+<div class="flex justify-between p-4 bg-slate-900/80 rounded-xl border border-white/5 text-[11px] font-bold uppercase"><span class="text-slate-500">Stake B</span><span id="res-b">0</span></div>
+<div id="res-c-box" class="hidden flex justify-between p-4 bg-slate-900/80 rounded-xl border border-white/5 text-[11px] font-bold uppercase"><span class="text-slate-500">Stake C</span><span id="res-c">0</span></div>
+<div class="premium-gradient p-6 rounded-2xl mt-4">
+<div class="flex justify-between text-[10px] font-black text-white/60 uppercase"><span>ROI %</span><span id="res-roi">0.00%</span></div>
+<div class="flex justify-between text-2xl font-black text-white mt-1 italic uppercase tracking-tighter"><span>Net Profit</span><span id="res-profit">0</span></div>
+</div>
+</div>
+</div>
+</div>
+<div class="version-tag">v9.1 TON Golden Master</div>
+</section>
 
-    <section id="bookies-tab" class="tab-content p-4">
-        <div class="glass p-7 rounded-[40px] mb-8 border-indigo-500/40 bg-indigo-950/10 shadow-xl">
-            <h2 class="text-xl font-black italic text-indigo-400 mb-3 uppercase tracking-tighter">Partners Hub</h2>
-            <p class="text-[11px] text-slate-400 leading-relaxed font-bold italic mb-6">Strategic collaboration with global partners through <span class="text-white">Direct B2B API Channels</span>.</p>
-            <div class="flex justify-around items-center pt-5 border-t border-white/10 opacity-50">
-                <img src="https://icon.horse/icon/mga.org.mt" class="w-7 h-7 grayscale">
-                <img src="https://icon.horse/icon/gamblingcommission.gov.uk" class="w-7 h-7 grayscale">
-                <img src="https://icon.horse/icon/curacao-egaming.com" class="w-7 h-7 grayscale">
-            </div>
-        </div>
-        <div id="partner-list" class="space-y-3"></div>
-        <div class="version-tag">v9.1 TON Golden Master</div>
-    </section>
+<section id="bookies-tab" class="tab-content p-4">
+<div class="glass p-6 rounded-[32px] mb-6 border-indigo-500/40 bg-indigo-950/10 shadow-xl">
+<h2 class="text-xl font-black italic text-indigo-400 mb-3 uppercase tracking-tighter">Partners</h2>
+<p class="text-[10px] text-slate-400 leading-relaxed font-bold italic mb-6">Strategic B2B API Channels with global Tier-1 partners.</p>
+<div class="flex justify-around items-center pt-5 border-t border-white/10 opacity-50">
+<img src="https://icon.horse/icon/mga.org.mt" class="w-6 h-6 grayscale">
+<img src="https://icon.horse/icon/gamblingcommission.gov.uk" class="w-6 h-6 grayscale">
+<img src="https://icon.horse/icon/curacao-egaming.com" class="w-6 h-6 grayscale">
+</div>
+</div>
+<div id="partner-list" class="space-y-3"></div>
+<div class="version-tag">v9.1 TON Golden Master</div>
+</section>
 
-    <section id="saas-tab" class="tab-content p-4">
-        <h2 class="text-2xl font-black text-center mb-10 italic uppercase tracking-tighter">Membership Plan</h2>
-        <div class="space-y-8">
-            <div class="glass p-7 rounded-[40px] border-slate-700/50">
-                <h3 class="text-xl font-black text-slate-400 uppercase italic mb-5">Free Basic</h3>
-                <ul class="space-y-3.5 text-[11px] text-slate-500 font-bold uppercase italic border-b border-white/5 pb-7 mb-7">
-                    <li>• ROI Limit: Up to 1.0%</li>
-                    <li>• Feed Delay: 10-Min Lag</li>
-                    <li>• Links: Web Standard</li>
-                </ul>
-                <div class="text-2xl font-black italic uppercase tracking-tighter">FREE</div>
-            </div>
-            <div class="premium-gradient p-8 rounded-[40px] shadow-2xl relative overflow-hidden">
-                <h3 class="text-xl font-black text-white uppercase italic mb-5">Pro Elite</h3>
-                <ul class="space-y-3.5 text-[11px] text-white/90 font-bold uppercase italic border-b border-white/15 pb-7 mb-7">
-                    <li>• ROI Limit: Unlimited High ROI</li>
-                    <li>• Feed Speed: Real-time Live</li>
-                    <li>• Links: Direct Deep-Link</li>
-                </ul>
-                <div class="text-3xl font-black italic uppercase tracking-tighter">19.9 TON</div>
-                <i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-[120px]"></i>
-            </div>
-            <div class="elite-gradient p-8 rounded-[40px] shadow-2xl relative overflow-hidden">
-                <h3 class="text-xl font-black text-white uppercase italic mb-5">Elite Master</h3>
-                <ul class="space-y-3.5 text-[11px] text-white/95 font-bold uppercase italic border-b border-white/15 pb-7 mb-7">
-                    <li>• ROI: Unlimited + AI Picks</li>
-                    <li>• Alerts: 0.1s Priority Feed</li>
-                    <li>• Login: Auto-Login Integrated</li>
-                </ul>
-                <div class="text-3xl font-black italic uppercase tracking-tighter">49.9 TON</div>
-                <i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-[120px]"></i>
-            </div>
-        </div>
-        <div class="version-tag">v9.1 TON Golden Master</div>
-    </section>
+<section id="saas-tab" class="tab-content p-4">
+<h2 class="text-2xl font-black text-center mb-8 italic uppercase tracking-tighter">Membership Plan</h2>
+<div class="space-y-6">
+<div class="glass p-6 rounded-[32px] border-slate-700/50">
+<h3 class="text-lg font-black text-slate-400 uppercase italic mb-4">Free Basic</h3>
+<ul class="space-y-2.5 text-[10px] text-slate-500 font-bold uppercase italic border-b border-white/5 pb-5 mb-5">
+<li>• ROI Limit: Up to 1.0%</li>
+<li>• Feed Delay: 10-Min Lag</li>
+<li>• Links: Web Standard</li>
+</ul>
+<div class="text-2xl font-black italic uppercase tracking-tighter">FREE</div>
+</div>
+<div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden">
+<h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3>
+<ul class="space-y-2.5 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-5 mb-5">
+<li>• ROI Limit: Unlimited High ROI</li>
+<li>• Feed Speed: Real-time Live</li>
+<li>• Links: Direct Deep-Link</li>
+</ul>
+<div class="text-2xl font-black italic uppercase tracking-tighter">19.9 TON</div>
+<i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-[100px]"></i>
+</div>
+<div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden">
+<h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3>
+<ul class="space-y-2.5 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-5 mb-5">
+<li>• ROI: Unlimited + AI Picks</li>
+<li>• Alerts: 0.1s Priority Feed</li>
+<li>• Sync: Auto-Login Integration</li>
+</ul>
+<div class="text-2xl font-black italic uppercase tracking-tighter">49.9 TON</div>
+<i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-[100px]"></i>
+</div>
+</div>
+<div class="version-tag">v9.1 TON Golden Master</div>
+</section>
 
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('home', this)"><i class="fa-solid fa-bolt-lightning text-2xl mb-2"></i><span>Live</span></div>
-        <div class="nav-item" onclick="switchTab('calc', this)"><i class="fa-solid fa-calculator text-2xl mb-2"></i><span>Calc</span></div>
-        <div class="nav-item" onclick="switchTab('bookies', this)"><i class="fa-solid fa-globe text-2xl mb-2"></i><span>Bookies</span></div>
-        <div class="nav-item"><i class="fa-solid fa-chart-bar text-2xl mb-2"></i><span>History</span></div>
-        <div class="nav-item" onclick="switchTab('saas', this)"><i class="fa-solid fa-gem text-2xl mb-2"></i><span>Member</span></div>
-    </nav>
+<nav class="bottom-nav">
+<div class="nav-item active" onclick="switchTab('home', this)"><i class="fa-solid fa-bolt-lightning text-xl mb-1.5"></i><span>Live</span></div>
+<div class="nav-item" onclick="switchTab('calc', this)"><i class="fa-solid fa-calculator text-xl mb-1.5"></i><span>Calc</span></div>
+<div class="nav-item" onclick="switchTab('bookies', this)"><i class="fa-solid fa-globe text-xl mb-1.5"></i><span>Bookies</span></div>
+<div class="nav-item"><i class="fa-solid fa-chart-bar text-xl mb-1.5"></i><span>History</span></div>
+<div class="nav-item" onclick="switchTab('saas', this)"><i class="fa-solid fa-gem text-xl mb-1.5"></i><span>Member</span></div>
+</nav>
 
-    <script>
-        const state = { balance: 5720.50, calcMode: 2 };
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
+<script>
+const state = { balance: 5720.50, calcMode: 2 };
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
-        async function fetchMatches() {
-            const container = document.getElementById('api-match-container');
-            container.innerHTML = `<div class="text-center py-20 text-[11px] font-black animate-pulse uppercase tracking-[0.2em]">Syncing Live Scanner...</div>`;
-            try {
-                const res = await fetch(GAS_URL);
-                const data = await res.json();
-                container.innerHTML = '';
-                data.forEach(m => {
-                    const sportEmoji = m['종목'] === 'Soccer' ? '⚽' : (m['종목'] === 'Basketball' ? '🏀' : '🏆');
-                    const countryEmoji = m['국가'] === 'England' ? '🏴󠁧󠁢󠁥󠁮󠁧󠁿' : (m['국가'] === 'USA' ? '🇺🇸' : (m['국가'] === 'Spain' ? '🇪🇸' : '🌍'));
-                    const league = m['리그명'] || 'GLOBAL';
-                    const time = m['시작시간'] || 'LIVE';
-                    const market = m['마켓타입'] || '1X2';
-                    const is3Way = m['배당C'] && m['배당C'] !== "";
+async function fetchMatches() {
+const container = document.getElementById('api-match-container');
+container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase tracking-[0.2em]">Syncing SureTrack API...</div>`;
+try {
+const res = await fetch(GAS_URL);
+const data = await res.json();
+container.innerHTML = '';
+data.forEach(m => {
+const sportMap = { 'Soccer': '⚽', 'Basketball': '🏀', 'Baseball': '⚾', 'Tennis': '🎾' };
+const countryMap = { 'England': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'USA': '🇺🇸', 'Spain': '🇪🇸', 'Italy': '🇮🇹', 'Germany': '🇩🇪' };
+const sportEmoji = sportMap[m['종목']] || '🏆';
+const league = m['리그명'] || 'GLOBAL';
+const countryEmoji = countryMap[m['국가']] || '🌍';
+const time = m['시작시간'] || 'LIVE';
+const market = m['마켓타입'] || 'H2H';
+const is3Way = m['배당C'] && m['배당C'] !== "";
 
-                    const card = document.createElement('div');
-                    card.className = 'glass rounded-[35px] overflow-hidden shadow-2xl';
-                    card.innerHTML = `
-                        <div class="p-4 bg-white/5 flex justify-between items-center text-[12px] font-black text-slate-400 border-b border-white/5 uppercase italic tracking-widest">
-                            <span>${sportEmoji} ${league} ${countryEmoji}</span>
-                            <span class="text-indigo-400">${time}</span>
-                        </div>
-                        <div class="p-6 text-center">
-                            <div class="text-2xl font-black tracking-tighter text-white italic mb-4">${m['경기명']}</div>
-                            <div class="text-[11px] font-black text-indigo-500 uppercase tracking-[0.3em] mb-2">${market}</div>
-                            <div class="text-2xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-2 rounded-xl border border-white/5">
-                                ${m['배당A']} <span class="text-slate-700 mx-2">/</span> ${m['배당B']} ${is3Way ? '<span class="text-slate-700 mx-2">/</span> ' + m['배당C'] : ''}
-                            </div>
-                        </div>
-                        <div class="center-logo-box border-t border-b border-white/5">
-                            <a href="https://${m['북A'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group">
-                                <div class="logo-container"><div class="initial-badge">${m['북A'][0]}</div><img src="https://icon.horse/icon/${m['북A'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div>
-                                <span class="text-[12px] font-black text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북A']}</span>
-                            </a>
-                            <div class="text-slate-700 text-[10px] font-black italic">VS</div>
-                            <a href="https://${m['북B'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group">
-                                <div class="logo-container"><div class="initial-badge">${m['북B'][0]}</div><img src="https://icon.horse/icon/${m['북B'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div>
-                                <span class="text-[12px] font-black text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북B']}</span>
-                            </a>
-                        </div>
-                        <div class="p-5 flex justify-between items-center bg-slate-900/50">
-                            <div><div class="text-[9px] text-slate-600 font-black uppercase tracking-widest">Expected ROI</div><div class="text-green-400 font-black text-3xl tracking-tighter italic">+${m['수익률(%)']}%</div></div>
-                            <button onclick="prepareCalc('${m['경기명']}', ${m['배당A']}, ${m['배당B']}, ${m['배당C'] || 0})" class="bg-indigo-600 w-14 h-14 rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform"><i class="fa-solid fa-calculator text-xl text-white"></i></button>
-                        </div>`;
-                    container.appendChild(card);
-                });
-            } catch(e) { container.innerHTML = '<div class="text-center py-20 text-red-500 font-black text-[11px] uppercase tracking-widest">Connect Error</div>'; }
-        }
+const card = document.createElement('div');
+card.className = 'glass rounded-[30px] overflow-hidden shadow-2xl';
+card.innerHTML = `
+<div class="p-4 bg-white/5 flex justify-between items-center text-[11px] font-black text-slate-400 border-b border-white/5 uppercase italic tracking-widest">
+<span>${sportEmoji} ${league} ${countryEmoji}</span>
+<span class="text-indigo-400 font-bold">${time}</span>
+</div>
+<div class="p-5 text-center">
+<div class="text-lg font-black tracking-tighter text-white italic mb-3">${m['경기명']}</div>
+<div class="text-[10px] font-black text-indigo-500 uppercase tracking-[0.3em] mb-2">${market}</div>
+<div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-2 rounded-xl border border-white/5">
+${m['배당A']} <span class="text-slate-700 mx-2">/</span> ${m['배당B']} ${is3Way ? '<span class="text-slate-700 mx-2">/</span> ' + m['배당C'] : ''}
+</div>
+</div>
+<div class="center-logo-box border-t border-b border-white/5">
+<a href="https://${m['북A'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group">
+<div class="logo-container"><div class="initial-badge">${m['북A'][0]}</div><img src="https://icon.horse/icon/${m['북A'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div>
+<span class="text-[11px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북A']}</span>
+</a>
+<div class="text-slate-700 text-[9px] font-black italic">VS</div>
+<a href="https://${m['북B'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group">
+<div class="logo-container"><div class="initial-badge">${m['북B'][0]}</div><img src="https://icon.horse/icon/${m['북B'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div>
+<span class="text-[11px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북B']}</span>
+</a>
+</div>
+<div class="p-4 flex justify-between items-center bg-slate-900/50">
+<div><div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">EXPECTED ROI</div><div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m['수익률(%)']}%</div></div>
+<button onclick="prepareCalc('${m['경기명']}', ${m['배당A']}, ${m['배당B']}, ${m['배당C'] || 0})" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform"><i class="fa-solid fa-calculator text-lg text-white"></i></button>
+</div>`;
+container.appendChild(card);
+});
+} catch(e) { container.innerHTML = '<div class="text-center py-20 text-red-500 font-black text-[10px] uppercase tracking-widest">Connect Error</div>'; }
+}
 
-        function loadBookies() {
-            const list = document.getElementById('partner-list');
-            const partners = [
-                {n:'Pinnacle',d:'pinnacle.com',t:'VIP'}, {n:'Bet365',d:'bet365.com',t:'CORE'}, {n:'Stake',d:'stake.com',t:'CRYPTO'}, {n:'1xBet',d:'1xbet.com',t:'ODDS'},
-                {n:'Betway',d:'betway.com',t:'GLOBAL'}, {n:'Bwin',d:'bwin.com',t:'LIVE'}, {n:'Unibet',d:'unibet.com',t:'PRO'}, {n:'Betfair',d:'betfair.com',t:'EXCH'},
-                {n:'Ladbrokes',d:'ladbrokes.com',t:'UK'}, {n:'Marathonbet',d:'marathonbet.com',t:'VAL'}, {n:'22Bet',d:'22bet.com',t:'WIDE'}
-            ];
-            list.innerHTML = partners.map(p => `
-                <div class="glass p-5 rounded-2xl flex items-center gap-5 bookie-card active:bg-white/5 transition-all">
-                    <div class="logo-container"><div class="initial-badge">${p.n[0]}</div><img src="https://icon.horse/icon/${p.d}" class="logo-img" onload="this.style.opacity=1"></div>
-                    <div class="flex-1 text-left">
-                        <div class="flex justify-between items-center"><h4 class="font-black text-[15px] italic uppercase tracking-tighter">${p.n}</h4><span class="text-[9px] border border-white/20 px-2 py-0.5 rounded text-slate-500 font-black">${p.t}</span></div>
-                        <p class="text-[10px] text-slate-600 italic font-bold uppercase tracking-tight">Secured SureTrack Partner Channel</p>
-                    </div>
-                </div>`).join('');
-        }
+function loadBookies() {
+const list = document.getElementById('partner-list');
+const partners = [{n:'Pinnacle',d:'pinnacle.com',t:'VIP'},{n:'Bet365',d:'bet365.com',t:'CORE'},{n:'Stake',d:'stake.com',t:'CRYPTO'},{n:'1xBet',d:'1xbet.com',t:'ODDS'},{n:'Betway',d:'betway.com',t:'GLOBAL'},{n:'Bwin',d:'bwin.com',t:'LIVE'},{n:'Unibet',d:'unibet.com',t:'PRO'},{n:'Betfair',d:'betfair.com',t:'EXCH'},{n:'Ladbrokes',d:'ladbrokes.com',t:'UK'},{n:'Marathonbet',d:'marathonbet.com',t:'VAL'},{n:'22Bet',d:'22bet.com',t:'WIDE'}];
+list.innerHTML = partners.map(p => `<div class="glass p-4 rounded-2xl flex items-center gap-5 bookie-card active:bg-white/5 transition-all"><div class="logo-container"><div class="initial-badge">${p.n[0]}</div><img src="https://icon.horse/icon/${p.d}" class="logo-img" onload="this.style.opacity=1"></div><div class="flex-1 text-left"><div class="flex justify-between items-center"><h4 class="font-black text-[14px] italic uppercase tracking-tighter">${p.n}</h4><span class="text-[8px] border border-white/20 px-2 py-0.5 rounded text-slate-500 font-black">${p.t}</span></div><p class="text-[9px] text-slate-600 italic font-bold uppercase tracking-tight">Secured Partner Channel</p></div></div>`).join('');
+}
 
-        function setCalcMode(m) {
-            state.calcMode = m;
-            document.getElementById('mode-2way').classList.toggle('active', m===2);
-            document.getElementById('mode-3way').classList.toggle('active', m===3);
-            document.getElementById('odds-c').classList.toggle('hidden', m===2);
-            document.getElementById('res-c-box').classList.toggle('hidden', m===2);
-            runCalculation();
-        }
+function setCalcMode(m) {
+state.calcMode = m;
+document.getElementById('mode-2way').classList.toggle('active', m===2);
+document.getElementById('mode-3way').classList.toggle('active', m===3);
+document.getElementById('odds-c').classList.toggle('hidden', m===2);
+document.getElementById('res-c-box').classList.toggle('hidden', m===2);
+runCalculation();
+}
 
-        function prepareCalc(n, a, b, c) {
-            const mode = (c && c > 0) ? 3 : 2;
-            setCalcMode(mode);
-            document.getElementById('odds-a').value = a; document.getElementById('odds-b').value = b;
-            if(mode===3) document.getElementById('odds-c').value = c;
-            switchTab('calc', document.querySelectorAll('.nav-item')[1]);
-            runCalculation();
-        }
+function prepareCalc(n, a, b, c) {
+const mode = (c && c > 0) ? 3 : 2;
+setCalcMode(mode);
+document.getElementById('odds-a').value = a; document.getElementById('odds-b').value = b;
+if(mode===3) document.getElementById('odds-c').value = c;
+switchTab('calc', document.querySelectorAll('.nav-item')[1]);
+runCalculation();
+}
 
-        function runCalculation() {
-            const s = parseFloat(document.getElementById('calc-seed').value) || 0;
-            const a = parseFloat(document.getElementById('odds-a').value) || 0;
-            const b = parseFloat(document.getElementById('odds-b').value) || 0;
-            const res = document.getElementById('calc-results');
-            if(s<=0 || a<=0 || b<=0) { res.style.opacity="0.2"; return; }
-            res.style.opacity="1";
-            let sA, sB, sC=0, tP=0;
-            if(state.calcMode===2) { tP=(1/a)+(1/b); sA=(s/a)/tP; sB=(s/b)/tP; }
-            else {
-                const c=parseFloat(document.getElementById('odds-c').value)||0; if(c<=0) return;
-                tP=(1/a)+(1/b)+(1/c); sA=(s/a)/tP; sB=(s/b)/tP; sC=(s/c)/tP;
-                document.getElementById('res-c').innerText = Math.floor(sC).toLocaleString();
-            }
-            document.getElementById('res-a').innerText = Math.floor(sA).toLocaleString();
-            document.getElementById('res-b').innerText = Math.floor(sB).toLocaleString();
-            document.getElementById('res-profit').innerText = Math.floor((s/tP)-s).toLocaleString();
-            document.getElementById('res-roi').innerText = (((1/tP)-1)*100).toFixed(2) + "%";
-        }
+function runCalculation() {
+const s = parseFloat(document.getElementById('calc-seed').value) || 0;
+const a = parseFloat(document.getElementById('odds-a').value) || 0;
+const b = parseFloat(document.getElementById('odds-b').value) || 0;
+const res = document.getElementById('calc-results');
+if(s<=0 || a<=0 || b<=0) { res.style.opacity="0.2"; return; }
+res.style.opacity="1";
+let sA, sB, sC=0, tP=0;
+if(state.calcMode===2) { tP=(1/a)+(1/b); sA=(s/a)/tP; sB=(s/b)/tP; }
+else {
+const c=parseFloat(document.getElementById('odds-c').value)||0; if(c<=0) return;
+tP=(1/a)+(1/b)+(1/c); sA=(s/a)/tP; sB=(s/b)/tP; sC=(s/c)/tP;
+document.getElementById('res-c').innerText = Math.floor(sC).toLocaleString();
+}
+document.getElementById('res-a').innerText = Math.floor(sA).toLocaleString();
+document.getElementById('res-b').innerText = Math.floor(sB).toLocaleString();
+document.getElementById('res-profit').innerText = Math.floor((s/tP)-s).toLocaleString();
+document.getElementById('res-roi').innerText = (((1/tP)-1)*100).toFixed(2) + "%";
+}
 
-        function switchTab(t, el) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(t+'-tab').classList.add('active');
-            if(el) el.classList.add('active');
-            window.scrollTo(0,0);
-        }
+function switchTab(t, el) {
+document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+document.getElementById(t+'-tab').classList.add('active');
+if(el) el.classList.add('active');
+window.scrollTo(0,0);
+}
 
-        window.onload = () => { fetchMatches(); loadBookies(); };
-    </script>
+window.onload = () => {
+document.getElementById('top-balance').innerText = state.balance.toLocaleString() + " TON";
+loadBookies(); fetchMatches();
+};
+</script>
 </body>
 </html>
