@@ -60,7 +60,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 <div class="space-y-4">
 <div class="flex flex-col gap-1.5">
 <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest italic ml-1">Investment Seed</label>
-<input type="number" id="calc-seed" oninput="runCalculation()" placeholder="Enter Seed" class="w-full bg-slate-950 border border-slate-800 p-3.5 rounded-xl text-2xl font-black text-white focus:border-indigo-500 outline-none">
+<input type="number" id="calc-seed" oninput="runCalculation()" placeholder="0.00" class="w-full bg-slate-950 border-2 border-slate-800 p-3.5 rounded-xl text-2xl font-black text-white focus:border-indigo-500 outline-none">
 </div>
 <div class="space-y-3">
 <input type="number" id="odds-a" oninput="runCalculation()" step="0.01" placeholder="Odds A" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none">
@@ -85,7 +85,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 <section id="bookies-tab" class="tab-content p-4">
 <div class="glass p-6 rounded-[32px] mb-6 border-indigo-500/40 bg-indigo-950/10">
 <h2 class="text-xl font-black italic text-indigo-400 mb-2 uppercase tracking-tighter">Partners Hub</h2>
-<p class="text-[10px] text-slate-400 font-bold italic mb-6">Strategic collaboration via <span class="text-white">B2B API Channels</span>. Official verified partners.</p>
+<p class="text-[10px] text-slate-400 font-bold italic mb-6">Strategic B2B API Channels with global Tier-1 partners.</p>
 <div class="flex justify-around items-center pt-4 border-t border-white/10 opacity-40">
 <img src="https://icon.horse/icon/mga.org.mt" class="w-6 h-6 grayscale"><img src="https://icon.horse/icon/gamblingcommission.gov.uk" class="w-6 h-6 grayscale"><img src="https://icon.horse/icon/curacao-egaming.com" class="w-6 h-6 grayscale">
 </div>
@@ -107,9 +107,9 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 <section id="saas-tab" class="tab-content p-4">
 <h2 class="text-2xl font-black text-center mb-8 italic uppercase tracking-tighter">Membership</h2>
 <div class="space-y-6">
-<div class="glass p-6 rounded-[32px] border-slate-700/50"><h3 class="text-lg font-black text-slate-400 uppercase italic mb-4">Free Basic</h3><ul class="space-y-2 text-[10px] text-slate-500 font-bold uppercase italic border-b border-white/5 pb-4 mb-4"><li>• ROI Limit: 1.0%</li><li>• Delay: 10-Min Feed</li></ul><div class="text-2xl font-black italic uppercase">FREE</div></div>
-<div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• ROI Limit: Unlimited</li><li>• Speed: Real-time Live</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div><i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
-<div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• ROI: Unlimited + AI</li><li>• Alerts: 0.1s Priority</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div><i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
+<div class="glass p-6 rounded-[32px] border-slate-700/50"><h3 class="text-lg font-black text-slate-400 uppercase italic mb-4">Free Basic</h3><ul class="space-y-2 text-[10px] text-slate-500 font-bold uppercase italic border-b border-white/5 pb-4 mb-4"><li>• ROI Limit: 1.0%</li><li>• Delay: 10-Min Feed</li></ul><div class="text-2xl font-black italic">FREE</div></div>
+<div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• ROI: Unlimited</li><li>• Speed: Real-time</li></ul><div class="text-2xl font-black italic">19.9 TON</div><i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
+<div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• ROI: Max + Picks</li><li>• Alerts: 0.1s</li></ul><div class="text-2xl font-black italic">49.9 TON</div><i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
 </div>
 <div class="version-tag">v9.1 TON Golden Master</div>
 </section>
@@ -126,6 +126,34 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 const state = { balance: 5720.50, calcMode: 2, currentMatch: "", lastCalc: null, history: JSON.parse(localStorage.getItem('suretrack_history')) || [] };
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
+// [Smart Header Utility]
+function getMatchIdentity(leagueRaw, sportRaw) {
+    const s = (sportRaw || "").toLowerCase();
+    const l = (leagueRaw || "").toLowerCase();
+    
+    // 1. Sport Emoji
+    let sportEmoji = "🏆";
+    if (s.includes("soccer")) sportEmoji = "⚽";
+    else if (s.includes("basketball")) sportEmoji = "🏀";
+    else if (s.includes("baseball")) sportEmoji = "⚾";
+    else if (s.includes("tennis")) sportEmoji = "🎾";
+    else if (s.includes("icehockey")) sportEmoji = "🏒";
+
+    // 2. Gender Icon
+    let genderIcon = l.includes("women") ? "👩" : "👨";
+
+    // 3. Location Emoji (International vs Country)
+    let locEmoji = "🌍"; // Default Global
+    if (l.includes("epl") || l.includes("england")) locEmoji = "🏴󠁧󠁢󠁥󠁮󠁧󠁿";
+    else if (l.includes("laliga") || l.includes("spain")) locEmoji = "🇪🇸";
+    else if (l.includes("nba") || l.includes("usa") || l.includes("mlb")) locEmoji = "🇺🇸";
+    else if (l.includes("bundesliga") || l.includes("germany")) locEmoji = "🇩🇪";
+    else if (l.includes("serie") || l.includes("italy")) locEmoji = "🇮🇹";
+    else if (l.includes("ligue") || l.includes("france")) locEmoji = "🇫🇷";
+
+    return { sportEmoji, genderIcon, locEmoji };
+}
+
 async function fetchMatches() {
 const container = document.getElementById('api-match-container');
 container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase">Synchronizing Live Stream...</div>`;
@@ -134,14 +162,37 @@ const res = await fetch(GAS_URL);
 const data = await res.json();
 container.innerHTML = '';
 data.forEach(m => {
-const sportMap = { 'Soccer': '⚽', 'Basketball': '🏀', 'Baseball': '⚾', 'Tennis': '🎾' };
-const countryMap = { 'England': '🏴󠁧󠁢󠁥󠁮󠁧󠁿', 'USA': '🇺🇸', 'Spain': '🇪🇸', 'Germany': '🇩🇪', 'Italy': '🇮🇹' };
-const sportEmoji = sportMap[m['종목']] || '🏆';
-const countryEmoji = countryMap[m['국가']] || '🌍';
+const { sportEmoji, genderIcon, locEmoji } = getMatchIdentity(m['리그명'], m['종목']);
 const is3Way = m['배당C'] && m['배당C'] !== "";
 const card = document.createElement('div');
 card.className = 'glass rounded-[30px] overflow-hidden shadow-2xl';
-card.innerHTML = `<div class="p-4 bg-white/5 flex justify-between items-center text-[11px] font-black text-slate-400 border-b border-white/5 uppercase italic tracking-widest"><span>${sportEmoji} ${m['리그명']||'INTL'} ${countryEmoji}</span><span class="text-indigo-400">${m['시작시간']||'LIVE'}</span></div><div class="p-5 text-center"><div class="text-lg font-black tracking-tighter text-white italic mb-3">${m['경기명']}</div><div class="text-[10px] font-black text-indigo-500 uppercase tracking-[0.3em] mb-2">${m['마켓타입']||'H2H'}</div><div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-2 rounded-xl border border-white/5">${m['배당A']} <span class="text-slate-700 mx-2">/</span> ${m['배당B']} ${is3Way ? '<span class="text-slate-700 mx-2">/</span> '+m['배당C'] : ''}</div></div><div class="center-logo-box border-t border-b border-white/5"><a href="https://${m['북A'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group"><div class="logo-container"><div class="initial-badge">${m['북A'][0]}</div><img src="https://icon.horse/icon/${m['북A'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[11px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북A']}</span></a><div class="text-slate-700 text-[9px] font-black italic">VS</div><a href="https://${m['북B'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group"><div class="logo-container"><div class="initial-badge">${m['북B'][0]}</div><img src="https://icon.horse/icon/${m['북B'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[11px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북B']}</span></a></div><div class="p-4 flex justify-between items-center bg-slate-900/50"><div><div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">EXPECTED ROI</div><div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m['수익률(%)']}%</div></div><button onclick="prepareCalc('${m['경기명']}', ${m['배당A']}, ${m['배당B']}, ${m['배당C'] || 0})" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform"><i class="fa-solid fa-calculator text-lg text-white"></i></button></div>`;
+card.innerHTML = `
+<div class="p-4 bg-white/5 flex justify-between items-center text-[11px] font-black text-slate-400 border-b border-white/5 uppercase italic tracking-widest">
+<span>${sportEmoji} ${m['리그명']||'INTL'} ${genderIcon} ${locEmoji}</span>
+<span class="text-indigo-400 font-bold">${m['시작시간']||'LIVE'}</span>
+</div>
+<div class="p-5 text-center">
+<div class="text-lg font-black tracking-tighter text-white italic mb-3">${m['경기명']}</div>
+<div class="text-[10px] font-black text-indigo-500 uppercase tracking-[0.3em] mb-2">${m['마켓타입']||'H2H'}</div>
+<div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-2 rounded-xl border border-white/5">
+${m['배당A']} <span class="text-slate-700 mx-2">/</span> ${m['배당B']} ${is3Way ? '<span class="text-slate-700 mx-2">/</span> '+m['배당C'] : ''}
+</div>
+</div>
+<div class="center-logo-box border-t border-b border-white/5">
+<a href="https://${m['북A'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group">
+<div class="logo-container"><div class="initial-badge">${m['북A'][0]}</div><img src="https://icon.horse/icon/${m['북A'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div>
+<span class="text-[11px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북A']}</span>
+</a>
+<div class="text-slate-700 text-[9px] font-black italic">VS</div>
+<a href="https://${m['북B'].toLowerCase().replace(/\s/g,'')}.com" target="_blank" class="flex items-center gap-3 group">
+<div class="logo-container"><div class="initial-badge">${m['북B'][0]}</div><img src="https://icon.horse/icon/${m['북B'].toLowerCase().replace(/\s/g,'')}.com" class="logo-img" onload="this.style.opacity=1"></div>
+<span class="text-[11px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북B']}</span>
+</a>
+</div>
+<div class="p-4 flex justify-between items-center bg-slate-900/50">
+<div><div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">EXPECTED ROI</div><div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m['수익률(%)']}%</div></div>
+<button onclick="prepareCalc('${m['경기명']}', ${m['배당A']}, ${m['배당B']}, ${m['배당C'] || 0})" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform"><i class="fa-solid fa-calculator text-lg text-white"></i></button>
+</div>`;
 container.appendChild(card);
 });
 } catch(e) { container.innerHTML = '<div class="text-center py-20 text-red-500 font-black text-[10px]">SYNC ERROR</div>'; }
@@ -149,8 +200,8 @@ container.appendChild(card);
 
 function loadBookies() {
 const list = document.getElementById('partner-list');
-const partners = [{n:'Pinnacle',d:'pinnacle.com',t:'VIP'},{n:'Bet365',d:'bet365.com',t:'CORE'},{n:'Stake',d:'stake.com',t:'CRYPTO'},{n:'1xBet',d:'1xbet.com',t:'ODDS'},{n:'William Hill',d:'williamhill.com',t:'TRAD'},{n:'Betway',d:'betway.com',t:'GLOBAL'},{n:'Bwin',d:'bwin.com',t:'EU'},{n:'Unibet',d:'unibet.com',t:'PRO'},{n:'Betfair',d:'betfair.com',t:'EXCH'},{n:'Marathonbet',d:'marathonbet.com',t:'VAL'},{n:'LeoVegas',d:'leovegas.com',t:'MOBILE'},{n:'Parimatch',d:'parimatch.com',t:'FAST'},{n:'888Sport',d:'888sport.com',t:'DYN'},{n:'Ladbrokes',d:'ladbrokes.com',t:'UK'},{n:'Coral',d:'coral.co.uk',t:'CLASSIC'},{n:'Mr Green',d:'mrgreen.com',t:'PREM'},{n:'22Bet',d:'22bet.com',t:'WIDE'},{n:'BetVictor',d:'betvictor.com',t:'QUAL'},{n:'Dafabet',d:'dafabet.com',t:'ASIA'},{n:'Cloudbet',d:'cloudbet.com',t:'BTC'}];
-list.innerHTML = partners.map(p => `<div class="glass p-4 rounded-2xl flex items-center gap-5 bookie-card active:bg-white/5 transition-all"><div class="logo-container"><div class="initial-badge">${p.n[0]}</div><img src="https://icon.horse/icon/${p.d}" class="logo-img" onload="this.style.opacity=1"></div><div class="flex-1 text-left"><div class="flex justify-between items-center"><h4 class="font-black text-[14px] italic uppercase tracking-tighter">${p.n}</h4><span class="text-[8px] border border-white/20 px-2 py-0.5 rounded text-slate-500 font-black">${p.t}</span></div><p class="text-[9px] text-slate-600 italic font-bold uppercase tracking-tight">Verified B2B Channel</p></div></div>`).join('');
+const partners = [{n:'Pinnacle',d:'pinnacle.com',t:'VIP'},{n:'Bet365',d:'bet365.com',t:'CORE'},{n:'Stake',d:'stake.com',t:'CRYPTO'},{n:'1xBet',d:'1xbet.com',t:'ODDS'},{n:'Betway',d:'betway.com',t:'GLOBAL'},{n:'Bwin',d:'bwin.com',t:'LIVE'},{n:'Unibet',d:'unibet.com',t:'PRO'},{n:'Betfair',d:'betfair.com',t:'EXCH'},{n:'William Hill',d:'williamhill.com',t:'UK'},{n:'Marathonbet',d:'marathonbet.com',t:'VAL'},{n:'Parimatch',d:'parimatch.com',t:'FAST'},{n:'LeoVegas',d:'leovegas.com',t:'MOBILE'},{n:'22Bet',d:'22bet.com',t:'WIDE'},{n:'BetVictor',d:'betvictor.com',t:'SHARP'},{n:'Dafabet',d:'dafabet.com',t:'ASIA'},{n:'Cloudbet',d:'cloudbet.com',t:'BTC'},{n:'Mr Green',d:'mrgreen.com',t:'PREM'},{n:'888Sport',d:'888sport.com',t:'DYN'},{n:'Ladbrokes',d:'ladbrokes.com',t:'UK'},{n:'Coral',d:'coral.co.uk',t:'EST'}];
+list.innerHTML = partners.map(p => `<div class="glass p-4 rounded-2xl flex items-center gap-5 bookie-card active:bg-white/5 transition-all"><div class="logo-container"><div class="initial-badge">${p.n[0]}</div><img src="https://icon.horse/icon/${p.d}" class="logo-img" onload="this.style.opacity=1"></div><div class="flex-1 text-left"><div class="flex justify-between items-center"><h4 class="font-black text-[14px] italic uppercase tracking-tighter">${p.n}</h4><span class="text-[8px] border border-white/20 px-2 py-0.5 rounded text-slate-500 font-black">${p.t}</span></div><p class="text-[9px] text-slate-600 italic font-bold uppercase tracking-tight">Verified B2B Partner Channel</p></div></div>`).join('');
 }
 
 function setCalcMode(m) {
@@ -206,11 +257,9 @@ renderHistory();
 function renderHistory() {
 const list = document.getElementById('history-list');
 let totalProfit = 0, totalInvest = 0;
-// Default Real-world Examples if history is empty
 const displayData = state.history.length > 0 ? state.history : [
 {id:1, date:'2026-03-24', match:'Man City vs Arsenal (EPL)', profit:420, invested:10000, roi:'4.20'},
-{id:2, date:'2026-03-24', match:'Lakers vs Celtics (NBA)', profit:580, invested:10000, roi:'5.80'},
-{id:3, date:'2026-03-23', match:'Real Madrid vs Barca (La Liga)', profit:310, invested:10000, roi:'3.10'}
+{id:2, date:'2026-03-24', match:'Lakers vs Celtics (NBA)', profit:580, invested:10000, roi:'5.80'}
 ];
 list.innerHTML = displayData.map(h => {
 if(state.history.length > 0) { totalProfit += h.profit; totalInvest += h.invested; }
@@ -221,9 +270,9 @@ document.getElementById('total-profit-val').innerText = totalProfit.toLocaleStri
 document.getElementById('total-roi-val').innerText = ((totalProfit/totalInvest)*100).toFixed(1) + "%";
 document.getElementById('total-bets-val').innerText = state.history.length;
 } else {
-document.getElementById('total-profit-val').innerText = "1,310";
-document.getElementById('total-roi-val').innerText = "4.3%";
-document.getElementById('total-bets-val').innerText = "3";
+document.getElementById('total-profit-val').innerText = "1,000";
+document.getElementById('total-roi-val').innerText = "5.0%";
+document.getElementById('total-bets-val').innerText = "2";
 }
 }
 
