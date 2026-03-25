@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Surebet v7.1 Golden Master (API Edition)</title>
+    <title>Surebet v7.1 Golden Master (Real Logo)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -14,8 +14,15 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
         .premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
-        .logo-btn { height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2s; }
-        .logo-btn:active { background: rgba(255,255,255,0.1); transform: scale(0.98); }
+        
+        /* 로고 배너 스타일 고도화 */
+        .logo-btn { height: 100px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; padding: 20px; overflow: hidden; }
+        .logo-btn img { max-height: 100%; max-width: 100%; object-fit: contain; transition: all 0.3s ease; filter: grayscale(1) invert(1) opacity(0.7); }
+        
+        /* 터치/호버 시 원본 색상 노출 (UX) */
+        .logo-btn:active img, .logo-btn:hover img { filter: grayscale(0) invert(0) opacity(1); transform: scale(1.05); }
+        .logo-btn:active { background: rgba(255,255,255,0.03); }
+
         .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 11px; color: #64748b; cursor: pointer; }
         .nav-item.active { color: #818cf8; }
@@ -39,8 +46,8 @@
         </div>
         <div id="api-match-container" class="space-y-4">
             <div class="animate-pulse flex flex-col gap-4">
-                <div class="h-32 bg-slate-800 rounded-2xl w-full"></div>
-                <div class="h-32 bg-slate-800 rounded-2xl w-full"></div>
+                <div class="h-40 bg-slate-800 rounded-3xl w-full"></div>
+                <div class="h-40 bg-slate-800 rounded-3xl w-full"></div>
             </div>
         </div>
         <div class="version-tag">v7.1 TON Golden Master</div>
@@ -116,56 +123,69 @@
             currentOdds: { a: 0, b: 0, team: '' }
         };
 
-        // [2] Deterministic RNG (UTC Based)
-        function getSeed() { return Math.floor(Date.now() / 60000); }
-
-        // [3] API Data Fetching (v9.0 Recovery)
+        // [2] API Data Fetching (with REAL Logos)
         async function fetchMatches() {
             const container = document.getElementById('api-match-container');
-            // 실제 환경에서는 fetch('api-url')을 사용합니다.
+            
+            // 시뮬레이션 데이터에 실제 로고 URL 매칭
             const mockApiData = [
-                { id: 1, sport: '⚽', country: '영국', league: 'EPL', time: '22:00', home: '맨유', away: '리버풀', oddsA: 2.15, oddsB: 2.08, bookA: 'Pinnacle', linkA: 'https://pinnacle.com', bookB: 'Bet365', linkB: 'https://bet365.com', roi: 4.2 },
-                { id: 2, sport: '🏀', country: '미국', league: 'NBA', time: '10:30', home: 'LAL', away: 'GSW', oddsA: 1.95, oddsB: 2.30, bookA: '1xBet', linkA: 'https://1xbet.com', bookB: 'Pinnacle', linkB: 'https://pinnacle.com', roi: 5.6 }
+                { id: 1, sport: '⚽', country: '영국', league: 'EPL', time: '22:00', home: '맨유', away: '리버풀', oddsA: 2.15, oddsB: 2.08, roi: 4.2, 
+                  bookA: 'Pinnacle', linkA: 'https://pinnacle.com', imgA: 'https://upload.wikimedia.org/wikipedia/commons/2/23/Pinnacle_Logo.svg',
+                  bookB: 'Bet365', linkB: 'https://bet365.com', imgB: 'https://upload.wikimedia.org/wikipedia/commons/2/20/Bet365_Logo.svg' },
+                { id: 2, sport: '🏀', country: '미국', league: 'NBA', time: '10:30', home: 'LAL', away: 'GSW', oddsA: 1.95, oddsB: 2.30, roi: 5.6,
+                  bookA: '1xBet', linkA: 'https://1xbet.com', imgA: 'https://upload.wikimedia.org/wikipedia/commons/e/ed/1xbet_logo.png',
+                  bookB: 'Pinnacle', linkB: 'https://pinnacle.com', imgB: 'https://upload.wikimedia.org/wikipedia/commons/2/23/Pinnacle_Logo.svg' }
             ];
 
-            container.innerHTML = '';
-            mockApiData.forEach(m => {
-                const card = document.createElement('div');
-                card.className = 'glass rounded-3xl overflow-hidden';
-                card.innerHTML = `
-                    <div class="p-3 bg-white/5 flex justify-between items-center text-[10px] font-bold text-slate-400">
-                        <span>${m.sport} ${m.country} - ${m.league}</span>
-                        <span>LIVE ${m.time}</span>
-                    </div>
-                    <div class="p-4 text-center border-b border-white/5">
-                        <div class="text-lg font-black">${m.home} vs ${m.away}</div>
-                        <div class="text-xs text-indigo-400 font-mono mt-1">${m.oddsA} / ${m.oddsB}</div>
-                    </div>
-                    <div class="flex items-stretch h-20 divide-x divide-white/5">
-                        <a href="${m.linkA}" target="_blank" class="flex-1 logo-btn hover:bg-white/5">
-                            <span class="text-[9px] uppercase text-slate-500 mb-1">${m.bookA}</span>
-                            <div class="w-12 h-6 bg-slate-700 rounded animate-pulse"></div> </a>
-                        <a href="${m.linkB}" target="_blank" class="flex-1 logo-btn hover:bg-white/5">
-                            <span class="text-[9px] uppercase text-slate-500 mb-1">${m.bookB}</span>
-                            <div class="w-12 h-6 bg-slate-700 rounded animate-pulse"></div>
-                        </a>
-                    </div>
-                    <div class="p-3 flex justify-between items-center bg-slate-900/50">
-                        <div class="text-green-400 font-black text-sm">ROI +${m.roi}%</div>
-                        <button onclick="prepareCalc('${m.home} vs ${m.away}', ${m.oddsA}, ${m.oddsB})" class="bg-indigo-600 w-10 h-10 rounded-xl shadow-lg shadow-indigo-500/30">
-                            <i class="fa-solid fa-calculator"></i>
-                        </button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+            // 로딩 시뮬레이션 (UX)
+            container.innerHTML = `<div class="text-center text-xs text-slate-600 py-10">fetching live data...</div>`;
+
+            setTimeout(() => {
+                container.innerHTML = '';
+                mockApiData.forEach(m => {
+                    const card = document.createElement('div');
+                    card.className = 'glass rounded-3xl overflow-hidden shadow-lg';
+                    card.innerHTML = `
+                        <div class="p-3 bg-white/5 flex justify-between items-center text-[10px] font-bold text-slate-400 border-b border-white/5">
+                            <span>${m.sport} ${m.country} - ${m.league}</span>
+                            <span>LIVE ${m.time}</span>
+                        </div>
+                        <div class="p-4 text-center">
+                            <div class="text-xs text-slate-500">Match</div>
+                            <div class="text-lg font-black tracking-tight">${m.home} vs ${m.away}</div>
+                            <div class="text-xs text-indigo-400 font-mono mt-1">${m.oddsA} / ${m.oddsB}</div>
+                        </div>
+                        
+                        <div class="flex items-stretch h-24 divide-x divide-white/5 border-t border-b border-white/5 bg-black/20">
+                            <a href="${m.linkA}" target="_blank" class="flex-1 logo-btn">
+                                <img src="${m.imgA}" alt="${m.bookA}">
+                            </a>
+                            <a href="${m.linkB}" target="_blank" class="flex-1 logo-btn">
+                                <img src="${m.imgB}" alt="${m.bookB}">
+                            </a>
+                        </div>
+                        
+                        <div class="p-3 flex justify-between items-center bg-slate-900/50">
+                            <div class="flex items-baseline gap-1">
+                                <div class="text-xs text-green-500 font-bold">ROI</div>
+                                <div class="text-green-400 font-black text-xl">+${m.roi}%</div>
+                            </div>
+                            <button onclick="prepareCalc('${m.home} vs ${m.away}', ${m.oddsA}, ${m.oddsB})" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg shadow-indigo-500/30 active:scale-95 transition-transform flex items-center justify-center">
+                                <i class="fa-solid fa-calculator text-lg"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }, 800); // 약간의 지연으로 API 호출 느낌 전달
         }
 
-        // [4] Calculator Logic
+        // [3] Calculator Logic
         function prepareCalc(name, a, b) {
             state.currentOdds = { a, b, team: name };
             document.getElementById('calc-match-name').innerText = name;
             document.getElementById('calc-match-odds').innerText = `Odds: ${a} vs ${b}`;
+            // 자동으로 계산기 탭으로 이동 (UX)
             switchTab('calc', document.querySelectorAll('.nav-item')[1]);
         }
 
@@ -177,6 +197,7 @@
             resDiv.classList.remove('opacity-30');
 
             const { a, b } = state.currentOdds;
+            // 양방 분배 공식
             const stakeA = (b / (a + b)) * seed;
             const stakeB = (a / (a + b)) * seed;
             const win = stakeA * a;
@@ -188,7 +209,7 @@
             document.getElementById('res-profit').innerText = Math.floor(profit).toLocaleString() + "원";
         }
 
-        // [5] General UI Control
+        // [4] General UI Control
         function switchTab(tabId, el) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -200,7 +221,7 @@
         // Initialize
         window.onload = () => {
             document.getElementById('top-balance').innerText = state.balance.toFixed(2) + " TON";
-            fetchMatches();
+            fetchMatches(); // 앱 시작 시 데이터 가져오기
         };
     </script>
 </body>
