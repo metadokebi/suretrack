@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SureTrack v9.7 Golden Master</title>
+<title>SureTrack v9.8 Golden Master</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-body { font-family: 'Inter', sans-serif; background-color: #020617; color: white; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; overflow-x: hidden; }
-.tab-content { display: none; padding-bottom: 120px; min-height: 100vh; }
+body { font-family: 'Inter', sans-serif; background-color: #020617; color: white; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; overflow: hidden; }
+.tab-content { display: none; padding-bottom: 120px; min-height: 100vh; overflow-y: auto; }
 .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .neon-logo { color: #f59e0b; text-shadow: 0 0 5px #f59e0b, 0 0 15px #d97706; font-weight: 900; font-style: italic; }
@@ -30,11 +30,14 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 .version-tag { font-size: 10px; color: #475569; font-weight: bold; text-align: center; padding: 25px; letter-spacing: 1.5px; opacity: 0.5; }
 .calc-mode-btn { flex: 1; padding: 12px; font-size: 11px; font-weight: 900; border-radius: 12px; background: rgba(255,255,255,0.05); color: #64748b; transition: all 0.2s; }
 .calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
-/* v9.7 Deposit Modal Style */
-#deposit-modal { display: none; position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
-.deposit-card { width: 100%; max-width: 360px; background: #0f172a; border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 32px; padding: 24px; position: relative; }
-.copy-field { background: #020617; border: 1px solid #1e293b; padding: 12px 16px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-/* v9.5 Auto-Bot Toggle Style */
+.direct-logo { width: 18px; height: 18px; border-radius: 4px; margin-top: 4px; border: 1px solid rgba(255,255,255,0.1); }
+/* v9.8 Rolls-Style Components */
+#profile-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 1500; overflow-y: auto; padding-bottom: 100px; }
+.rolls-balance-box { background: #0f172a; border-radius: 28px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
+.menu-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #0f172a; border-radius: 20px; margin-bottom: 8px; cursor: default; }
+#deposit-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: #ffffff; border-radius: 32px 32px 0 0; z-index: 2100; padding: 24px; transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1); color: #000; }
+#deposit-sheet.active { bottom: 0; }
+.overlay-blur { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 2050; }
 .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .4s; border-radius: 24px; }
@@ -45,33 +48,96 @@ input:checked + .slider:before { transform: translateX(20px); }
 </head>
 <body>
 
-<div id="deposit-modal">
-    <div class="deposit-card text-center">
-        <button onclick="closeDeposit()" class="absolute top-6 right-6 text-slate-500"><i class="fa-solid fa-xmark text-xl"></i></button>
-        <h2 class="text-xl font-black italic text-white uppercase tracking-tighter mb-2">Refill TON</h2>
-        <p class="text-[10px] text-slate-500 font-bold uppercase mb-6 tracking-widest">Send TON to the address below</p>
+<div id="profile-overlay">
+    <header class="p-6 flex justify-between items-center">
+        <h2 class="text-xl font-black text-white italic">Rolls</h2>
+        <div class="flex gap-4 items-center">
+            <button class="text-white opacity-50"><i class="fa-solid fa-ellipsis-vertical text-lg"></i></button>
+            <button onclick="closeProfile()" class="text-white opacity-50"><i class="fa-solid fa-xmark text-xl"></i></button>
+        </div>
+    </header>
+    
+    <div class="p-6 text-center">
+        <div class="relative inline-block mb-4">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-24 h-24 rounded-full border-2 border-indigo-500/30">
+            <div class="absolute -top-1 -left-1 bg-indigo-950 p-1.5 rounded-full border border-white/10 text-xs">🌸 0</div>
+            <div class="absolute -top-1 -right-1 bg-indigo-950 p-2 rounded-full border border-white/10 text-xs"><i class="fa-solid fa-gear"></i></div>
+        </div>
+        <h3 class="text-xl font-black text-white italic mb-8">@haku82</h3>
         
-        <div class="text-left mb-6">
-            <label class="text-[9px] font-black text-indigo-400 uppercase tracking-widest ml-1 mb-1.5 block">Wallet Address</label>
-            <div class="copy-field">
-                <span class="text-[11px] font-mono text-slate-300 truncate mr-4">UQAs7...E9x2j</span>
-                <button onclick="copyText('UQAs7_SureTrack_Official_Wallet_Placeholder')" class="text-indigo-400 text-xs"><i class="fa-regular fa-copy"></i></button>
+        <div class="rolls-balance-box text-left mb-8 flex justify-between items-center">
+            <div>
+                <div class="text-[10px] text-slate-500 font-black uppercase mb-2 tracking-widest">Rolls balance</div>
+                <div class="flex flex-col gap-1.5">
+                    <div class="text-lg font-black text-white italic flex items-center gap-2"><i class="fa-solid fa-gem text-indigo-400 text-sm"></i> <span id="profile-ton-val">5,720.50</span> TON</div>
+                    <div class="text-lg font-black text-white italic flex items-center gap-2"><i class="fa-solid fa-circle-dollar-to-slot text-green-400 text-sm"></i> <span id="profile-usdt-val">0</span> USDT</div>
+                </div>
             </div>
-            
-            <label class="text-[9px] font-black text-amber-500 uppercase tracking-widest ml-1 mb-1.5 block">Required Comment (Memo)</label>
-            <div class="copy-field border-amber-500/30">
-                <span id="user-memo" class="text-lg font-black text-white italic tracking-widest">778899</span>
-                <button onclick="copyText(document.getElementById('user-memo').innerText)" class="text-amber-500 text-xs"><i class="fa-regular fa-copy"></i></button>
+            <div class="flex gap-2">
+                <button onclick="openDeposit()" class="bg-indigo-600 px-6 py-2.5 rounded-2xl text-xs font-black uppercase italic shadow-lg">Deposit</button>
+                <button class="bg-slate-800 w-11 h-11 rounded-2xl flex items-center justify-center text-white border border-white/5"><i class="fa-solid fa-wallet"></i></button>
             </div>
         </div>
         
-        <div class="bg-indigo-500/10 p-4 rounded-2xl mb-6">
-            <p class="text-[10px] text-indigo-300 font-bold leading-relaxed">
-                <i class="fa-solid fa-circle-exclamation mr-1"></i> YOU MUST INCLUDE THE COMMENT <br>TO AUTOMATICALLY REFILL YOUR BALANCE.
-            </p>
+        <div class="space-y-2 text-left">
+            <div class="menu-item">
+                <div class="flex items-center gap-4"><i class="fa-solid fa-gift text-red-400"></i><span class="text-sm font-bold">Gift inventory</span></div>
+                <div class="flex items-center gap-2"><span class="bg-red-500 w-5 h-5 rounded-full text-[10px] flex items-center justify-center font-black">0</span><i class="fa-solid fa-chevron-right text-slate-700"></i></div>
+            </div>
+            <div class="menu-item">
+                <div class="flex items-center gap-4"><i class="fa-solid fa-scroll text-amber-400"></i><span class="text-sm font-bold">Tasks</span></div>
+                <div class="flex items-center gap-2"><span class="bg-amber-500 px-2 py-0.5 rounded-full text-[9px] flex items-center justify-center font-black text-slate-900 uppercase">0 / 14</span><i class="fa-solid fa-chevron-right text-slate-700"></i></div>
+            </div>
+            <div class="menu-item">
+                <div class="flex items-center gap-4"><i class="fa-solid fa-gem text-indigo-400"></i><span class="text-sm font-bold">Referrals</span></div>
+                <i class="fa-solid fa-chevron-right text-slate-700"></i>
+            </div>
+            <div class="menu-item">
+                <div class="flex items-center gap-4"><i class="fa-solid fa-sack-dollar text-amber-600"></i><span class="text-sm font-bold">Staking</span></div>
+                <i class="fa-solid fa-chevron-right text-slate-700"></i>
+            </div>
         </div>
-        
-        <button onclick="closeDeposit()" class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl uppercase italic text-xs shadow-xl active:scale-95 transition-transform">I have sent TON</button>
+    </div>
+</div>
+
+<div class="overlay-blur" id="sheet-blur" onclick="closeDeposit()"></div>
+<div id="deposit-sheet">
+    <div class="flex justify-between items-start mb-6">
+        <div class="bg-slate-100 w-12 h-12 rounded-2xl flex items-center justify-center text-indigo-600"><i class="fa-solid fa-border-all text-xl"></i></div>
+        <button onclick="closeDeposit()" class="bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center text-slate-400"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <h2 class="text-2xl font-black text-center mb-1">Connect your TON wallet</h2>
+    <p class="text-center text-slate-500 text-sm font-bold mb-8">Use Wallet in Telegram or choose<br>other application</p>
+    
+    <button onclick="connectAlert()" class="w-full bg-indigo-600 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 mb-8 shadow-xl">
+        <i class="fa-solid fa-wallet text-xl"></i> Connect Wallet in Telegram
+    </button>
+    
+    <p class="text-center text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6">Choose other application</p>
+    
+    <div class="grid grid-cols-4 gap-4 mb-8">
+        <div class="flex flex-col items-center gap-1.5 cursor-pointer">
+            <img src="https://icon.horse/icon/tonkeeper.com" class="w-14 h-14 rounded-2xl shadow-lg border border-slate-100">
+            <span class="text-[9px] font-black text-slate-600 uppercase">Tonkeeper</span>
+        </div>
+        <div class="flex flex-col items-center gap-1.5 cursor-pointer">
+            <div class="w-14 h-14 bg-indigo-500 rounded-2xl flex items-center justify-center shadow-lg"><i class="fa-solid fa-circle-dot text-white text-2xl"></i></div>
+            <span class="text-[9px] font-black text-slate-600 uppercase">MyTonWallet</span>
+        </div>
+        <div class="flex flex-col items-center gap-1.5 cursor-pointer">
+            <div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg"><i class="fa-solid fa-diamond text-white text-2xl"></i></div>
+            <span class="text-[9px] font-black text-slate-600 uppercase">Tonhub</span>
+        </div>
+        <div class="flex flex-col items-center gap-1.5 cursor-pointer">
+            <div class="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 shadow-sm border border-slate-200"><i class="fa-solid fa-qrcode text-2xl"></i></div>
+            <span class="text-[9px] font-black text-slate-600 uppercase text-center leading-tight">View all<br>wallets</span>
+        </div>
+    </div>
+    
+    <div class="flex items-center justify-center gap-2 pt-6 border-t border-slate-100">
+        <i class="fa-solid fa-gem text-indigo-500 text-sm"></i>
+        <span class="text-xs font-black italic tracking-tighter uppercase">TON Connect</span>
+        <i class="fa-solid fa-circle-question text-slate-300"></i>
     </div>
 </div>
 
@@ -80,9 +146,12 @@ input:checked + .slider:before { transform: translateX(20px); }
 <div class="live-dot"></div>
 <h1 class="text-2xl neon-logo tracking-tighter">SURETRACK</h1>
 </div>
-<div class="flex items-center gap-2">
+<div class="flex items-center gap-3 cursor-pointer" onclick="openProfile()">
     <div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 italic tracking-tighter">5,720.50 TON</div>
-    <button onclick="depositFund()" class="bg-indigo-600 w-7 h-7 rounded-full flex items-center justify-center text-white active:scale-90 transition-transform shadow-lg shadow-indigo-500/20"><i class="fa-solid fa-plus text-[10px]"></i></button>
+    <div class="relative">
+        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-9 h-9 rounded-full border border-indigo-500/50 object-cover bg-slate-800">
+        <div class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-slate-900 rounded-full"></div>
+    </div>
 </div>
 </header>
 
@@ -100,7 +169,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 <button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black uppercase">Refresh Feed</button>
 </div>
 <div id="api-match-container" class="space-y-4"></div>
-<div class="version-tag">v9.7 TON Golden Master</div>
+<div class="version-tag">v9.8 TON Golden Master</div>
 </main>
 
 <section id="calc-tab" class="tab-content p-4">
@@ -131,7 +200,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 </div>
 </div>
 </div>
-<div class="version-tag">v9.7 TON Golden Master</div>
+<div class="version-tag">v9.8 TON Golden Master</div>
 </section>
 
 <section id="bookies-tab" class="tab-content p-4">
@@ -143,7 +212,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 </div>
 </div>
 <div id="partner-list" class="space-y-2.5"></div>
-<div class="version-tag">v9.7 TON Golden Master</div>
+<div class="version-tag">v9.8 TON Golden Master</div>
 </section>
 
 <section id="history-tab" class="tab-content p-4">
@@ -153,7 +222,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 <div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div id="total-bets-val" class="text-white font-black text-sm">0</div></div>
 </div>
 <div id="history-list" class="space-y-3"></div>
-<div class="version-tag">v9.7 TON Golden Master</div>
+<div class="version-tag">v9.8 TON Golden Master</div>
 </section>
 
 <section id="saas-tab" class="tab-content p-4">
@@ -163,7 +232,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 <div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden" onclick="subscribePlan('PRO')"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: 100 TON</li><li>• Speed: Real-time (2nd Priority)</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div><i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
 <div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden ring-4 ring-indigo-500/30" onclick="subscribePlan('ELITE')"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: UNLIMITED</li><li>• Speed: 0.1s (1st Priority)</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div><i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
 </div>
-<div class="version-tag">v9.7 TON Golden Master</div>
+<div class="version-tag">v9.8 TON Golden Master</div>
 </section>
 
 <nav class="bottom-nav">
@@ -175,21 +244,15 @@ input:checked + .slider:before { transform: translateX(20px); }
 </nav>
 
 <script>
-const state = { balance: 5720.50, isAutoBot: false, isSubscribed: false, currentTier: 'FREE', userMemo: '778899', calcMode: 2, currentMatch: "", lastCalc: null, history: JSON.parse(localStorage.getItem('suretrack_history')) || [], currentBookA: "", currentBookB: "" };
+const state = { balance: 5720.50, isAutoBot: false, isSubscribed: false, currentTier: 'FREE', calcMode: 2, currentMatch: "", lastCalc: null, history: JSON.parse(localStorage.getItem('suretrack_history')) || [], currentBookA: "", currentBookB: "" };
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
-// v9.7 Rollsgame-Style Deposit Functions
-function depositFund() { 
-    document.getElementById('deposit-modal').style.display = 'flex';
-}
-function closeDeposit() { 
-    document.getElementById('deposit-modal').style.display = 'none';
-}
-function copyText(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        alert("Copied: " + text);
-    });
-}
+// v9.8 Rolls UI Control
+function openProfile() { document.getElementById('profile-overlay').style.display = 'block'; }
+function closeProfile() { document.getElementById('profile-overlay').style.display = 'none'; }
+function openDeposit() { document.getElementById('sheet-blur').style.display = 'block'; setTimeout(() => document.getElementById('deposit-sheet').classList.add('active'), 10); }
+function closeDeposit() { document.getElementById('deposit-sheet').classList.remove('active'); setTimeout(() => document.getElementById('sheet-blur').style.display = 'none', 400); }
+function connectAlert() { alert("Redirecting to Telegram Wallet..."); }
 
 function toggleBot() { 
     const toggle = document.getElementById('bot-toggle');
@@ -207,25 +270,23 @@ function toggleBot() {
 function subscribePlan(plan) {
     const cost = plan === 'PRO' ? 19.9 : 49.9;
     if(state.balance < cost) { alert("Insufficient TON Balance."); return; }
-    state.balance -= cost;
-    state.isSubscribed = true;
-    state.currentTier = plan;
+    state.balance -= cost; state.isSubscribed = true; state.currentTier = plan;
     updateBalance();
-    alert(`Success! Auto-Bot is now unlocked for ${plan} status.`);
+    alert(`Success! You are now a ${plan} MASTER.`);
     switchTab('home', document.querySelectorAll('.nav-item')[0]);
 }
 
-function updateBalance() { document.getElementById('top-balance').innerText = state.balance.toLocaleString(undefined, {minimumFractionDigits: 2}) + " TON"; }
+function updateBalance() { 
+    const b = state.balance.toLocaleString(undefined, {minimumFractionDigits: 2});
+    document.getElementById('top-balance').innerText = b + " TON"; 
+    document.getElementById('profile-ton-val').innerText = b;
+}
 
-// v9.6 Sport Emoji Optimized (Trophy Removed)
+// v9.7 무결성 유지: 종목 이모지 최적화
 function getMatchIdentity(lRaw, sRaw) {
 const s = (sRaw || "").toLowerCase(); const l = (lRaw || "").toLowerCase();
 let sEmoji = "🏁"; 
-if(s.includes("soccer")) sEmoji = "⚽"; 
-else if(s.includes("basketball")) sEmoji = "🏀"; 
-else if(s.includes("baseball")) sEmoji = "⚾"; 
-else if(s.includes("tennis")) sEmoji = "🎾";
-else if(s.includes("volleyball")) sEmoji = "🏐";
+if(s.includes("soccer")) sEmoji = "⚽"; else if(s.includes("basketball")) sEmoji = "🏀"; else if(s.includes("baseball")) sEmoji = "⚾"; else if(s.includes("tennis")) sEmoji = "🎾"; else if(s.includes("volleyball")) sEmoji = "🏐";
 let gText = l.includes("women") ? "Women" : "Men";
 let lEmoji = "🌍"; if(l.includes("england") || l.includes("epl")) lEmoji = "🏴󠁧󠁢󠁥󠁮󠁧󠁿"; else if(l.includes("spain") || l.includes("la liga")) lEmoji = "🇪🇸"; else if(l.includes("usa") || l.includes("nba") || l.includes("mlb")) lEmoji = "🇺🇸"; else if(l.includes("germany")) lEmoji = "🇩🇪"; else if(l.includes("italy")) lEmoji = "🇮🇹";
 return { sEmoji, gText, lEmoji };
@@ -239,7 +300,7 @@ try { const date = new Date(isoString); return date.toLocaleString('ko-KR', { ti
 
 async function fetchMatches() {
 const container = document.getElementById('api-match-container');
-container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase">Syncing Arbitrage Tunnels...</div>`;
+container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase">Syncing Real-time Tunnels...</div>`;
 try {
 const res = await fetch(GAS_URL); const data = await res.json(); container.innerHTML = '';
 data.forEach(m => {
@@ -250,39 +311,7 @@ const domainA = m['북A'].toLowerCase().replace(/\s/g,'') + ".com";
 const domainB = m['북B'].toLowerCase().replace(/\s/g,'') + ".com";
 const card = document.createElement('div');
 card.className = 'glass rounded-[30px] overflow-hidden shadow-2xl';
-card.innerHTML = `
-<div class="p-4 bg-white/5 flex justify-between items-center text-[11px] font-black text-slate-400 border-b border-white/5 uppercase italic tracking-widest"><span>${sEmoji} ${m['리그명']||'INTL'} ${gText} ${lEmoji}</span></div>
-<div class="p-5 text-center">
-    <div class="text-lg font-black tracking-tighter text-white italic">${m['경기명']}</div>
-    <div class="text-[10px] font-black text-indigo-400 mb-3">${kTime}</div>
-    <div class="text-[9px] font-black text-slate-600 uppercase tracking-[0.3em] mb-1.5">${m['마켓타입']||'1X2'}</div>
-    <div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-5 rounded-xl border border-white/5 flex justify-around items-end">
-        <div class="flex flex-col items-center">
-            <span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">WIN</span>
-            <span>${m['배당A']}</span>
-        </div>
-        <span class="text-slate-700 pb-2">/</span>
-        <div class="flex flex-col items-center">
-            <span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">${is3Way ? 'DRAW' : 'LOSE'}</span>
-            <span>${m['배당B']}</span>
-        </div>
-        ${is3Way ? `
-        <span class="text-slate-700 pb-2">/</span>
-        <div class="flex flex-col items-center">
-            <span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">LOSE</span>
-            <span>${m['배당C']}</span>
-        </div>` : ''}
-    </div>
-</div>
-<div class="center-logo-box border-t border-b border-white/5">
-    <a href="https://${domainA}" target="_blank" class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">A</div><img src="https://icon.horse/icon/${domainA}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic">${m['북A']}</span></a>
-    <div class="text-slate-700 text-[9px] font-black italic">VS</div>
-    <a href="https://${domainB}" target="_blank" class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">B</div><img src="https://icon.horse/icon/${domainB}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic">${m['북B']}</span></a>
-</div>
-<div class="p-4 flex justify-between items-center bg-slate-900/50">
-    <div><div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">EXPECTED ROI</div><div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m['수익률(%)']}%</div></div>
-    <button onclick="prepareCalc('${m['경기명']}', ${m['배당A']}, ${m['배당B']}, ${m['배당C'] || 0}, '${m['북A']}', '${m['북B']}')" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform"><i class="fa-solid fa-calculator text-lg text-white"></i></button>
-</div>`;
+card.innerHTML = `<div class="p-4 bg-white/5 flex justify-between items-center text-[11px] font-black text-slate-400 border-b border-white/5 uppercase italic tracking-widest"><span>${sEmoji} ${m['리그명']||'INTL'} ${gText} ${lEmoji}</span></div><div class="p-5 text-center"><div class="text-lg font-black tracking-tighter text-white italic">${m['경기명']}</div><div class="text-[10px] font-black text-indigo-400 mb-3">${kTime}</div><div class="text-[9px] font-black text-slate-600 uppercase tracking-[0.3em] mb-1.5">${m['마켓타입']||'1X2'}</div><div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-5 rounded-xl border border-white/5 flex justify-around items-end"><div class="flex flex-col items-center"><span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">WIN</span><span>${m['배당A']}</span></div><span class="text-slate-700 pb-2">/</span><div class="flex flex-col items-center"><span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">${is3Way ? 'DRAW' : 'LOSE'}</span><span>${m['배당B']}</span></div>${is3Way ? `<span class="text-slate-700 pb-2">/</span><div class="flex flex-col items-center"><span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">LOSE</span><span>${m['배당C']}</span></div>` : ''}</div></div><div class="center-logo-box border-t border-b border-white/5"><a href="https://${domainA}" target="_blank" class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">A</div><img src="https://icon.horse/icon/${domainA}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic">${m['북A']}</span></a><div class="text-slate-700 text-[9px] font-black italic">VS</div><a href="https://${domainB}" target="_blank" class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">B</div><img src="https://icon.horse/icon/${domainB}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic">${m['북B']}</span></a></div><div class="p-4 flex justify-between items-center bg-slate-900/50"><div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m['수익률(%)']}%</div><button onclick="prepareCalc('${m['경기명']}', ${m['배당A']}, ${m['배당B']}, ${m['배당C'] || 0}, '${m['북A']}', '${m['북B']}')" class="bg-indigo-600 w-12 h-12 rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform"><i class="fa-solid fa-calculator text-lg text-white"></i></button></div>`;
 container.appendChild(card);
 });
 } catch(e) { container.innerHTML = '<div class="text-center py-20 text-red-500 font-black text-[10px]">SYNC ERROR</div>'; }
@@ -311,8 +340,8 @@ state.lastCalc = { match: state.currentMatch || "Manual Arbitrage", invested: s,
 function saveBetToHistory() { if(!state.lastCalc || state.lastCalc.invested <= 0) return; const newEntry = { ...state.lastCalc, id: Date.now(), date: new Date().toLocaleDateString(), status: 'SETTLED' }; state.history.unshift(newEntry); localStorage.setItem('suretrack_history', JSON.stringify(state.history)); alert("Bet Executed!"); renderHistory(); }
 function renderHistory() { 
 const list = document.getElementById('history-list'); let totalP = 0, totalI = 0; 
-const displayData = state.history.length > 0 ? state.history : [{id:1, date:'2026-03-24', match:'Lakers vs Celtics (NBA)', profit:120, invested:1000, roi:'12.0', status:'SETTLED'}, {id:2, date:'2026-03-24', match:'Man City vs Arsenal (EPL)', profit:0, invested:2000, roi:'0.0', status:'FAILED (Slipped)'}]; 
-list.innerHTML = displayData.map(h => { if(h.status === 'SETTLED') { totalP += h.profit; totalI += h.invested; } return `<div class="glass p-4 rounded-2xl border-l-4 ${h.status === 'SETTLED' ? 'border-indigo-500' : 'border-red-500/50'} relative overflow-hidden"><div class="flex justify-between items-start mb-2"><div class="z-10"><div class="text-[9px] text-slate-500 font-black uppercase tracking-widest">${h.date}</div><div class="text-[13px] font-black italic text-white mt-0.5">${h.match}</div><div class="text-[8px] font-bold mt-1 ${h.status === 'SETTLED' ? 'text-indigo-400' : 'text-red-400'} uppercase tracking-widest">${h.status}</div></div><div class="${h.status === 'SETTLED' ? 'text-green-400' : 'text-slate-600'} font-black text-sm z-10">${h.status === 'SETTLED' ? '+$'+h.profit.toLocaleString() : 'VOID'}</div></div><div class="flex justify-between text-[9px] font-bold text-slate-500 uppercase z-10"><span>Stake: $${h.invested.toLocaleString()}</span><span>Yield: ${h.roi}%</span></div></div>`; }).join(''); 
+const displayData = state.history.length > 0 ? state.history : [{id:1, date:'2026-03-24', match:'Man City (EPL)', profit:420, invested:10000, roi:'4.20', status:'SETTLED'}]; 
+list.innerHTML = displayData.map(h => { if(h.status === 'SETTLED') { totalP += h.profit; totalI += h.invested; } return `<div class="glass p-4 rounded-2xl border-l-4 ${h.status === 'SETTLED' ? 'border-indigo-500' : 'border-red-500/50'} relative overflow-hidden"><div class="flex justify-between items-start mb-2"><div class="z-10"><div class="text-[9px] text-slate-500 font-black uppercase tracking-widest">${h.date}</div><div class="text-[13px] font-black italic text-white mt-0.5">${h.match}</div><div class="text-[8px] font-bold mt-1 uppercase tracking-widest">${h.status}</div></div><div class="text-green-400 font-black text-sm z-10">${h.status === 'SETTLED' ? '+$'+h.profit.toLocaleString() : 'VOID'}</div></div><div class="flex justify-between text-[9px] font-bold text-slate-500 uppercase z-10"><span>Stake: $${h.invested.toLocaleString()}</span><span>Yield: ${h.roi}%</span></div></div>`; }).join(''); 
 if(state.history.length > 0) { document.getElementById('total-profit-val').innerText = totalP.toLocaleString(); document.getElementById('total-roi-val').innerText = (totalI > 0 ? ((totalP/totalI)*100).toFixed(1) : "0") + "%"; document.getElementById('total-bets-val').innerText = state.history.length; } 
 }
 
