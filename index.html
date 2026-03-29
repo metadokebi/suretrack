@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SureTrack v9.9 Golden Master</title>
+<title>SureTrack v10.0 Golden Master</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-/* 1. 스크롤 복구: body의 overflow-y 허용 및 스무스 스크롤 적용 */
 body { font-family: 'Inter', sans-serif; background-color: #020617; color: white; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
 .tab-content { display: none; padding-bottom: 140px; min-height: 100vh; width: 100%; box-sizing: border-box; }
 .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
@@ -25,16 +25,20 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 .center-logo-box { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 14px; background: rgba(0,0,0,0.2); }
 .bookie-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.03); cursor: pointer; display: flex; align-items: center; text-decoration: none; color: inherit; }
 .bookie-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.08); border-color: rgba(99, 102, 241, 0.4); }
-.bottom-nav { position: fixed; bottom: 0; width: 100%; height: 85px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+/* 3. 내비게이션 z-index 조정하여 프로필 위에서도 보이게 설정 */
+.bottom-nav { position: fixed; bottom: 0; width: 100%; height: 85px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 2000; }
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 700; }
 .nav-item.active { color: #818cf8; }
 .version-tag { font-size: 10px; color: #475569; font-weight: bold; text-align: center; padding: 25px; letter-spacing: 1.5px; opacity: 0.5; }
 .calc-mode-btn { flex: 1; padding: 12px; font-size: 11px; font-weight: 900; border-radius: 12px; background: rgba(255,255,255,0.05); color: #64748b; transition: all 0.2s; }
 .calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
 .direct-logo { width: 18px; height: 18px; border-radius: 4px; margin-top: 4px; border: 1px solid rgba(255,255,255,0.1); }
-/* v9.9 Profile Overlay & Modal: 스크롤 방해 요소 제거 */
+/* v10.0 Profile & Modal Fix */
 #profile-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 1500; overflow-y: auto; padding-bottom: 120px; }
-.rolls-balance-box { background: #0f172a; border-radius: 28px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
+.rolls-balance-box { background: #0f172a; border-radius: 28px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+/* 2. Deposit 버튼 크기 및 텍스트 밸런스 조정 */
+.deposit-btn { background: #4f46e5; padding: 10px 18px; rounded: 16px; font-size: 11px; font-weight: 900; text-transform: uppercase; font-style: italic; letter-spacing: -0.5px; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); transition: transform 0.2s; }
+.deposit-btn:active { transform: scale(0.95); }
 .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #0f172a; border-radius: 20px; margin-bottom: 8px; cursor: default; }
 #deposit-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: #ffffff; border-radius: 32px 32px 0 0; z-index: 2100; padding: 24px; transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1); color: #000; }
 #deposit-sheet.active { bottom: 0; }
@@ -64,40 +68,28 @@ input:checked + .slider:before { transform: translateX(20px); }
         </div>
         <h3 id="profile-handle" class="text-xl font-black text-white italic mb-8">@haku82</h3>
         
-        <div class="rolls-balance-box text-left mb-8 flex justify-between items-center">
-            <div>
-                <div class="text-[10px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">Asset balance</div>
+        <div class="rolls-balance-box mb-8">
+            <div class="text-left">
+                <div class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">Asset balance</div>
                 <div class="flex flex-col gap-1.5">
-                    <div class="text-lg font-black text-white italic flex items-center gap-2"><i class="fa-solid fa-gem text-indigo-400 text-sm"></i> <span id="profile-ton-val">5,720.50</span> TON</div>
-                    <div class="text-lg font-black text-white italic flex items-center gap-2"><i class="fa-solid fa-circle-dollar-to-slot text-green-400 text-sm"></i> <span id="profile-usdt-val">0</span> USDT</div>
+                    <div class="text-[16px] font-black text-white italic flex items-center gap-2"><i class="fa-solid fa-gem text-indigo-400 text-sm"></i> <span id="profile-ton-val">5,720.50</span> TON</div>
+                    <div class="text-[16px] font-black text-white italic flex items-center gap-2"><i class="fa-solid fa-circle-dollar-to-slot text-green-400 text-sm"></i> <span id="profile-usdt-val">0.00</span> USDT</div>
                 </div>
             </div>
-            <div class="flex gap-2">
-                <button onclick="openDeposit()" class="bg-indigo-600 px-6 py-2.5 rounded-2xl text-xs font-black uppercase italic shadow-lg">Deposit</button>
-                <button class="bg-slate-800 w-11 h-11 rounded-2xl flex items-center justify-center text-white border border-white/5"><i class="fa-solid fa-wallet"></i></button>
+            <div class="flex items-center gap-2">
+                <button onclick="openDeposit()" class="deposit-btn rounded-xl">Deposit</button>
+                <button class="bg-slate-800 w-10 h-10 rounded-xl flex items-center justify-center text-white border border-white/5"><i class="fa-solid fa-wallet text-sm"></i></button>
             </div>
         </div>
         
         <div class="space-y-2 text-left">
-            <div class="menu-item">
-                <div class="flex items-center gap-4"><i class="fa-solid fa-gift text-red-400"></i><span class="text-sm font-bold">Gift inventory</span></div>
-                <div class="flex items-center gap-2"><span class="bg-red-500 w-5 h-5 rounded-full text-[10px] flex items-center justify-center font-black">0</span><i class="fa-solid fa-chevron-right text-slate-700"></i></div>
-            </div>
-            <div class="menu-item">
-                <div class="flex items-center gap-4"><i class="fa-solid fa-scroll text-amber-400"></i><span class="text-sm font-bold">Tasks</span></div>
-                <div class="flex items-center gap-2"><span class="bg-amber-500 px-2 py-0.5 rounded-full text-[9px] flex items-center justify-center font-black text-slate-900 uppercase">0 / 14</span><i class="fa-solid fa-chevron-right text-slate-700"></i></div>
-            </div>
-            <div class="menu-item">
-                <div class="flex items-center gap-4"><i class="fa-solid fa-gem text-indigo-400"></i><span class="text-sm font-bold">Referrals</span></div>
-                <i class="fa-solid fa-chevron-right text-slate-700"></i>
-            </div>
-            <div class="menu-item">
-                <div class="flex items-center gap-4"><i class="fa-solid fa-sack-dollar text-amber-600"></i><span class="text-sm font-bold">Staking</span></div>
-                <i class="fa-solid fa-chevron-right text-slate-700"></i>
-            </div>
+            <div class="menu-item"><div class="flex items-center gap-4"><i class="fa-solid fa-gift text-red-400"></i><span class="text-sm font-bold">Gift inventory</span></div><div class="flex items-center gap-2"><span class="bg-red-500 w-5 h-5 rounded-full text-[10px] flex items-center justify-center font-black">0</span><i class="fa-solid fa-chevron-right text-slate-700"></i></div></div>
+            <div class="menu-item"><div class="flex items-center gap-4"><i class="fa-solid fa-scroll text-amber-400"></i><span class="text-sm font-bold">Tasks</span></div><div class="flex items-center gap-2"><span class="bg-amber-500 px-2 py-0.5 rounded-full text-[9px] flex items-center justify-center font-black text-slate-900 uppercase">0 / 14</span><i class="fa-solid fa-chevron-right text-slate-700"></i></div></div>
+            <div class="menu-item"><div class="flex items-center gap-4"><i class="fa-solid fa-gem text-indigo-400"></i><span class="text-sm font-bold">Referrals</span></div><i class="fa-solid fa-chevron-right text-slate-700"></i></div>
+            <div class="menu-item"><div class="flex items-center gap-4"><i class="fa-solid fa-sack-dollar text-amber-600"></i><span class="text-sm font-bold">Staking</span></div><i class="fa-solid fa-chevron-right text-slate-700"></i></div>
         </div>
     </div>
-    <div class="version-tag">v9.9 TON Golden Master</div>
+    <div class="version-tag">v10.0 TON Golden Master</div>
 </div>
 
 <div class="overlay-blur" id="sheet-blur" onclick="closeDeposit()"></div>
@@ -106,20 +98,14 @@ input:checked + .slider:before { transform: translateX(20px); }
         <div class="bg-slate-100 w-12 h-12 rounded-2xl flex items-center justify-center text-indigo-600"><i class="fa-solid fa-border-all text-xl"></i></div>
         <button onclick="closeDeposit()" class="bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center text-slate-400"><i class="fa-solid fa-xmark"></i></button>
     </div>
-    <h2 class="text-2xl font-black text-center mb-1">Connect your TON wallet</h2>
-    <p class="text-center text-slate-500 text-sm font-bold mb-8">Use Wallet in Telegram or choose<br>other application</p>
-    
-    <button onclick="connectAlert()" class="w-full bg-indigo-600 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 mb-8 shadow-xl">
-        <i class="fa-solid fa-wallet text-xl"></i> Connect Wallet in Telegram
-    </button>
-    
-    <p class="text-center text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6">Choose other application</p>
-    
+    <h2 class="text-xl font-black text-center mb-1">Connect your TON wallet</h2>
+    <p class="text-center text-slate-500 text-xs font-bold mb-8">Use Wallet in Telegram or choose<br>other application</p>
+    <button onclick="connectAlert()" class="w-full bg-indigo-600 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 mb-8 shadow-xl"><i class="fa-solid fa-wallet text-xl"></i> Connect Wallet in Telegram</button>
     <div class="grid grid-cols-4 gap-4 mb-8 text-center">
-        <div class="flex flex-col items-center gap-1.5"><img src="https://icon.horse/icon/tonkeeper.com" class="w-14 h-14 rounded-2xl border border-slate-100"><span class="text-[9px] font-black text-slate-600 uppercase">Tonkeeper</span></div>
-        <div class="flex flex-col items-center gap-1.5"><div class="w-14 h-14 bg-indigo-500 rounded-2xl flex items-center justify-center shadow-lg"><i class="fa-solid fa-circle-dot text-white text-2xl"></i></div><span class="text-[9px] font-black text-slate-600 uppercase">MyTonWallet</span></div>
-        <div class="flex flex-col items-center gap-1.5"><div class="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg"><i class="fa-solid fa-diamond text-white text-2xl"></i></div><span class="text-[9px] font-black text-slate-600 uppercase">Tonhub</span></div>
-        <div class="flex flex-col items-center gap-1.5"><div class="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 border border-slate-200"><i class="fa-solid fa-qrcode text-2xl"></i></div><span class="text-[9px] font-black text-slate-600 uppercase leading-tight">View all</span></div>
+        <div class="flex flex-col items-center gap-1.5"><img src="https://icon.horse/icon/tonkeeper.com" class="w-12 h-12 rounded-2xl"><span class="text-[8px] font-black text-slate-600 uppercase">Tonkeeper</span></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-12 h-12 bg-indigo-500 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-circle-dot text-white text-xl"></i></div><span class="text-[8px] font-black text-slate-600 uppercase">MyTonWallet</span></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-diamond text-white text-xl"></i></div><span class="text-[8px] font-black text-slate-600 uppercase">Tonhub</span></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 border border-slate-200"><i class="fa-solid fa-qrcode text-xl"></i></div><span class="text-[8px] font-black text-slate-600 uppercase">View all</span></div>
     </div>
 </div>
 
@@ -145,69 +131,26 @@ input:checked + .slider:before { transform: translateX(20px); }
     </div>
     <label class="switch"><input type="checkbox" id="bot-toggle" onchange="toggleBot()"><span class="slider"></span></label>
 </div>
-
-<div class="flex justify-between items-center mb-4 px-1">
-<h2 class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Live Arbitrage Stream</h2>
-<button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black uppercase">Refresh Feed</button>
-</div>
+<div class="flex justify-between items-center mb-4 px-1"><h2 class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Live Arbitrage Stream</h2><button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black uppercase">Refresh Feed</button></div>
 <div id="api-match-container" class="space-y-4"></div>
-<div class="version-tag">v9.9 TON Golden Master</div>
+<div class="version-tag">v10.0 TON Golden Master</div>
 </main>
 
 <section id="calc-tab" class="tab-content p-4">
-<div class="glass rounded-[32px] p-5 border-indigo-500/20 shadow-2xl">
-<div class="flex gap-2 mb-5 bg-black/40 p-1.5 rounded-2xl">
-<button id="mode-2way" onclick="setCalcMode(2)" class="calc-mode-btn active uppercase italic">2-Way</button>
-<button id="mode-3way" onclick="setCalcMode(3)" class="calc-mode-btn uppercase italic">3-Way</button>
-</div>
-<div class="space-y-4">
-<div class="flex flex-col gap-1.5">
-<label class="text-[9px] font-black text-slate-500 uppercase tracking-widest italic ml-1">Investment Seed</label>
-<input type="number" id="calc-seed" oninput="runCalculation()" placeholder="0.00" class="w-full bg-slate-950 border-2 border-slate-800 p-3.5 rounded-xl text-2xl font-black text-white focus:border-indigo-500 outline-none">
-</div>
-<div class="space-y-3">
-<input type="number" id="odds-a" oninput="runCalculation()" step="0.01" placeholder="Odds A" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none">
-<input type="number" id="odds-b" oninput="runCalculation()" step="0.01" placeholder="Odds B" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none">
-<input type="number" id="odds-c" oninput="runCalculation()" step="0.01" placeholder="Odds C" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none hidden">
-</div>
-<div id="calc-results" class="space-y-2.5 opacity-20">
-<div class="flex justify-between p-3.5 bg-slate-900/80 rounded-xl border border-white/5 text-[11px] font-bold uppercase"><span class="text-slate-500" id="label-a">Stake A</span><span id="res-a">0</span></div>
-<div class="flex justify-between p-3.5 bg-slate-900/80 rounded-xl border border-white/5 text-[11px] font-bold uppercase"><span class="text-slate-500" id="label-b">Stake B</span><span id="res-b">0</span></div>
-<div id="res-c-box" class="hidden flex justify-between p-3.5 bg-slate-900/80 rounded-xl border border-white/5 text-[11px] font-bold uppercase"><span class="text-slate-500" id="label-c">Stake C</span><span id="res-c">0</span></div>
-<div class="premium-gradient p-5 rounded-2xl mt-4">
-<div class="flex justify-between text-[10px] font-black text-white/60 uppercase"><span>ROI %</span><span id="res-roi">0.00%</span></div>
-<div class="flex justify-between text-2xl font-black text-white mt-1 italic uppercase tracking-tighter"><span>Net Profit</span><span id="res-profit">0</span></div>
-</div>
-<button onclick="saveBetToHistory()" class="w-full bg-white text-indigo-900 font-black py-3 rounded-xl uppercase italic text-xs shadow-xl active:scale-95 transition-transform mt-2">Manual Execution</button>
-</div>
-</div>
-</div>
-<div class="version-tag">v9.9 TON Golden Master</div>
+    <div class="glass rounded-[32px] p-5 border-indigo-500/20 shadow-2xl">
+        <div class="flex gap-2 mb-5 bg-black/40 p-1.5 rounded-2xl"><button id="mode-2way" onclick="setCalcMode(2)" class="calc-mode-btn active uppercase italic">2-Way</button><button id="mode-3way" onclick="setCalcMode(3)" class="calc-mode-btn uppercase italic">3-Way</button></div>
+        <div class="space-y-4">
+            <input type="number" id="calc-seed" oninput="runCalculation()" placeholder="0.00" class="w-full bg-slate-950 border-2 border-slate-800 p-3.5 rounded-xl text-2xl font-black text-white outline-none mb-4">
+            <div class="space-y-3"><input type="number" id="odds-a" oninput="runCalculation()" step="0.01" placeholder="Odds A" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none"><input type="number" id="odds-b" oninput="runCalculation()" step="0.01" placeholder="Odds B" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none"><input type="number" id="odds-c" oninput="runCalculation()" step="0.01" placeholder="Odds C" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none hidden"></div>
+            <div id="calc-results" class="space-y-2.5 opacity-20"><div class="flex justify-between p-3.5 bg-slate-900/80 rounded-xl text-[11px] font-bold uppercase"><span class="text-slate-500" id="label-a">Stake A</span><span id="res-a">0</span></div><div class="flex justify-between p-3.5 bg-slate-900/80 rounded-xl text-[11px] font-bold uppercase"><span class="text-slate-500" id="label-b">Stake B</span><span id="res-b">0</span></div><div id="res-c-box" class="hidden flex justify-between p-3.5 bg-slate-900/80 rounded-xl text-[11px] font-bold uppercase"><span class="text-slate-500" id="label-c">Stake C</span><span id="res-c">0</span></div><div class="premium-gradient p-5 rounded-2xl mt-4"><div class="flex justify-between text-[10px] font-black text-white/60 uppercase"><span>ROI %</span><span id="res-roi">0.00%</span></div><div class="flex justify-between text-2xl font-black text-white mt-1 italic uppercase tracking-tighter"><span>Net Profit</span><span id="res-profit">0</span></div></div><button onclick="saveBetToHistory()" class="w-full bg-white text-indigo-900 font-black py-3 rounded-xl uppercase italic text-xs shadow-xl active:scale-95 transition-transform mt-2">Manual Execution</button></div>
+        </div>
+    </div>
+    <div class="version-tag">v10.0 TON Golden Master</div>
 </section>
 
-<section id="bookies-tab" class="tab-content p-4">
-<div id="partner-list" class="space-y-2.5"></div>
-<div class="version-tag">v9.9 TON Golden Master</div>
-</section>
-
-<section id="history-tab" class="tab-content p-4">
-<div class="grid grid-cols-3 gap-2.5 mb-6">
-<div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Profit</div><div id="total-profit-val" class="text-green-400 font-black text-sm">0</div></div>
-<div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Avg ROI</div><div id="total-roi-val" class="text-indigo-400 font-black text-sm">0%</div></div>
-<div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div id="total-bets-val" class="text-white font-black text-sm">0</div></div>
-</div>
-<div id="history-list" class="space-y-3"></div>
-<div class="version-tag">v9.9 TON Golden Master</div>
-</section>
-
-<section id="saas-tab" class="tab-content p-4">
-<h2 class="text-2xl font-black text-center mb-8 italic uppercase tracking-tighter">Membership</h2>
-<div class="space-y-6">
-<div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden" onclick="subscribePlan('PRO')"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: 100 TON</li><li>• Speed: Real-time (2nd Priority)</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div></div>
-<div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden ring-4 ring-indigo-500/30" onclick="subscribePlan('ELITE')"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: UNLIMITED</li><li>• Speed: 0.1s (1st Priority)</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div></div>
-</div>
-<div class="version-tag">v9.9 TON Golden Master</div>
-</section>
+<section id="bookies-tab" class="tab-content p-4"><div id="partner-list" class="space-y-2.5"></div><div class="version-tag">v10.0 TON Golden Master</div></section>
+<section id="history-tab" class="tab-content p-4"><div class="grid grid-cols-3 gap-2.5 mb-6"><div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Profit</div><div id="total-profit-val" class="text-green-400 font-black text-sm">0</div></div><div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Avg ROI</div><div id="total-roi-val" class="text-indigo-400 font-black text-sm">0%</div></div><div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div id="total-bets-val" class="text-white font-black text-sm">0</div></div></div><div id="history-list" class="space-y-3"></div><div class="version-tag">v10.0 TON Golden Master</div></section>
+<section id="saas-tab" class="tab-content p-4"><div class="space-y-6"><div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden" onclick="subscribePlan('PRO')"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: 100 TON</li><li>• Speed: Real-time (2nd Priority)</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div></div><div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden ring-4 ring-indigo-500/30" onclick="subscribePlan('ELITE')"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: UNLIMITED</li><li>• Speed: 0.1s (1st Priority)</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div></div></div><div class="version-tag">v10.0 TON Golden Master</div></section>
 
 <nav class="bottom-nav">
 <div class="nav-item active" onclick="switchTab('home', this)"><i class="fa-solid fa-bolt-lightning text-xl mb-1.5"></i><span>Live</span></div>
@@ -218,27 +161,30 @@ input:checked + .slider:before { transform: translateX(20px); }
 </nav>
 
 <script>
-// v9.9 고정 상태 및 무결성 로직
 const state = { balance: 5720.50, isAutoBot: false, isSubscribed: false, currentTier: 'FREE', calcMode: 2, currentMatch: "", lastCalc: null, history: JSON.parse(localStorage.getItem('suretrack_history')) || [], currentBookA: "", currentBookB: "" };
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
-// 텔레그램 프로필 연동 (TMA SDK Mocking)
+// 1. 텔레그램 프로필 연동 (TMA SDK FIX)
 function syncTelegramProfile() {
     try {
-        const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
-        if(user && user.photo_url) {
-            document.getElementById('header-avatar').src = user.photo_url;
-            document.getElementById('profile-avatar-main').src = user.photo_url;
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // 미니앱 확장
+        const user = tg.initDataUnsafe?.user;
+        if(user) {
+            if(user.photo_url) {
+                document.getElementById('header-avatar').src = user.photo_url;
+                document.getElementById('profile-avatar-main').src = user.photo_url;
+            }
             document.getElementById('profile-handle').innerText = `@${user.username || user.first_name}`;
         }
-    } catch(e) { console.log("TMA Not detected."); }
+    } catch(e) { console.log("Telegram SDK not available in this environment."); }
 }
 
 function openProfile() { document.getElementById('profile-overlay').style.display = 'block'; }
 function closeProfile() { document.getElementById('profile-overlay').style.display = 'none'; }
 function openDeposit() { document.getElementById('sheet-blur').style.display = 'block'; setTimeout(() => document.getElementById('deposit-sheet').classList.add('active'), 10); }
 function closeDeposit() { document.getElementById('deposit-sheet').classList.remove('active'); setTimeout(() => document.getElementById('sheet-blur').style.display = 'none', 400); }
-function connectAlert() { alert("Connecting to TON Wallet..."); }
+function connectAlert() { alert("Redirecting to Wallet..."); }
 
 function toggleBot() { 
     const toggle = document.getElementById('bot-toggle');
@@ -253,7 +199,7 @@ function toggleBot() {
 
 function subscribePlan(plan) {
     const cost = plan === 'PRO' ? 19.9 : 49.9;
-    if(state.balance < cost) { alert("Insufficient TON."); return; }
+    if(state.balance < cost) { alert("Insufficient Balance."); return; }
     state.balance -= cost; state.isSubscribed = true; state.currentTier = plan;
     updateBalance(); alert(`${plan} Membership Activated!`); switchTab('home', document.querySelectorAll('.nav-item')[0]);
 }
@@ -264,11 +210,9 @@ function updateBalance() {
     document.getElementById('profile-ton-val').innerText = b;
 }
 
-// 🏆 제거 및 종목별 이모지 최적화 무결성 고정
 function getMatchIdentity(lRaw, sRaw) {
 const s = (sRaw || "").toLowerCase(); const l = (lRaw || "").toLowerCase();
-let sEmoji = "🏁"; 
-if(s.includes("soccer")) sEmoji = "⚽"; else if(s.includes("basketball")) sEmoji = "🏀"; else if(s.includes("baseball")) sEmoji = "⚾"; else if(s.includes("tennis")) sEmoji = "🎾"; else if(s.includes("volleyball")) sEmoji = "🏐";
+let sEmoji = "🏁"; if(s.includes("soccer")) sEmoji = "⚽"; else if(s.includes("basketball")) sEmoji = "🏀"; else if(s.includes("baseball")) sEmoji = "⚾"; else if(s.includes("tennis")) sEmoji = "🎾"; else if(s.includes("volleyball")) sEmoji = "🏐";
 let gText = l.includes("women") ? "Women" : "Men";
 let lEmoji = "🌍"; if(l.includes("england") || l.includes("epl")) lEmoji = "🏴󠁧󠁢󠁥󠁮󠁧󠁿"; else if(l.includes("spain") || l.includes("la liga")) lEmoji = "🇪🇸"; else if(l.includes("usa") || l.includes("nba") || l.includes("mlb")) lEmoji = "🇺🇸"; else if(l.includes("germany")) lEmoji = "🇩🇪"; else if(l.includes("italy")) lEmoji = "🇮🇹";
 return { sEmoji, gText, lEmoji };
@@ -282,7 +226,7 @@ try { const date = new Date(isoString); return date.toLocaleString('ko-KR', { ti
 
 async function fetchMatches() {
 const container = document.getElementById('api-match-container');
-container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase">Syncing Real-time Tunnels...</div>`;
+container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase tracking-[0.2em]">Synchronizing Tunnels...</div>`;
 try {
 const res = await fetch(GAS_URL); const data = await res.json(); container.innerHTML = '';
 data.forEach(m => {
@@ -316,9 +260,9 @@ document.getElementById('res-a').innerText = Math.floor(sA).toLocaleString(); do
 state.lastCalc = { match: state.currentMatch || "Manual Arbitrage", invested: s, profit: Math.floor((s/tP)-s), roi: (((1/tP)-1)*100).toFixed(2), status: 'SETTLED' }; 
 }
 
-function saveBetToHistory() { if(!state.lastCalc || state.lastCalc.invested <= 0) return; const newEntry = { ...state.lastCalc, id: Date.now(), date: new Date().toLocaleDateString(), status: 'SETTLED' }; state.history.unshift(newEntry); localStorage.setItem('suretrack_history', JSON.stringify(state.history)); alert("Bet Executed!"); renderHistory(); }
+function saveBetToHistory() { if(!state.lastCalc || state.lastCalc.invested <= 0) return; const newEntry = { ...state.lastCalc, id: Date.now(), date: new Date().toLocaleDateString(), status: 'SETTLED' }; state.history.unshift(newEntry); localStorage.setItem('suretrack_history', JSON.stringify(state.history)); alert("Bet Saved!"); renderHistory(); }
 function renderHistory() { 
-const list = document.getElementById('history-list'); let totalP = 0, totalI = 0; const displayData = state.history.length > 0 ? state.history : [{id:1, date:'2026-03-24', match:'Lakers (NBA)', profit:420, invested:10000, roi:'4.20', status:'SETTLED'}]; 
+const list = document.getElementById('history-list'); let totalP = 0, totalI = 0; const displayData = state.history.length > 0 ? state.history : [{id:1, date:'2026-03-24', match:'Man City (EPL)', profit:420, invested:10000, roi:'4.20', status:'SETTLED'}]; 
 list.innerHTML = displayData.map(h => { if(h.status === 'SETTLED') { totalP += h.profit; totalI += h.invested; } return `<div class="glass p-4 rounded-2xl border-l-4 border-indigo-500 relative overflow-hidden"><div class="flex justify-between items-start mb-2"><div class="z-10"><div class="text-[9px] text-slate-500 font-black uppercase tracking-widest">${h.date}</div><div class="text-[13px] font-black italic text-white mt-0.5">${h.match}</div><div class="text-[8px] font-bold mt-1 uppercase text-indigo-400">${h.status}</div></div><div class="text-green-400 font-black text-sm z-10">+$${h.profit.toLocaleString()}</div></div><div class="flex justify-between text-[9px] font-bold text-slate-500 uppercase z-10"><span>Stake: $${h.invested.toLocaleString()}</span><span>Yield: ${h.roi}%</span></div></div>`; }).join(''); 
 if(state.history.length > 0) { document.getElementById('total-profit-val').innerText = totalP.toLocaleString(); document.getElementById('total-roi-val').innerText = (totalI > 0 ? ((totalP/totalI)*100).toFixed(1) : "0") + "%"; document.getElementById('total-bets-val').innerText = state.history.length; } 
 }
