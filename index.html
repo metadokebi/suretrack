@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SureTrack v10.9 Golden Master</title>
+<title>SureTrack v10.8 Golden Master</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -14,7 +14,6 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* 프리미엄 UI 아이덴티티 */
 .neon-logo { color: #f59e0b; text-shadow: 0 0 5px #f59e0b, 0 0 15px #d97706; font-weight: 900; font-style: italic; }
 .live-dot { width: 10px; height: 10px; border-radius: 50%; animation: pulse-rg 1.5s infinite; }
 @keyframes pulse-rg { 0% { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; } 50% { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; } 100% { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; } }
@@ -22,109 +21,85 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 .premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
 .elite-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
 
-/* 하단 내비게이션 (v10.8 무결성 고정) */
-.bottom-nav { position: fixed; bottom: 0; width: 100%; height: 85px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 6000; transition: transform 0.3s ease-in-out; }
+.logo-container { position: relative; width: 34px; height: 34px; flex-shrink: 0; }
+.initial-badge { width: 34px; height: 34px; background: #1e293b; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #475569; text-transform: uppercase; }
+.logo-img { position: absolute; top: 0; left: 0; width: 34px; height: 34px; border-radius: 8px; object-fit: contain; z-index: 10; opacity: 0; transition: opacity 0.3s; }
+.center-logo-box { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 14px; background: rgba(0,0,0,0.2); }
+.bookie-card { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.03); cursor: pointer; display: flex; align-items: center; text-decoration: none; color: inherit; }
+.bookie-card:hover { transform: translateY(-3px); background: rgba(255,255,255,0.08); border-color: rgba(99, 102, 241, 0.4); }
+
+.bottom-nav { position: fixed; bottom: 0; width: 100%; height: 85px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 6000; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 .bottom-nav.hidden-nav { transform: translateY(100%); }
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 700; }
 .nav-item.active { color: #818cf8; }
 .version-tag { font-size: 10px; color: #475569; font-weight: bold; text-align: center; padding: 25px; letter-spacing: 1.5px; opacity: 0.5; }
 
-/* 프로필 및 세이프티 가드 UI */
+/* 프로필 UI v10.8 최종 정렬 */
 #profile-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 1500; overflow-y: auto; padding-bottom: 120px; }
 .rolls-balance-box { background: #0f172a; border-radius: 28px; padding: 22px; border: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
 .deposit-btn { background: #4f46e5; padding: 11px 22px; border-radius: 14px; font-size: 12px; font-weight: 900; text-transform: uppercase; font-style: italic; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); cursor: pointer; color: white; }
 .wallet-icon-btn { background: #1e293b; width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
-.menu-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #0f172a; border-radius: 20px; margin-bottom: 8px; cursor: pointer; }
+.menu-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #0f172a; border-radius: 20px; margin-bottom: 8px; cursor: default; }
 
-/* v10.9 Safety Guard 전용 스타일 */
-.safety-input { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 12px; color: white; font-weight: 800; width: 80px; text-align: center; outline: none; }
-.safety-input:focus { border-color: #4f46e5; box-shadow: 0 0 10px rgba(79, 70, 229, 0.2); }
-
-/* 지갑 연결 모달 (CONECT.png 스타일 완벽 유지) */
+/* v10.8 Wallet Sheet 복구 (CONECT.png 스타일 - 흰색 배경) */
 #deposit-sheet { position: fixed; bottom: -100%; left: 0; width: 100%; background: #ffffff; border-radius: 32px 32px 0 0; z-index: 7000; padding: 24px 24px 30px 24px; transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1); color: #000; }
 #deposit-sheet.active { bottom: 0; }
 .overlay-blur { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 6500; }
 
-/* 계산기/매치 카드 무결성 스타일 */
-.calc-mode-btn { flex: 1; padding: 14px; font-size: 12px; font-weight: 900; border-radius: 14px; background: rgba(0,0,0,0.3); color: #475569; transition: all 0.3s; text-transform: uppercase; font-style: italic; }
-.calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 0 15px rgba(79, 70, 229, 0.6); }
-.direct-logo { width: 18px; height: 18px; border-radius: 4px; margin-top: 6px; border: 1px solid rgba(255,255,255,0.1); }
+/* 입금(Refill) 화면 */
+#refill-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 5000; padding: 20px; flex-direction: column; align-items: center; justify-content: space-between; }
+.big-balance { font-size: 64px; font-weight: 900; color: white; letter-spacing: -3px; margin-top: 40px; }
+.btn-connect-blue { width: 100%; background: #2563eb; color: white; font-weight: 800; font-size: 16px; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3); text-align: center; margin-bottom: 20px; }
 
-/* 스위치 공통 */
+/* 오토봇 스위치 */
 .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .4s; border-radius: 24px; }
 .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-input:checked + .slider { background-color: #4f46e5; }
+input:checked + .slider { background-color: #4f46e5; box-shadow: 0 0 10px rgba(79, 70, 229, 0.5); }
 input:checked + .slider:before { transform: translateX(20px); }
+
+/* 계산기 모드 버튼 (네온) */
+.calc-mode-btn { flex: 1; padding: 14px; font-size: 12px; font-weight: 900; border-radius: 14px; background: rgba(0,0,0,0.3); color: #475569; transition: all 0.3s; text-transform: uppercase; font-style: italic; }
+.calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 0 15px rgba(79, 70, 229, 0.6); transform: scale(1.02); }
+.direct-logo { width: 18px; height: 18px; border-radius: 4px; margin-top: 6px; border: 1px solid rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
 
-<div id="refill-overlay" class="hidden fixed inset-0 bg-[#020617] z-[5000] p-5 flex-col items-center justify-between">
+<div id="refill-overlay">
     <div class="w-full flex flex-col items-center">
         <header class="w-full flex justify-between items-center p-2"><button onclick="closeRefill()" class="text-slate-500 p-2"><i class="fa-solid fa-chevron-left text-lg"></i></button><button onclick="closeRefill()" class="text-slate-500 p-2"><i class="fa-solid fa-xmark text-xl"></i></button></header>
         <div class="flex gap-8 mt-12"><div class="font-black text-white text-lg flex items-center gap-2"><i class="fa-solid fa-gem text-blue-500"></i> TON</div><div class="font-black text-slate-600 text-lg flex items-center gap-2"><i class="fa-solid fa-star"></i> Stars</div></div>
-        <div class="glass p-1 rounded-2xl flex gap-1 mt-10"><div class="bg-slate-800 px-4 py-2 rounded-xl text-[10px] font-black text-white">Wallet</div><div class="px-4 py-2 text-[10px] font-black text-slate-500">Crypto Bot</div><div class="px-4 py-2 text-[10px] font-black text-slate-500">xRocket</div></div>
-        <div class="text-[64px] font-[900] text-white tracking-tighter mt-12">0 <span class="text-slate-700 text-3xl ml-1 uppercase">ton</span></div>
+        <div class="glass p-1 rounded-2xl flex gap-1 mt-10"><div class="bg-slate-800 px-4 py-2 rounded-xl text-[10px] font-black">Wallet</div><div class="px-4 py-2 text-[10px] font-black text-slate-500">Crypto Bot</div><div class="px-4 py-2 text-[10px] font-black text-slate-500">xRocket</div></div>
+        <div class="big-balance">0 <span class="text-slate-700 text-3xl ml-1">TON</span></div>
         <div class="text-slate-600 font-bold mt-4 opacity-50"><i class="fa-solid fa-wallet mr-1"></i> -</div>
     </div>
-    <button onclick="openWalletSheet()" class="w-full bg-blue-600 text-white font-black py-5 rounded-2xl text-lg shadow-xl mb-10 active:scale-95 transition-transform">Connect</button>
+    <button onclick="openWalletSheet()" class="btn-connect-blue active:scale-95 transition-transform shadow-lg">Connect</button>
 </div>
 
 <div id="profile-overlay">
     <header class="p-6 flex justify-between items-center"><h2 class="text-sm neon-logo italic tracking-tighter">SURETRACK</h2><button onclick="closeProfile()" class="text-white opacity-50"><i class="fa-solid fa-xmark text-xl"></i></button></header>
-    
     <div class="p-6 text-center">
-        <div class="relative inline-block mb-4">
-            <img id="profile-avatar-main" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-24 h-24 rounded-full border-2 border-indigo-500/30 object-cover bg-slate-800">
-            <button onclick="toggleSafetyView()" class="absolute -top-1 -right-1 bg-indigo-950 p-2.5 rounded-full border border-white/10 text-xs text-indigo-400 shadow-lg active:scale-90 transition-transform"><i class="fa-solid fa-gear"></i></button>
-        </div>
+        <div class="relative inline-block mb-4"><img id="profile-avatar-main" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-24 h-24 rounded-full border-2 border-indigo-500/30 object-cover bg-slate-800"></div>
         <h3 id="profile-handle" class="text-xl font-black text-white italic mb-8">@haku82</h3>
-
-        <div id="profile-main-view">
-            <div class="rolls-balance-box mb-8">
-                <div class="text-left flex flex-col justify-center">
-                    <div class="text-[9px] text-slate-500 font-black uppercase mb-1.5 italic tracking-wider">Asset balance</div>
-                    <div class="flex flex-col gap-1">
-                        <div class="text-[17px] font-black italic text-white flex items-center gap-2"><i class="fa-solid fa-gem text-indigo-400 text-xs"></i> <span id="profile-ton-val">5,720.50</span> TON</div>
-                        <div class="text-[17px] font-black italic text-slate-500 flex items-center gap-2"><i class="fa-solid fa-circle-dollar-to-slot text-xs"></i> 0.00 USDT</div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button onclick="openRefill()" class="deposit-btn">Deposit</button>
-                    <button onclick="openWalletSheet()" class="wallet-icon-btn active:scale-90 transition-transform"><i class="fa-solid fa-wallet text-white"></i></button>
+        <div class="rolls-balance-box mb-8">
+            <div class="text-left flex flex-col justify-center">
+                <div class="text-[9px] text-slate-500 font-black uppercase mb-1.5 italic tracking-wider">Asset balance</div>
+                <div class="flex flex-col gap-1">
+                    <div class="text-[17px] font-black italic text-white flex items-center gap-2"><i class="fa-solid fa-gem text-indigo-400 text-xs"></i> <span id="profile-ton-val">5,720.50</span> TON</div>
+                    <div class="text-[17px] font-black italic text-slate-500 flex items-center gap-2"><i class="fa-solid fa-circle-dollar-to-slot text-xs"></i> 0.00 USDT</div>
                 </div>
             </div>
-            <div class="space-y-2 text-left">
-                <div class="menu-item"><div class="flex items-center gap-4"><i class="fa-solid fa-gift text-red-400"></i><span class="text-sm font-bold">Gift inventory</span></div><i class="fa-solid fa-chevron-right text-slate-700 text-xs"></i></div>
-                <div class="menu-item"><div class="flex items-center gap-4"><i class="fa-solid fa-gem text-indigo-400"></i><span class="text-sm font-bold">Referrals</span></div><i class="fa-solid fa-chevron-right text-slate-700 text-xs"></i></div>
-                <div class="menu-item"><div class="flex items-center gap-4"><i class="fa-solid fa-sack-dollar text-amber-600"></i><span class="text-sm font-bold">Staking</span></div><i class="fa-solid fa-chevron-right text-slate-700 text-xs"></i></div>
+            <div class="flex items-center gap-2">
+                <button onclick="openWalletSheet()" class="deposit-btn">Deposit</button>
+                <button onclick="openWalletSheet()" class="wallet-icon-btn active:scale-90 transition-transform"><i class="fa-solid fa-wallet text-white"></i></button>
             </div>
         </div>
-
-        <div id="profile-safety-view" class="hidden text-left space-y-4">
-            <h4 class="text-xs font-black text-indigo-400 uppercase tracking-widest mb-6 border-l-4 border-indigo-500 pl-3">Safety Guards Engine</h4>
-            
-            <div class="glass p-5 rounded-2xl flex justify-between items-center">
-                <div><div class="text-sm font-bold text-white mb-1 italic">Slippage Limit</div><p class="text-[9px] text-slate-500 font-bold uppercase">Auto-stop if odds drop over limit</p></div>
-                <input type="number" id="safety-slippage" class="safety-input" value="0.05" step="0.01" onchange="saveSafety()">
-            </div>
-
-            <div class="glass p-5 rounded-2xl flex justify-between items-center">
-                <div><div class="text-sm font-bold text-white mb-1 italic">Max Seed Guard</div><p class="text-[9px] text-slate-500 font-bold uppercase">Limit per execution (TON)</p></div>
-                <input type="number" id="safety-max-seed" class="safety-input" value="50" onchange="saveSafety()">
-            </div>
-
-            <div class="glass p-5 rounded-2xl flex justify-between items-center">
-                <div><div class="text-sm font-bold text-white mb-1 italic">Daily Stop-Loss</div><p class="text-[9px] text-slate-500 font-bold uppercase">Kill-switch on daily loss</p></div>
-                <div class="flex items-center gap-3">
-                    <input type="number" id="safety-stop-loss" class="safety-input" value="10" onchange="saveSafety()">
-                    <label class="switch"><input type="checkbox" id="safety-stop-toggle" onchange="saveSafety()" checked><span class="slider"></span></label>
-                </div>
-            </div>
-
-            <button onclick="toggleSafetyView()" class="w-full py-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] text-center mt-6">Back to Profile</button>
+        <div class="space-y-2 text-left">
+            <div class="menu-item"><div class="flex items-center gap-4"><i class="fa-solid fa-gift text-red-400"></i><span class="text-sm font-bold">Gift inventory</span></div><i class="fa-solid fa-chevron-right text-slate-700"></i></div>
+            <div class="menu-item"><div class="flex items-center gap-4"><i class="fa-solid fa-gem text-indigo-400"></i><span class="text-sm font-bold">Referrals</span></div><i class="fa-solid fa-chevron-right text-slate-700"></i></div>
+            <div class="menu-item"><div class="flex items-center gap-4"><i class="fa-solid fa-sack-dollar text-amber-600"></i><span class="text-sm font-bold">Staking</span></div><i class="fa-solid fa-chevron-right text-slate-700"></i></div>
         </div>
     </div>
 </div>
@@ -137,14 +112,21 @@ input:checked + .slider:before { transform: translateX(20px); }
     </div>
     <h2 class="text-xl font-black text-center mb-1 text-slate-900">Connect your TON wallet</h2>
     <p class="text-center text-slate-500 text-xs font-bold mb-8">Use Wallet in Telegram or choose other application</p>
-    <button onclick="connectAlert()" class="w-full bg-sky-500 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 mb-8 shadow-lg active:scale-95 transition-transform"><i class="fa-solid fa-wallet text-xl"></i> Connect Wallet in Telegram<i class="fa-solid fa-paper-plane text-sm ml-auto opacity-30"></i></button>
+    
+    <button onclick="connectAlert()" class="w-full bg-sky-500 text-white font-black py-4 rounded-2xl flex items-center justify-center gap-3 mb-8 shadow-lg active:scale-95 transition-transform">
+        <i class="fa-solid fa-wallet text-xl"></i> Connect Wallet in Telegram
+        <i class="fa-solid fa-paper-plane text-sm ml-auto opacity-30"></i>
+    </button>
+    
     <p class="text-center text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Choose other application</p>
+    
     <div class="grid grid-cols-4 gap-4 mb-4 text-center px-4">
         <div class="flex flex-col items-center gap-1.5"><img src="https://icon.horse/icon/tonkeeper.com" class="w-12 h-12 rounded-2xl border border-slate-100 shadow-md"><span class="text-[8px] font-bold text-slate-600">Tonkeeper</span></div>
-        <div class="flex flex-col items-center gap-1.5"><div class="w-12 h-12 bg-indigo-500 rounded-2xl flex items-center justify-center shadow-md"><i class="fa-solid fa-circle-dot text-white text-xl"></i></div><span class="text-[8px] font-bold text-slate-600">MyTon</span></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-12 h-12 bg-indigo-500 rounded-2xl flex items-center justify-center shadow-md"><i class="fa-solid fa-circle-dot text-white text-xl"></i></div><span class="text-[8px] font-bold text-slate-600">MyTonWallet</span></div>
         <div class="flex flex-col items-center gap-1.5"><div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-md"><i class="fa-solid fa-diamond text-white text-xl"></i></div><span class="text-[8px] font-bold text-slate-600">Tonhub</span></div>
-        <div class="flex flex-col items-center gap-1.5"><div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 border border-slate-200"><i class="fa-solid fa-qrcode text-xl"></i></div><span class="text-[8px] font-bold text-slate-600 leading-tight uppercase">View all</span></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 border border-slate-200"><i class="fa-solid fa-qrcode text-xl"></i></div><span class="text-[8px] font-bold text-slate-600 leading-tight">View all<br>wallets</span></div>
     </div>
+    
     <div class="flex justify-between items-center text-slate-400 mt-8 pt-6 border-t border-slate-100">
         <div class="flex items-center gap-2"><i class="fa-solid fa-gem text-indigo-500 text-xs"></i><span class="text-xs font-black italic uppercase tracking-tighter">TON Connect</span></div>
         <i class="fa-solid fa-circle-question text-lg opacity-50 cursor-pointer"></i>
@@ -166,38 +148,30 @@ input:checked + .slider:before { transform: translateX(20px); }
     </div>
     <div class="flex justify-between items-center mb-4 px-1"><h2 class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Live Arbitrage Stream</h2><button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black uppercase">Refresh Feed</button></div>
     <div id="api-match-container" class="space-y-4"></div>
-    <div class="version-tag">v10.9 TON Golden Master</div>
+    <div class="version-tag">v10.8 TON Golden Master</div>
 </main>
 
 <section id="calc-tab" class="tab-content p-4">
     <div class="glass rounded-[32px] p-5 border-indigo-500/20 shadow-2xl">
         <div class="flex gap-2 mb-6 bg-black/40 p-1.5 rounded-2xl"><button id="mode-2way" onclick="setCalcMode(2)" class="calc-mode-btn active">2-Way Mode</button><button id="mode-3way" onclick="setCalcMode(3)" class="calc-mode-btn">3-Way Mode</button></div>
         <div class="space-y-4">
-            <input type="number" id="calc-seed" oninput="runCalculation()" placeholder="0.00" class="w-full bg-slate-950 border-2 border-slate-800 p-3.5 rounded-xl text-2xl font-black text-white outline-none">
+            <input type="number" id="calc-seed" oninput="runCalculation()" placeholder="0.00" class="w-full bg-slate-950 border-2 border-slate-800 p-3.5 rounded-xl text-2xl font-black text-white outline-none mb-4">
             <div class="space-y-3"><input type="number" id="odds-a" oninput="runCalculation()" step="0.01" placeholder="Odds A" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none"><input type="number" id="odds-b" oninput="runCalculation()" step="0.01" placeholder="Odds B" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none"><input type="number" id="odds-c" oninput="runCalculation()" step="0.01" placeholder="Odds C" class="w-full bg-slate-900/50 border border-slate-700 p-3.5 rounded-xl text-lg font-black text-indigo-400 outline-none hidden"></div>
-            <div id="calc-results" class="space-y-2.5 opacity-20 mt-4 text-white"><div class="flex justify-between p-3.5 bg-slate-900/80 rounded-xl text-[11px] font-bold uppercase"><span class="text-slate-500">Stake A</span><span id="res-a">0</span></div><div class="flex justify-between p-3.5 bg-slate-900/80 rounded-xl text-[11px] font-bold uppercase"><span class="text-slate-500">Stake B</span><span id="res-b">0</span></div><div class="premium-gradient p-5 rounded-2xl mt-4"><div class="flex justify-between text-[10px] font-black opacity-60 uppercase"><span>ROI %</span><span id="res-roi">0.00%</span></div><div class="flex justify-between text-2xl font-black mt-1 italic tracking-tighter"><span>Net Profit</span><span id="res-profit">0</span></div></div><button onclick="saveBetToHistory()" class="w-full bg-white text-indigo-900 font-black py-3 rounded-xl mt-2 uppercase italic text-xs shadow-xl">Manual Execution</button></div>
+            <div id="calc-results" class="space-y-2.5 opacity-20 mt-4"><div class="flex justify-between p-3.5 bg-slate-900/80 rounded-xl text-[11px] font-bold uppercase"><span class="text-slate-500">Stake A</span><span id="res-a">0</span></div><div class="flex justify-between p-3.5 bg-slate-900/80 rounded-xl text-[11px] font-bold uppercase"><span class="text-slate-500">Stake B</span><span id="res-b">0</span></div><div id="res-c-box" class="hidden flex justify-between p-3.5 bg-slate-900/80 rounded-xl text-[11px] font-bold uppercase"><span class="text-slate-500">Stake C</span><span id="res-c">0</span></div><div class="premium-gradient p-5 rounded-2xl mt-4 text-white"><div class="flex justify-between text-[10px] font-black opacity-60 uppercase"><span>ROI %</span><span id="res-roi">0.00%</span></div><div class="flex justify-between text-2xl font-black mt-1 italic uppercase tracking-tighter"><span>Net Profit</span><span id="res-profit">0</span></div></div><button onclick="saveBetToHistory()" class="w-full bg-white text-indigo-900 font-black py-3 rounded-xl mt-2 uppercase italic text-xs shadow-xl active:scale-95 transition-transform">Manual Execution</button></div>
         </div>
     </div>
-    <div class="version-tag">v10.9 TON Golden Master</div>
+    <div class="version-tag">v10.8 TON Golden Master</div>
 </section>
 
 <section id="bookies-tab" class="tab-content p-4">
+    <div class="glass p-6 rounded-[32px] mb-6 border-indigo-500/40 bg-indigo-950/10 shadow-xl"><h2 class="text-xl font-black italic text-indigo-400 mb-2 uppercase tracking-tighter">Partners Hub</h2><p class="text-[10px] text-slate-400 font-bold italic mb-6">Strategic API Channels with Tier-1 partners.</p></div>
     <div id="partner-list" class="space-y-2.5"></div>
-    <div class="version-tag">v10.9 TON Golden Master</div>
+    <div class="version-tag">v10.8 TON Golden Master</div>
 </section>
 
-<section id="history-tab" class="tab-content p-4">
-    <div class="grid grid-cols-3 gap-2.5 mb-6 text-center">
-        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Profit</div><div id="total-profit-val" class="text-green-400 font-black text-sm">0</div></div>
-        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Avg ROI</div><div id="total-roi-val" class="text-indigo-400 font-black text-sm">0%</div></div>
-        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div id="total-bets-val" class="text-white font-black text-sm">0</div></div>
-    </div>
-    <div id="history-list" class="space-y-3"></div>
-</section>
+<section id="history-tab" class="tab-content p-4"><div class="grid grid-cols-3 gap-2.5 mb-6"><div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Profit</div><div id="total-profit-val" class="text-green-400 font-black text-sm">0</div></div><div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Avg ROI</div><div id="total-roi-val" class="text-indigo-400 font-black text-sm">0%</div></div><div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div id="total-bets-val" class="text-white font-black text-sm">0</div></div></div><div id="history-list" class="space-y-3"></div><div class="version-tag">v10.8 TON Golden Master</div></section>
 
-<section id="saas-tab" class="tab-content p-4">
-    <div class="space-y-6"><div class="premium-gradient p-7 rounded-[32px] relative"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><div class="text-2xl font-black italic">19.9 TON / MO</div><i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div><div class="elite-gradient p-7 rounded-[32px] relative ring-4 ring-indigo-500/30"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><div class="text-2xl font-black italic">49.9 TON / MO</div><i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div></div>
-</section>
+<section id="saas-tab" class="tab-content p-4"><div class="space-y-6"><div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative" onclick="subscribePlan('PRO')"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><div class="text-2xl font-black italic">19.9 TON / MO</div><i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div><div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative ring-4 ring-indigo-500/30" onclick="subscribePlan('ELITE')"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><div class="text-2xl font-black italic">49.9 TON / MO</div><i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div></div><div class="version-tag">v10.8 TON Golden Master</div></section>
 
 <nav class="bottom-nav" id="main-nav">
     <div class="nav-item active" onclick="switchTab('home', this)"><i class="fa-solid fa-bolt-lightning text-xl mb-1.5"></i><span>Live</span></div>
@@ -208,12 +182,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 </nav>
 
 <script>
-// v10.9 상태 관리 및 세이프티 가드 로직
-const state = { 
-    balance: 5720.50, isAutoBot: false, isSubscribed: false, currentTier: 'FREE',
-    safety: JSON.parse(localStorage.getItem('suretrack_safety')) || { slippage: 0.05, maxSeed: 50, stopLoss: 10, stopToggle: true },
-    history: JSON.parse(localStorage.getItem('suretrack_history')) || [] 
-};
+const state = { balance: 5720.50, isAutoBot: false, isSubscribed: false, currentTier: 'FREE', calcMode: 2, currentMatch: "", lastCalc: null, history: JSON.parse(localStorage.getItem('suretrack_history')) || [], currentBookA: "", currentBookB: "" };
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
 function syncTelegramProfile() {
@@ -226,29 +195,6 @@ function syncTelegramProfile() {
     } catch(e) {}
 }
 
-// v10.9 세이프티 가드 뷰 전환 및 저장 로직
-function toggleSafetyView() {
-    const main = document.getElementById('profile-main-view');
-    const safety = document.getElementById('profile-safety-view');
-    if(main.classList.contains('hidden')) { main.classList.remove('hidden'); safety.classList.add('hidden'); }
-    else { main.classList.add('hidden'); safety.classList.remove('hidden'); loadSafetyUI(); }
-}
-function loadSafetyUI() {
-    document.getElementById('safety-slippage').value = state.safety.slippage;
-    document.getElementById('safety-max-seed').value = state.safety.maxSeed;
-    document.getElementById('safety-stop-loss').value = state.safety.stopLoss;
-    document.getElementById('safety-stop-toggle').checked = state.safety.stopToggle;
-}
-function saveSafety() {
-    state.safety = {
-        slippage: parseFloat(document.getElementById('safety-slippage').value),
-        maxSeed: parseFloat(document.getElementById('safety-max-seed').value),
-        stopLoss: parseFloat(document.getElementById('safety-stop-loss').value),
-        stopToggle: document.getElementById('safety-stop-toggle').checked
-    };
-    localStorage.setItem('suretrack_safety', JSON.stringify(state.safety));
-}
-
 function switchTab(t, el) { 
     closeProfile(); closeRefill(); closeWalletSheet();
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
@@ -259,11 +205,7 @@ function switchTab(t, el) {
 }
 
 function openProfile() { document.getElementById('profile-overlay').style.display = 'block'; }
-function closeProfile() { 
-    document.getElementById('profile-overlay').style.display = 'none'; 
-    document.getElementById('profile-main-view').classList.remove('hidden');
-    document.getElementById('profile-safety-view').classList.add('hidden');
-}
+function closeProfile() { document.getElementById('profile-overlay').style.display = 'none'; }
 
 function openWalletSheet() { 
     document.getElementById('main-nav').classList.add('hidden-nav');
@@ -272,19 +214,29 @@ function openWalletSheet() {
 }
 function closeWalletSheet() { 
     document.getElementById('deposit-sheet').classList.remove('active'); 
-    setTimeout(() => { document.getElementById('sheet-blur').style.display = 'none'; if(document.getElementById('refill-overlay').classList.contains('hidden')) { document.getElementById('main-nav').classList.remove('hidden-nav'); } }, 400); 
+    setTimeout(() => {
+        document.getElementById('sheet-blur').style.display = 'none';
+        if(document.getElementById('refill-overlay').style.display !== 'flex') {
+            document.getElementById('main-nav').classList.remove('hidden-nav');
+        }
+    }, 400); 
 }
 
-function openRefill() { document.getElementById('main-nav').classList.add('hidden-nav'); document.getElementById('refill-overlay').classList.remove('hidden'); document.getElementById('refill-overlay').style.display = 'flex'; }
-function closeRefill() { document.getElementById('refill-overlay').classList.add('hidden'); document.getElementById('refill-overlay').style.display = 'none'; document.getElementById('main-nav').classList.remove('hidden-nav'); }
+function openRefill() { document.getElementById('main-nav').classList.add('hidden-nav'); document.getElementById('refill-overlay').style.display = 'flex'; }
+function closeRefill() { document.getElementById('refill-overlay').style.display = 'none'; document.getElementById('main-nav').classList.remove('hidden-nav'); }
 
-function connectAlert() { alert("Protocol: Connecting to TON Connect..."); }
+function connectAlert() { alert("Connecting via Rolls-bot Protocol..."); }
 
 function toggleBot() { 
     const toggle = document.getElementById('bot-toggle');
-    if(toggle.checked && !state.isSubscribed) { alert("Active Membership Required."); toggle.checked = false; switchTab('saas', document.querySelectorAll('.nav-item')[4]); return; }
-    state.isAutoBot = toggle.checked; 
-    if(state.isAutoBot) alert(`Bot Engaged: Slippage Guard set to ${state.safety.slippage}`);
+    if(toggle.checked && !state.isSubscribed) { alert("Membership Required."); toggle.checked = false; switchTab('saas', document.querySelectorAll('.nav-item')[4]); return; }
+    state.isAutoBot = toggle.checked; const badge = document.getElementById('bot-status-badge');
+    if(state.isAutoBot) { badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
+}
+
+function subscribePlan(plan) {
+    const cost = plan === 'PRO' ? 19.9 : 49.9; if(state.balance < cost) { alert("Insufficient TON."); return; }
+    state.balance -= cost; state.isSubscribed = true; state.currentTier = plan; updateBalance(); alert(`${plan} MASTER Activated!`); switchTab('home', document.querySelectorAll('.nav-item')[0]);
 }
 
 function updateBalance() { 
@@ -292,39 +244,56 @@ function updateBalance() {
     document.getElementById('top-balance').innerText = b + " TON"; document.getElementById('profile-ton-val').innerText = b;
 }
 
-// 매칭 스트림 로직 복구 및 고정 (녹색 VS, 배당 내 로고)
+function getMatchIdentity(lRaw, sRaw) {
+    const s = (sRaw || "").toLowerCase(); const l = (lRaw || "").toLowerCase();
+    let sEmoji = "🏁"; if(s.includes("soccer")) sEmoji = "⚽"; else if(s.includes("basketball")) sEmoji = "🏀"; else if(s.includes("baseball")) sEmoji = "⚾"; else if(s.includes("tennis")) sEmoji = "🎾"; else if(s.includes("volleyball")) sEmoji = "🏐";
+    let gText = l.includes("women") ? "Women" : "Men";
+    let lEmoji = "🌍"; if(l.includes("england") || l.includes("epl")) lEmoji = "🏴󠁧󠁢󠁥󠁮󠁧󠁿"; else if(l.includes("spain") || l.includes("la liga")) lEmoji = "🇪🇸"; else if(l.includes("usa") || l.includes("nba") || l.includes("mlb")) lEmoji = "🇺🇸"; else if(l.includes("germany")) lEmoji = "🇩🇪"; else if(l.includes("italy")) lEmoji = "🇮🇹";
+    return { sEmoji, gText, lEmoji };
+}
+
+function formatKoreanTime(isoString) {
+    if(!isoString || isoString === "LIVE") return "LIVE";
+    try { const date = new Date(isoString); return date.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).replace('. ', '/').replace('.', '');
+    } catch(e) { return "LIVE"; }
+}
+
 async function fetchMatches() {
     const container = document.getElementById('api-match-container');
-    container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase tracking-[0.2em]">Syncing Master Feed...</div>`;
+    container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase tracking-[0.2em]">Syncing Feed...</div>`;
     try {
         const res = await fetch(GAS_URL); const data = await res.json(); container.innerHTML = '';
         data.forEach(m => {
+            const { sEmoji, gText, lEmoji } = getMatchIdentity(m['리그명'], m['종목']);
+            const kTime = formatKoreanTime(m['시작시간']); const is3Way = m['배당C'] && m['배당C'] !== "";
             const domainA = m['북A'].toLowerCase().replace(/\s/g,'') + ".com"; const domainB = m['북B'].toLowerCase().replace(/\s/g,'') + ".com";
             const card = document.createElement('div'); card.className = 'glass rounded-[30px] overflow-hidden shadow-2xl p-5 mb-4';
             card.innerHTML = `
+                <div class="flex justify-between items-center text-[10px] font-black text-slate-500 uppercase italic mb-3"><span>${sEmoji} ${m['리그명']||'INTL'} ${gText} ${lEmoji}</span></div>
                 <div class="text-lg font-black text-white italic mb-1 text-center">${m['경기명'].split(' vs ').join(' <span class="text-green-400 not-italic mx-1">vs</span> ')}</div>
-                <div class="text-[10px] font-black text-indigo-400 mb-4 text-center">LIVE NOW</div>
+                <div class="text-[10px] font-black text-indigo-400 mb-4 text-center">${kTime}</div>
                 <div class="flex justify-around items-center bg-black/30 py-5 rounded-2xl border border-white/5">
-                    <div class="flex flex-col items-center gap-2"><span class="text-[10px] text-slate-500 font-black uppercase">Win</span><span class="text-xl font-[900] italic text-white">${m['배당A']}</span><img src="https://icon.horse/icon/${domainA}" class="direct-logo"></div>
+                    <div class="flex flex-col items-center gap-2"><span class="text-[10px] text-slate-500 font-black uppercase">Win</span><span class="text-xl font-900 italic text-white">${m['배당A']}</span><img src="https://icon.horse/icon/${domainA}" class="direct-logo"></div>
                     <span class="text-slate-800 text-2xl font-thin">|</span>
-                    <div class="flex flex-col items-center gap-2"><span class="text-[10px] text-slate-500 font-black uppercase">Lose</span><span class="text-xl font-[900] italic text-white">${m['배당B']}</span><img src="https://icon.horse/icon/${domainB}" class="direct-logo"></div>
+                    <div class="flex flex-col items-center gap-2"><span class="text-[10px] text-slate-500 font-black uppercase">${is3Way ? 'Draw' : 'Lose'}</span><span class="text-xl font-900 italic text-white">${m['배당B']}</span><img src="https://icon.horse/icon/${is3Way ? domainA : domainB}" class="direct-logo"></div>
+                    ${is3Way ? `<span class="text-slate-800 text-2xl font-thin">|</span><div class="flex flex-col items-center gap-2"><span class="text-[10px] text-slate-500 font-black uppercase">Lose</span><span class="text-xl font-900 italic text-white">${m['배당C']}</span><img src="https://icon.horse/icon/${domainB}" class="direct-logo"></div>` : ''}
                 </div>
-                <div class="flex justify-between items-center mt-5 px-1"><div class="text-green-400 font-black text-2xl italic tracking-tighter">+${m['수익률(%)']}% <span class="text-[8px] text-slate-500 uppercase not-italic">ROI</span></div><button onclick="prepareCalc('${m['경기명']}', ${m['배당A']}, ${m['배당B']}, 0, '${m['북A']}', '${m['북B']}')" class="bg-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center shadow-indigo-500/20"><i class="fa-solid fa-calculator text-lg text-white"></i></button></div>`;
+                <div class="flex justify-between items-center mt-5 px-1"><div class="text-green-400 font-black text-2xl italic tracking-tighter">+${m['수익률(%)']}% <span class="text-[8px] text-slate-500 uppercase not-italic">ROI</span></div><button onclick="prepareCalc('${m['경기명']}', ${m['배당A']}, ${m['배당B']}, ${m['배당C'] || 0}, '${m['북A']}', '${m['북B']}')" class="bg-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center active:scale-90 transition-transform shadow-lg shadow-indigo-500/20"><i class="fa-solid fa-calculator text-lg text-white"></i></button></div>`;
             container.appendChild(card);
         });
-    } catch(e) { container.innerHTML = '<div class="text-center py-20 text-red-500">SYNC ERROR</div>'; }
+    } catch(e) { container.innerHTML = '<div class="text-center py-20 text-red-500 font-black">SYNC ERROR</div>'; }
 }
 
 function loadBookies() {
     const list = document.getElementById('partner-list');
     const partners = [{n:'Pinnacle',d:'pinnacle.com',t:'VIP'},{n:'Bet365',d:'bet365.com',t:'CORE'},{n:'Stake',d:'stake.com',t:'CRYPTO'},{n:'1xBet',d:'1xbet.com',t:'ODDS'},{n:'Betway',d:'betway.com',t:'GLOBAL'},{n:'Bwin',d:'bwin.com',t:'LIVE'},{n:'Unibet',d:'unibet.com',t:'PRO'},{n:'Betfair',d:'betfair.com',t:'EXCH'},{n:'William Hill',d:'williamhill.com',t:'UK'},{n:'Marathonbet',d:'marathonbet.com',t:'VAL'},{n:'Parimatch',d:'parimatch.com',t:'FAST'},{n:'LeoVegas',d:'leovegas.com',t:'MOBILE'},{n:'22Bet',d:'22bet.com',t:'WIDE'},{n:'BetVictor',d:'betvictor.com',t:'SHARP'},{n:'Dafabet',d:'dafabet.com',t:'ASIA'},{n:'Cloudbet',d:'cloudbet.com',t:'BTC'},{n:'Mr Green',d:'mrgreen.com',t:'PREM'},{n:'888Sport',d:'888sport.com',t:'DYN'},{n:'Ladbrokes',d:'ladbrokes.com',t:'UK'},{n:'Coral',d:'coral.co.uk',t:'EST'}];
-    list.innerHTML = partners.map(p => `<a href="https://${p.d}" target="_blank" class="glass p-4 rounded-2xl bookie-card mb-2 flex justify-between items-center active:bg-indigo-600/30 transition-all"><div class="flex items-center gap-4"><div class="logo-container"><div class="initial-badge">${p.n[0]}</div><img src="https://icon.horse/icon/${p.d}" class="logo-img" onload="this.style.opacity=1"></div><div><h4 class="font-black text-sm uppercase italic">${p.n}</h4><p class="text-[8px] text-slate-500 font-bold">${p.d}</p></div></div><span class="text-[8px] border border-white/10 px-2 py-0.5 rounded text-slate-500 font-black">${p.t}</span></a>`).join('');
+    list.innerHTML = partners.map(p => `<a href="https://${p.d}" target="_blank" class="glass p-4 rounded-2xl bookie-card mb-2 flex justify-between items-center active:bg-indigo-600/30 transition-all"><div class="flex items-center gap-4"><div class="logo-container"><div class="initial-badge">${p.n[0]}</div><img src="https://icon.horse/icon/${p.d}" class="logo-img" onload="this.style.opacity=1"></div><div><h4 class="font-black text-sm uppercase italic">${p.n}</h4><p class="text-[8px] text-slate-500 font-bold">${p.d}</p></div></div><span class="text-[8px] border border-white/20 px-2 py-0.5 rounded text-slate-500 font-black">${p.t}</span></a>`).join('');
 }
 
 function renderHistory() { 
     const list = document.getElementById('history-list'); let totalP = 0, totalI = 0;
-    const displayData = state.history.length > 0 ? state.history : [{id:1, date:'2026-03-24', match:'Lakers vs Celtics', profit:420, invested:10000, roi:'4.20', status:'SETTLED'}]; 
-    list.innerHTML = displayData.map(h => { if(h.status === 'SETTLED') { totalP += h.profit; totalI += h.invested; } return `<div class="glass p-4 rounded-2xl border-l-4 border-indigo-500 relative mb-3"><div class="flex justify-between items-start mb-2"><div><div class="text-[9px] text-slate-500 font-black uppercase tracking-widest">${h.date}</div><div class="text-[13px] font-black italic text-white mt-0.5">${h.match}</div><div class="text-[8px] font-bold mt-1 uppercase text-indigo-400">${h.status}</div></div><div class="text-green-400 font-black text-sm">+$${h.profit.toLocaleString()}</div></div><div class="flex justify-between text-[9px] font-bold text-slate-500 uppercase"><span>Stake: $${h.invested.toLocaleString()}</span><span>Yield: ${h.roi}%</span></div></div>`; }).join(''); 
+    const displayData = state.history.length > 0 ? state.history : [{id:1, date:'2026-03-24', match:'Man City vs Arsenal', profit:420, invested:10000, roi:'4.20', status:'SETTLED'}]; 
+    list.innerHTML = displayData.map(h => { if(h.status === 'SETTLED') { totalP += h.profit; totalI += h.invested; } return `<div class="glass p-4 rounded-2xl border-l-4 border-indigo-500 relative overflow-hidden mb-3"><div class="flex justify-between items-start mb-2"><div><div class="text-[9px] text-slate-500 font-black uppercase tracking-widest">${h.date}</div><div class="text-[13px] font-black italic text-white mt-0.5">${h.match}</div><div class="text-[8px] font-bold mt-1 uppercase text-indigo-400">${h.status}</div></div><div class="text-green-400 font-black text-sm z-10">+$${h.profit.toLocaleString()}</div></div><div class="flex justify-between text-[9px] font-bold text-slate-500 uppercase z-10"><span>Stake: $${h.invested.toLocaleString()}</span><span>Yield: ${h.roi}%</span></div></div>`; }).join(''); 
     if(state.history.length > 0) { document.getElementById('total-profit-val').innerText = totalP.toLocaleString(); document.getElementById('total-roi-val').innerText = (totalI > 0 ? ((totalP/totalI)*100).toFixed(1) : "0") + "%"; document.getElementById('total-bets-val').innerText = state.history.length; } 
 }
 
@@ -333,10 +302,12 @@ function runCalculation() {
     if(s<=0 || a<=0 || b<=0) { res.style.opacity="0.2"; return; } res.style.opacity="1"; 
     let tP=(1/a)+(1/b); let sA=(s/a)/tP; let sB=(s/b)/tP;
     document.getElementById('res-a').innerText = Math.floor(sA).toLocaleString(); document.getElementById('res-b').innerText = Math.floor(sB).toLocaleString(); document.getElementById('res-profit').innerText = Math.floor((s/tP)-s).toLocaleString(); document.getElementById('res-roi').innerText = (((1/tP)-1)*100).toFixed(2) + "%"; 
+    state.lastCalc = { match: state.currentMatch || "Manual Arbitrage", invested: s, profit: Math.floor((s/tP)-s), roi: (((1/tP)-1)*100).toFixed(2), status: 'SETTLED' }; 
 }
 
-function setCalcMode(m) { state.calcMode = m; document.getElementById('mode-2way').classList.toggle('active', m===2); document.getElementById('mode-3way').classList.toggle('active', m===3); runCalculation(); }
-function prepareCalc(n, a, b, c, bookA, bookB) { state.currentMatch = n; switchTab('calc', document.querySelectorAll('.nav-item')[1]); document.getElementById('odds-a').value = a; document.getElementById('odds-b').value = b; runCalculation(); }
+function setCalcMode(m) { state.calcMode = m; document.getElementById('mode-2way').classList.toggle('active', m===2); document.getElementById('mode-3way').classList.toggle('active', m===3); document.getElementById('odds-c').classList.toggle('hidden', m===2); document.getElementById('res-c-box').classList.toggle('hidden', m===2); runCalculation(); }
+function prepareCalc(n, a, b, c, bookA, bookB) { state.currentMatch = n; const mode = (c && c > 0) ? 3 : 2; setCalcMode(mode); document.getElementById('odds-a').value = a; document.getElementById('odds-b').value = b; switchTab('calc', document.querySelectorAll('.nav-item')[1]); runCalculation(); }
+function saveBetToHistory() { if(!state.lastCalc || state.lastCalc.invested <= 0) return; const newEntry = { ...state.lastCalc, id: Date.now(), date: new Date().toLocaleDateString(), status: 'SETTLED' }; state.history.unshift(newEntry); localStorage.setItem('suretrack_history', JSON.stringify(state.history)); alert("Execution Stored!"); renderHistory(); }
 
 window.onload = () => { loadBookies(); fetchMatches(); renderHistory(); updateBalance(); syncTelegramProfile(); };
 </script>
