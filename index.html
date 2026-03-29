@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SureTrack v9.5 Golden Master</title>
+<title>SureTrack v9.6 Golden Master</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
@@ -30,8 +30,6 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 .version-tag { font-size: 10px; color: #475569; font-weight: bold; text-align: center; padding: 25px; letter-spacing: 1.5px; opacity: 0.5; }
 .calc-mode-btn { flex: 1; padding: 12px; font-size: 11px; font-weight: 900; border-radius: 12px; background: rgba(255,255,255,0.05); color: #64748b; transition: all 0.2s; }
 .calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
-.direct-logo { width: 18px; height: 18px; border-radius: 4px; margin-top: 4px; border: 1px solid rgba(255,255,255,0.1); }
-/* v9.5 Auto-Bot Toggle & Wallet Style */
 .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .4s; border-radius: 24px; }
@@ -67,7 +65,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 <button onclick="fetchMatches()" class="text-indigo-400 text-[10px] font-black uppercase">Refresh Feed</button>
 </div>
 <div id="api-match-container" class="space-y-4"></div>
-<div class="version-tag">v9.5 TON Golden Master</div>
+<div class="version-tag">v9.6 TON Golden Master</div>
 </main>
 
 <section id="calc-tab" class="tab-content p-4">
@@ -98,7 +96,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 </div>
 </div>
 </div>
-<div class="version-tag">v9.5 TON Golden Master</div>
+<div class="version-tag">v9.6 TON Golden Master</div>
 </section>
 
 <section id="bookies-tab" class="tab-content p-4">
@@ -110,7 +108,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 </div>
 </div>
 <div id="partner-list" class="space-y-2.5"></div>
-<div class="version-tag">v9.5 TON Golden Master</div>
+<div class="version-tag">v9.6 TON Golden Master</div>
 </section>
 
 <section id="history-tab" class="tab-content p-4">
@@ -120,17 +118,17 @@ input:checked + .slider:before { transform: translateX(20px); }
 <div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div id="total-bets-val" class="text-white font-black text-sm">0</div></div>
 </div>
 <div id="history-list" class="space-y-3"></div>
-<div class="version-tag">v9.5 TON Golden Master</div>
+<div class="version-tag">v9.6 TON Golden Master</div>
 </section>
 
 <section id="saas-tab" class="tab-content p-4">
 <h2 class="text-2xl font-black text-center mb-8 italic uppercase tracking-tighter">Membership</h2>
 <div class="space-y-6">
 <div class="glass p-6 rounded-[32px] border-slate-700/50 opacity-60"><h3 class="text-lg font-black text-slate-400 uppercase italic mb-4">Free Basic</h3><ul class="space-y-2 text-[10px] text-slate-500 font-bold uppercase italic border-b border-white/5 pb-4 mb-4"><li>• Bet Limit: 5 TON</li><li>• Delay: 10m (3rd Priority)</li></ul><div class="text-2xl font-black italic uppercase tracking-tighter">EXPIRED</div></div>
-<div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: 100 TON</li><li>• Speed: Real-time (2nd Priority)</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div><i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
-<div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden ring-4 ring-indigo-500/30"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: UNLIMITED</li><li>• Speed: 0.1s (1st Priority)</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div><i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
+<div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden" onclick="subscribePlan('PRO')"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Elite</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: 100 TON</li><li>• Speed: Real-time (2nd Priority)</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div><i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
+<div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden ring-4 ring-indigo-500/30" onclick="subscribePlan('ELITE')"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Master</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: UNLIMITED</li><li>• Speed: 0.1s (1st Priority)</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div><i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i></div>
 </div>
-<div class="version-tag">v9.5 TON Golden Master</div>
+<div class="version-tag">v9.6 TON Golden Master</div>
 </section>
 
 <nav class="bottom-nav">
@@ -142,38 +140,49 @@ input:checked + .slider:before { transform: translateX(20px); }
 </nav>
 
 <script>
-// v9.5 SaaS 및 자산 상태 관리
-const state = { balance: 5720.50, isAutoBot: false, calcMode: 2, currentMatch: "", lastCalc: null, history: JSON.parse(localStorage.getItem('suretrack_history')) || [], currentBookA: "", currentBookB: "" };
+const state = { balance: 5720.50, isAutoBot: false, isSubscribed: false, currentTier: 'FREE', calcMode: 2, currentMatch: "", lastCalc: null, history: JSON.parse(localStorage.getItem('suretrack_history')) || [], currentBookA: "", currentBookB: "" };
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
 function toggleBot() { 
-    state.isAutoBot = document.getElementById('bot-toggle').checked; 
-    const badge = document.getElementById('bot-status-badge');
-    if(state.isAutoBot) {
-        badge.classList.remove('hidden');
-        alert("Auto-Bot Activated: System is now scanning for Elite-priority matches.");
-    } else {
-        badge.classList.add('hidden');
+    const toggle = document.getElementById('bot-toggle');
+    if(toggle.checked && !state.isSubscribed) {
+        alert("ACCESS DENIED: Membership required for Auto-Execution.");
+        toggle.checked = false;
+        switchTab('saas', document.querySelectorAll('.nav-item')[4]);
+        return;
     }
+    state.isAutoBot = toggle.checked; 
+    const badge = document.getElementById('bot-status-badge');
+    if(state.isAutoBot) { badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
+}
+
+function subscribePlan(plan) {
+    const cost = plan === 'PRO' ? 19.9 : 49.9;
+    if(state.balance < cost) { alert("Insufficient TON Balance."); return; }
+    state.balance -= cost;
+    state.isSubscribed = true;
+    state.currentTier = plan;
+    updateBalance();
+    alert(`Welcome to ${plan} MASTER! Auto-Bot is now available.`);
+    switchTab('home', document.querySelectorAll('.nav-item')[0]);
 }
 
 function depositFund() { 
-    const amt = prompt("Enter TON amount to deposit (From TON Wallet):"); 
-    if(amt && !isNaN(amt)) { 
-        state.balance += parseFloat(amt); 
-        updateBalance(); 
-        alert("Secure Deposit Confirmed!"); 
-    } 
+    const amt = prompt("Enter TON amount to deposit:"); 
+    if(amt && !isNaN(amt)) { state.balance += parseFloat(amt); updateBalance(); alert("Deposit Confirmed!"); } 
 }
 
-function updateBalance() { 
-    document.getElementById('top-balance').innerText = state.balance.toLocaleString(undefined, {minimumFractionDigits: 2}) + " TON"; 
-}
+function updateBalance() { document.getElementById('top-balance').innerText = state.balance.toLocaleString(undefined, {minimumFractionDigits: 2}) + " TON"; }
 
-// RNG 및 경기 정체성 로직 (무결성 유지)
+// 🏆 baseball_mlb Men 🇺🇸 -> ⚾ baseball_mlb Men 🇺🇸 (수정 적용)
 function getMatchIdentity(lRaw, sRaw) {
 const s = (sRaw || "").toLowerCase(); const l = (lRaw || "").toLowerCase();
-let sEmoji = "🏆"; if(s.includes("soccer")) sEmoji = "⚽"; else if(s.includes("basketball")) sEmoji = "🏀"; else if(s.includes("baseball")) sEmoji = "⚾"; else if(s.includes("tennis")) sEmoji = "🎾";
+let sEmoji = "🏆"; 
+if(s.includes("soccer")) sEmoji = "⚽"; 
+else if(s.includes("basketball")) sEmoji = "🏀"; 
+else if(s.includes("baseball")) sEmoji = "⚾"; 
+else if(s.includes("tennis")) sEmoji = "🎾";
+else if(s.includes("volleyball")) sEmoji = "🏐";
 let gText = l.includes("women") ? "Women" : "Men";
 let lEmoji = "🌍"; if(l.includes("england") || l.includes("epl")) lEmoji = "🏴󠁧󠁢󠁥󠁮󠁧󠁿"; else if(l.includes("spain") || l.includes("la liga")) lEmoji = "🇪🇸"; else if(l.includes("usa") || l.includes("nba") || l.includes("mlb")) lEmoji = "🇺🇸"; else if(l.includes("germany")) lEmoji = "🇩🇪"; else if(l.includes("italy")) lEmoji = "🇮🇹";
 return { sEmoji, gText, lEmoji };
@@ -187,7 +196,7 @@ try { const date = new Date(isoString); return date.toLocaleString('ko-KR', { ti
 
 async function fetchMatches() {
 const container = document.getElementById('api-match-container');
-container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase">Connecting to Arbitrage Tunnels...</div>`;
+container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase">Syncing Real-time Tunnels...</div>`;
 try {
 const res = await fetch(GAS_URL); const data = await res.json(); container.innerHTML = '';
 data.forEach(m => {
@@ -204,31 +213,28 @@ card.innerHTML = `
     <div class="text-lg font-black tracking-tighter text-white italic">${m['경기명']}</div>
     <div class="text-[10px] font-black text-indigo-400 mb-3">${kTime}</div>
     <div class="text-[9px] font-black text-slate-600 uppercase tracking-[0.3em] mb-1.5">${m['마켓타입']||'1X2'}</div>
-    <div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-3 rounded-xl border border-white/5 flex justify-around items-end">
+    <div class="text-xl text-white font-mono font-black italic tracking-[0.1em] bg-black/30 py-4 rounded-xl border border-white/5 flex justify-around items-end">
         <div class="flex flex-col items-center">
             <span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">WIN</span>
             <span>${m['배당A']}</span>
-            <img src="https://icon.horse/icon/${domainA}" class="direct-logo">
         </div>
         <span class="text-slate-700 pb-2">/</span>
         <div class="flex flex-col items-center">
             <span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">${is3Way ? 'DRAW' : 'LOSE'}</span>
             <span>${m['배당B']}</span>
-            <img src="https://icon.horse/icon/${is3Way ? domainA : domainB}" class="direct-logo">
         </div>
         ${is3Way ? `
         <span class="text-slate-700 pb-2">/</span>
         <div class="flex flex-col items-center">
             <span class="text-xs text-slate-500 font-bold mb-1 tracking-tighter">LOSE</span>
             <span>${m['배당C']}</span>
-            <img src="https://icon.horse/icon/${domainB}" class="direct-logo">
         </div>` : ''}
     </div>
 </div>
 <div class="center-logo-box border-t border-b border-white/5">
-    <a href="https://${domainA}" target="_blank" class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">A</div><img src="https://icon.horse/icon/${domainA}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북A']}</span></a>
+    <a href="https://${domainA}" target="_blank" class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">A</div><img src="https://icon.horse/icon/${domainA}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic">${m['북A']}</span></a>
     <div class="text-slate-700 text-[9px] font-black italic">VS</div>
-    <a href="https://${domainB}" target="_blank" class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">B</div><img src="https://icon.horse/icon/${domainB}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic group-hover:text-indigo-400 transition-colors">${m['북B']}</span></a>
+    <a href="https://${domainB}" target="_blank" class="flex items-center gap-2 group"><div class="logo-container"><div class="initial-badge">B</div><img src="https://icon.horse/icon/${domainB}" class="logo-img" onload="this.style.opacity=1"></div><span class="text-[10px] font-bold text-slate-400 italic">${m['북B']}</span></a>
 </div>
 <div class="p-4 flex justify-between items-center bg-slate-900/50">
     <div><div class="text-[8px] text-slate-600 font-black uppercase tracking-widest">EXPECTED ROI</div><div class="text-green-400 font-black text-2xl tracking-tighter italic">+${m['수익률(%)']}%</div></div>
@@ -242,25 +248,11 @@ container.appendChild(card);
 function loadBookies() {
 const list = document.getElementById('partner-list');
 const partners = [{n:'Pinnacle',d:'pinnacle.com',t:'VIP'},{n:'Bet365',d:'bet365.com',t:'CORE'},{n:'Stake',d:'stake.com',t:'CRYPTO'},{n:'1xBet',d:'1xbet.com',t:'ODDS'},{n:'Betway',d:'betway.com',t:'GLOBAL'},{n:'Bwin',d:'bwin.com',t:'LIVE'},{n:'Unibet',d:'unibet.com',t:'PRO'},{n:'Betfair',d:'betfair.com',t:'EXCH'},{n:'William Hill',d:'williamhill.com',t:'UK'},{n:'Marathonbet',d:'marathonbet.com',t:'VAL'},{n:'Parimatch',d:'parimatch.com',t:'FAST'},{n:'LeoVegas',d:'leovegas.com',t:'MOBILE'},{n:'22Bet',d:'22bet.com',t:'WIDE'},{n:'BetVictor',d:'betvictor.com',t:'SHARP'},{n:'Dafabet',d:'dafabet.com',t:'ASIA'},{n:'Cloudbet',d:'cloudbet.com',t:'BTC'},{n:'Mr Green',d:'mrgreen.com',t:'PREM'},{n:'888Sport',d:'888sport.com',t:'DYN'},{n:'Ladbrokes',d:'ladbrokes.com',t:'UK'},{n:'Coral',d:'coral.co.uk',t:'EST'}];
-list.innerHTML = partners.map(p => `
-<a href="https://${p.d}" target="_blank" class="glass p-4 rounded-2xl bookie-card active:bg-white/5 transition-all">
-    <div class="logo-container"><div class="initial-badge">${p.n[0]}</div><img src="https://icon.horse/icon/${p.d}" class="logo-img" onload="this.style.opacity=1"></div>
-    <div class="flex-1 text-left ml-5">
-        <div class="flex justify-between items-center"><h4 class="font-black text-[14px] italic uppercase tracking-tighter">${p.n}</h4><span class="text-[8px] border border-white/20 px-2 py-0.5 rounded text-slate-500 font-black">${p.t}</span></div>
-        <p class="text-[9px] text-slate-600 italic font-bold uppercase tracking-tight">Access Secure Tunnel</p>
-    </div>
-    <i class="fa-solid fa-chevron-right text-slate-700 text-[10px]"></i>
-</a>`).join('');
+list.innerHTML = partners.map(p => `<a href="https://${p.d}" target="_blank" class="glass p-4 rounded-2xl bookie-card active:bg-white/5 transition-all"><div class="logo-container"><div class="initial-badge">${p.n[0]}</div><img src="https://icon.horse/icon/${p.d}" class="logo-img" onload="this.style.opacity=1"></div><div class="flex-1 text-left ml-5"><div class="flex justify-between items-center"><h4 class="font-black text-[14px] italic uppercase tracking-tighter">${p.n}</h4><span class="text-[8px] border border-white/20 px-2 py-0.5 rounded text-slate-500 font-black">${p.t}</span></div><p class="text-[9px] text-slate-600 italic font-bold uppercase tracking-tight">Access Gateway</p></div><i class="fa-solid fa-chevron-right text-slate-700 text-[10px]"></i></a>`).join('');
 }
 
 function setCalcMode(m) { state.calcMode = m; document.getElementById('mode-2way').classList.toggle('active', m===2); document.getElementById('mode-3way').classList.toggle('active', m===3); document.getElementById('odds-c').classList.toggle('hidden', m===2); document.getElementById('res-c-box').classList.toggle('hidden', m===2); runCalculation(); }
-
-function prepareCalc(n, a, b, c, bookA, bookB) { 
-state.currentMatch = n; state.currentBookA = bookA; state.currentBookB = bookB;
-const mode = (c && c > 0) ? 3 : 2; setCalcMode(mode); 
-document.getElementById('odds-a').value = a; document.getElementById('odds-b').value = b; if(mode===3) document.getElementById('odds-c').value = c; 
-switchTab('calc', document.querySelectorAll('.nav-item')[1]); runCalculation(); 
-}
+function prepareCalc(n, a, b, c, bookA, bookB) { state.currentMatch = n; state.currentBookA = bookA; state.currentBookB = bookB; const mode = (c && c > 0) ? 3 : 2; setCalcMode(mode); document.getElementById('odds-a').value = a; document.getElementById('odds-b').value = b; if(mode===3) document.getElementById('odds-c').value = c; switchTab('calc', document.querySelectorAll('.nav-item')[1]); runCalculation(); }
 
 function runCalculation() { 
 const s = parseFloat(document.getElementById('calc-seed').value) || 0; const a = parseFloat(document.getElementById('odds-a').value) || 0; const b = parseFloat(document.getElementById('odds-b').value) || 0; const res = document.getElementById('calc-results'); 
@@ -268,26 +260,15 @@ if(s<=0 || a<=0 || b<=0) { res.style.opacity="0.2"; return; } res.style.opacity=
 let sA, sB, sC=0, tP=0; 
 const iconA = `https://icon.horse/icon/${state.currentBookA.toLowerCase().replace(/\s/g,'')}.com`;
 const iconB = `https://icon.horse/icon/${state.currentBookB.toLowerCase().replace(/\s/g,'')}.com`;
-if(state.calcMode===2) { 
-    tP=(1/a)+(1/b); sA=(s/a)/tP; sB=(s/b)/tP; 
-    document.getElementById('label-a').innerHTML = `<img src="${iconA}" class="inline w-3 h-3 mr-1 rounded-sm"> WIN`;
-    document.getElementById('label-b').innerHTML = `<img src="${iconB}" class="inline w-3 h-3 mr-1 rounded-sm"> LOSE`;
-} else { 
-    const c=parseFloat(document.getElementById('odds-c').value)||0; if(c<=0) return; tP=(1/a)+(1/b)+(1/c); sA=(s/a)/tP; sB=(s/b)/tP; sC=(s/c)/tP; 
-    document.getElementById('res-c').innerText = Math.floor(sC).toLocaleString(); 
-    document.getElementById('label-a').innerHTML = `<img src="${iconA}" class="inline w-3 h-3 mr-1 rounded-sm"> HOME`;
-    document.getElementById('label-b').innerHTML = `<img src="${iconA}" class="inline w-3 h-3 mr-1 rounded-sm"> DRAW`;
-    document.getElementById('label-c').innerHTML = `<img src="${iconB}" class="inline w-3 h-3 mr-1 rounded-sm"> AWAY`;
-} 
+if(state.calcMode===2) { tP=(1/a)+(1/b); sA=(s/a)/tP; sB=(s/b)/tP; document.getElementById('label-a').innerHTML = `<img src="${iconA}" class="inline w-3 h-3 mr-1 rounded-sm"> WIN`; document.getElementById('label-b').innerHTML = `<img src="${iconB}" class="inline w-3 h-3 mr-1 rounded-sm"> LOSE`; } else { const c=parseFloat(document.getElementById('odds-c').value)||0; if(c<=0) return; tP=(1/a)+(1/b)+(1/c); sA=(s/a)/tP; sB=(s/b)/tP; sC=(s/c)/tP; document.getElementById('res-c').innerText = Math.floor(sC).toLocaleString(); document.getElementById('label-a').innerHTML = `<img src="${iconA}" class="inline w-3 h-3 mr-1 rounded-sm"> HOME`; document.getElementById('label-b').innerHTML = `<img src="${iconA}" class="inline w-3 h-3 mr-1 rounded-sm"> DRAW`; document.getElementById('label-c').innerHTML = `<img src="${iconB}" class="inline w-3 h-3 mr-1 rounded-sm"> AWAY`; } 
 document.getElementById('res-a').innerText = Math.floor(sA).toLocaleString(); document.getElementById('res-b').innerText = Math.floor(sB).toLocaleString(); document.getElementById('res-profit').innerText = Math.floor((s/tP)-s).toLocaleString(); document.getElementById('res-roi').innerText = (((1/tP)-1)*100).toFixed(2) + "%"; 
 state.lastCalc = { match: state.currentMatch || "Manual Arbitrage", invested: s, profit: Math.floor((s/tP)-s), roi: (((1/tP)-1)*100).toFixed(2), status: 'SETTLED' }; 
 }
 
-function saveBetToHistory() { if(!state.lastCalc || state.lastCalc.invested <= 0) return; const newEntry = { ...state.lastCalc, id: Date.now(), date: new Date().toLocaleDateString() }; state.history.unshift(newEntry); localStorage.setItem('suretrack_history', JSON.stringify(state.history)); alert("Bet Saved & Executed!"); renderHistory(); }
-
+function saveBetToHistory() { if(!state.lastCalc || state.lastCalc.invested <= 0) return; const newEntry = { ...state.lastCalc, id: Date.now(), date: new Date().toLocaleDateString(), status: 'SETTLED' }; state.history.unshift(newEntry); localStorage.setItem('suretrack_history', JSON.stringify(state.history)); alert("Bet Executed!"); renderHistory(); }
 function renderHistory() { 
 const list = document.getElementById('history-list'); let totalP = 0, totalI = 0; 
-const displayData = state.history.length > 0 ? state.history : [{id:1, date:'2026-03-24', match:'Man City vs Arsenal (EPL)', profit:420, invested:10000, roi:'4.20', status:'SETTLED'}, {id:2, date:'2026-03-24', match:'Lakers vs Celtics (NBA)', profit:0, invested:5000, roi:'0.0', status:'FAILED (Slipped)'}]; 
+const displayData = state.history.length > 0 ? state.history : [{id:1, date:'2026-03-24', match:'Lakers vs Celtics (NBA)', profit:120, invested:1000, roi:'12.0', status:'SETTLED'}, {id:2, date:'2026-03-24', match:'Man City vs Arsenal (EPL)', profit:0, invested:2000, roi:'0.0', status:'FAILED (Slipped)'}]; 
 list.innerHTML = displayData.map(h => { if(h.status === 'SETTLED') { totalP += h.profit; totalI += h.invested; } return `<div class="glass p-4 rounded-2xl border-l-4 ${h.status === 'SETTLED' ? 'border-indigo-500' : 'border-red-500/50'} relative overflow-hidden"><div class="flex justify-between items-start mb-2"><div class="z-10"><div class="text-[9px] text-slate-500 font-black uppercase tracking-widest">${h.date}</div><div class="text-[13px] font-black italic text-white mt-0.5">${h.match}</div><div class="text-[8px] font-bold mt-1 ${h.status === 'SETTLED' ? 'text-indigo-400' : 'text-red-400'} uppercase tracking-widest">${h.status}</div></div><div class="${h.status === 'SETTLED' ? 'text-green-400' : 'text-slate-600'} font-black text-sm z-10">${h.status === 'SETTLED' ? '+$'+h.profit.toLocaleString() : 'VOID'}</div></div><div class="flex justify-between text-[9px] font-bold text-slate-500 uppercase z-10"><span>Stake: $${h.invested.toLocaleString()}</span><span>Yield: ${h.roi}%</span></div></div>`; }).join(''); 
 if(state.history.length > 0) { document.getElementById('total-profit-val').innerText = totalP.toLocaleString(); document.getElementById('total-roi-val').innerText = (totalI > 0 ? ((totalP/totalI)*100).toFixed(1) : "0") + "%"; document.getElementById('total-bets-val').innerText = state.history.length; } 
 }
