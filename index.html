@@ -1,263 +1,254 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SureTrack v11.6 Golden Master</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #020617; color: white; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; height: 100%; }
         
-        :root { --tg-theme-bg-color: #020617; }
-        
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #020617; 
-            color: white; 
-            margin: 0; padding: 0; 
-            overflow: hidden; /* 전체 바디 스크롤 방지 (탭 내부 스크롤 사용) */
-            height: 100vh;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* 탭 컨텐츠 영역 독립 스크롤링 */
-        .tab-content { 
-            display: none; 
-            height: 100vh;
-            overflow-y: auto; 
-            padding-top: 80px; /* 헤더 공간 */
-            padding-bottom: 120px; /* 하단 네비 공간 */
-            -webkit-overflow-scrolling: touch; 
-        }
-        .tab-content.active { display: block; animation: fadeIn 0.2s ease; }
+        /* 탭 전환 애니메이션 */
+        .tab-content { display: none; padding-bottom: 160px; min-height: 100vh; width: 100%; box-sizing: border-box; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* 네온 & 그라디언트 디자인 */
-        .neon-logo { color: #f59e0b; text-shadow: 0 0 10px #d97706; font-weight: 900; font-style: italic; }
-        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); }
+        /* 디자인 시스템 */
+        .neon-logo { color: #f59e0b; text-shadow: 0 0 5px #f59e0b, 0 0 15px #d97706; font-weight: 900; font-style: italic; }
+        .live-dot { width: 10px; height: 10px; border-radius: 50%; animation: pulse-rg 1.5s infinite; }
+        @keyframes pulse-rg { 0% { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; } 50% { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; } 100% { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; } }
+        .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
         .premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
-        
-        /* 하단 네비게이션 고정 로직 */
-        .bottom-nav { 
-            position: fixed; bottom: 0; left: 0; right: 0;
-            height: 85px; background: #0f172a; 
-            border-top: 1px solid #1e293b; 
-            display: flex; justify-content: space-around; align-items: center; 
-            z-index: 5000;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        body.keyboard-open .bottom-nav { display: none !important; }
+        .elite-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
 
-        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; font-weight: 700; cursor: pointer; }
+        /* 하단 내비게이션 (키보드 대응) */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 85px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 6000; transition: transform 0.2s ease-in-out; }
+        body.keyboard-open .bottom-nav { transform: translateY(100%); pointer-events: none; }
+        .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 700; }
         .nav-item.active { color: #818cf8; }
 
-        /* 매치 카드 */
-        .match-card { background: rgba(30, 41, 59, 0.4); border-radius: 24px; padding: 18px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); }
-        .odds-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 10px; text-align: center; flex: 1; border: 1px solid rgba(255,255,255,0.03); }
+        /* 버전 표기 스타일 */
+        .version-tag { text-align: center; font-size: 7px; color: #475569; font-weight: bold; padding: 20px 0; opacity: 0.6; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* 오버레이 */
-        .full-overlay { 
-            display: none; position: fixed; inset: 0; 
-            background: #020617; z-index: 9000; 
-            overflow-y: auto; padding: 20px;
-        }
-
-        .version-tag { text-align: center; font-size: 8px; color: #475569; font-weight: 900; padding: 20px 0; letter-spacing: 2px; }
+        /* 매치 카드 & UI 컴포넌트 */
+        .match-card { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; overflow: hidden; margin-bottom: 16px; padding: 16px; }
+        .odds-column { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); }
+        .safety-input { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 10px; color: white; font-weight: 800; width: 85px; text-align: center; outline: none; }
+        
+        #profile-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 8000; overflow-y: auto; }
+        .deposit-btn { background: #4f46e5; padding: 8px 16px; border-radius: 12px; font-weight: 900; font-size: 11px; }
     </style>
 </head>
 <body>
 
-<header class="fixed top-0 left-0 right-0 h-[70px] flex justify-between items-center px-5 glass z-[6000]">
-    <div class="flex items-center gap-2">
-        <div class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_#22c55e]"></div>
-        <h1 class="text-xl neon-logo tracking-tighter">SURETRACK</h1>
-    </div>
-    <div onclick="openProfile()" class="flex items-center gap-3 bg-white/5 p-1.5 pr-3 rounded-full border border-white/10 active:scale-95 transition-transform">
-        <img id="header-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-8 h-8 rounded-full bg-slate-800">
-        <span class="text-[11px] font-black italic text-indigo-300">5,720.50</span>
+<header class="p-4 flex justify-between items-center glass sticky top-0 z-50">
+    <div class="flex items-center gap-3"><div class="live-dot"></div><h1 class="text-2xl neon-logo tracking-tighter">SURETRACK</h1></div>
+    <div class="flex items-center gap-3" onclick="openProfile()">
+        <div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 italic">5,720.50 TON</div>
+        <img id="header-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-9 h-9 rounded-full border border-indigo-500/50 bg-slate-800">
     </div>
 </header>
 
-<div id="home-tab" class="tab-content active px-4">
-    <div onclick="toggleBot()" class="glass p-5 rounded-[28px] mb-6 flex justify-between items-center active:scale-[0.98] transition-all">
-        <div>
-            <h3 class="text-[10px] font-black text-slate-400 uppercase italic">Auto-Execution</h3>
-            <p id="bot-sub" class="text-[9px] text-slate-500 font-bold mt-1 uppercase">Ready to Sync</p>
+<main id="home-tab" class="tab-content active p-4">
+    <div id="bot-status-btn" onclick="toggleBot()" class="glass p-5 rounded-[28px] mb-6 flex justify-between items-center shadow-xl active:scale-95 transition-all">
+        <div class="text-left">
+            <h3 class="text-xs font-black text-slate-400 italic uppercase">Auto-Execution Engine</h3>
+            <p id="bot-sub" class="text-[9px] text-slate-500 font-bold uppercase mt-1">Bot is currently Stand-by</p>
         </div>
-        <div id="bot-indicator" class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center text-slate-600 border border-white/5"><i class="fa-solid fa-power-off"></i></div>
+        <div id="bot-status-indicator" class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center text-slate-600 border border-white/5"><i class="fa-solid fa-power-off"></i></div>
     </div>
     
-    <div id="match-list" class="space-y-4"></div>
+    <div id="api-match-container" class="space-y-4"></div>
     <div class="version-tag">v11.6 TON GOLDEN MASTER</div>
-</div>
+</main>
 
-<div id="calc-tab" class="tab-content px-4">
-    <div class="glass p-6 rounded-[32px] shadow-2xl">
-        <div class="flex gap-2 mb-6 bg-black/20 p-1 rounded-2xl">
-            <button onclick="setMode(2)" id="btn-2way" class="flex-1 py-3 rounded-xl font-black text-xs bg-indigo-600">2-WAY</button>
-            <button onclick="setMode(3)" id="btn-3way" class="flex-1 py-3 rounded-xl font-black text-xs bg-transparent text-slate-500">3-WAY</button>
+<section id="calc-tab" class="tab-content p-4">
+    <div class="glass rounded-[32px] p-6 shadow-2xl">
+        <div class="flex gap-2 mb-6"><button id="mode-2way" onclick="setCalcMode(2)" class="flex-1 py-3 rounded-xl font-black bg-indigo-600">2-Way</button><button id="mode-3way" onclick="setCalcMode(3)" class="flex-1 py-3 rounded-xl font-black bg-slate-800">3-Way</button></div>
+        <div class="space-y-4">
+            <div class="bg-black/30 p-4 rounded-xl border border-white/5">
+                <label class="text-[9px] font-black text-slate-500 uppercase block mb-1">Seed Investment (TON)</label>
+                <input type="number" id="calc-seed" oninput="runCalculation()" placeholder="0.00" class="w-full bg-transparent border-none outline-none text-2xl font-black text-white">
+            </div>
+            <div id="calc-input-rows" class="space-y-3">
+                <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
+                    <input type="number" id="odds-a" oninput="runCalculation()" step="0.01" placeholder="Odds A" class="bg-transparent flex-1 font-black text-indigo-400 outline-none">
+                    <div class="text-right"><span class="text-[8px] text-slate-500 block uppercase">Stake A</span><span id="res-a" class="font-black text-white">0</span></div>
+                </div>
+                <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
+                    <input type="number" id="odds-b" oninput="runCalculation()" step="0.01" placeholder="Odds B" class="bg-transparent flex-1 font-black text-indigo-400 outline-none">
+                    <div class="text-right"><span class="text-[8px] text-slate-500 block uppercase">Stake B</span><span id="res-b" class="font-black text-white">0</span></div>
+                </div>
+                <div id="row-c" class="hidden flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
+                    <input type="number" id="odds-c" oninput="runCalculation()" step="0.01" placeholder="Odds C" class="bg-transparent flex-1 font-black text-indigo-400 outline-none">
+                    <div class="text-right"><span class="text-[8px] text-slate-500 block uppercase">Stake C</span><span id="res-c" class="font-black text-white">0</span></div>
+                </div>
+            </div>
+            <div id="calc-results" class="mt-6 opacity-40">
+                <div class="premium-gradient p-5 rounded-2xl flex justify-between items-center">
+                    <div><div class="text-[10px] font-black uppercase opacity-60">ROI %</div><div id="res-roi" class="text-2xl font-black">0.00%</div></div>
+                    <div class="text-right"><div class="text-[10px] font-black uppercase opacity-60">Net Profit</div><div id="res-profit" class="text-2xl font-black">0</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="history-tab" class="tab-content p-4">
+    <div class="grid grid-cols-3 gap-3 mb-6">
+        <div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] text-slate-500 font-black uppercase">Profit</div><div class="text-green-400 font-black">1,420.5</div></div>
+        <div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] text-slate-500 font-black uppercase">ROI</div><div class="text-indigo-400 font-black">5.2%</div></div>
+        <div class="glass p-4 rounded-2xl text-center"><div class="text-[8px] text-slate-500 font-black uppercase">Bets</div><div class="text-white font-black">142</div></div>
+    </div>
+    <div id="history-list" class="space-y-3"></div>
+    <div class="version-tag">Current Version: v11.6 Golden Master</div>
+</section>
+
+<div id="profile-overlay">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-8"><h2 class="neon-logo italic">SETTINGS</h2><button onclick="closeProfile()" class="text-slate-500"><i class="fa-solid fa-xmark text-2xl"></i></button></div>
+        <div class="text-center mb-8">
+            <img id="profile-avatar-main" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-24 h-24 rounded-full mx-auto border-4 border-indigo-500/20 mb-4 bg-slate-800">
+            <h3 class="text-xl font-black italic">@haku82</h3>
         </div>
         <div class="space-y-4">
-            <div class="bg-black/40 p-4 rounded-xl border border-white/5">
-                <span class="text-[9px] font-black text-slate-500 uppercase block mb-1 italic">Investment Seed</span>
-                <input type="number" id="seed" oninput="calculate()" placeholder="0.00" class="w-full bg-transparent border-none outline-none text-2xl font-black text-white">
-            </div>
-            <div class="space-y-3" id="input-group">
-                <div class="flex gap-3"><input type="number" id="o-a" oninput="calculate()" placeholder="Odds A" class="odds-box outline-none font-black text-indigo-400"><div class="w-24 text-right pr-2"><span class="text-[8px] text-slate-500 block">STAKE A</span><span id="r-a" class="font-black text-white">0</span></div></div>
-                <div class="flex gap-3"><input type="number" id="o-b" oninput="calculate()" placeholder="Odds B" class="odds-box outline-none font-black text-indigo-400"><div class="w-24 text-right pr-2"><span class="text-[8px] text-slate-500 block">STAKE B</span><span id="r-b" class="font-black text-white">0</span></div></div>
-                <div id="row-c" class="hidden flex gap-3"><input type="number" id="o-c" oninput="calculate()" placeholder="Odds C" class="odds-box outline-none font-black text-indigo-400"><div class="w-24 text-right pr-2"><span class="text-[8px] text-slate-500 block">STAKE C</span><span id="r-c" class="font-black text-white">0</span></div></div>
-            </div>
-            <div id="results" class="mt-6 premium-gradient p-5 rounded-2xl flex justify-between items-center opacity-30">
-                <div><div class="text-[10px] font-black uppercase opacity-60">ROI %</div><div id="res-roi" class="text-xl font-black">0.00%</div></div>
-                <div class="text-right"><div class="text-[10px] font-black uppercase opacity-60">Net Profit</div><div id="res-profit" class="text-xl font-black italic">0</div></div>
-            </div>
+            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Slippage Limit</div><p class="text-[8px] text-slate-500 font-black">AUTO-STOP ON ODDS DROP</p></div><input type="number" id="safety-slippage" class="safety-input" value="0.05"></div>
+            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Daily Stop-Loss</div><p class="text-[8px] text-slate-500 font-black">KILL-SWITCH ON LOSS</p></div><input type="number" id="safety-stop-loss" class="safety-input" value="10"></div>
+            <button onclick="saveSafetyComplete()" class="w-full py-4 bg-indigo-600 rounded-xl font-black uppercase tracking-widest mt-4">Save Configuration</button>
         </div>
-    </div>
-    <div class="version-tag">v11.6 TON GOLDEN MASTER</div>
-</div>
-
-<div id="history-tab" class="tab-content px-4">
-    <div id="history-list" class="space-y-3"></div>
-    <div class="version-tag">v11.6 TON GOLDEN MASTER</div>
-</div>
-
-<div id="profile-page" class="full-overlay">
-    <div class="flex justify-between items-center mb-10"><h2 class="neon-logo italic">SETTINGS</h2><button onclick="closeProfile()" class="text-slate-500 text-2xl"><i class="fa-solid fa-xmark"></i></button></div>
-    <div class="text-center mb-10">
-        <img id="profile-img" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-24 h-24 rounded-full mx-auto border-4 border-indigo-500/20 bg-slate-800 mb-4">
-        <h3 class="text-xl font-black">@haku82</h3>
-    </div>
-    <div class="space-y-4">
-        <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold">Slippage</div><p class="text-[8px] text-slate-500 font-black">AUTO-STOP LIMIT</p></div><input type="number" id="slip" class="w-20 bg-black/50 border border-white/10 rounded-lg p-2 text-center font-black" value="0.05"></div>
-        <button onclick="saveSettings()" class="w-full py-4 premium-gradient rounded-xl font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all">Save Config</button>
     </div>
 </div>
 
 <nav class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab('home', this)"><i class="fa-solid fa-bolt-lightning text-xl mb-1"></i><span>Live</span></div>
-    <div class="nav-item" onclick="switchTab('calc', this)"><i class="fa-solid fa-calculator text-xl mb-1"></i><span>Calc</span></div>
-    <div class="nav-item" onclick="switchTab('history', this)"><i class="fa-solid fa-chart-line text-xl mb-1"></i><span>History</span></div>
+    <div class="nav-item active" onclick="switchTab('home', this)"><i class="fa-solid fa-bolt-lightning text-xl mb-1.5"></i><span>Live</span></div>
+    <div class="nav-item" onclick="switchTab('calc', this)"><i class="fa-solid fa-calculator text-xl mb-1.5"></i><span>Calc</span></div>
+    <div class="nav-item" onclick="switchTab('history', this)"><i class="fa-solid fa-chart-bar text-xl mb-1.5"></i><span>History</span></div>
 </nav>
 
 <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
-    tg.enableClosingConfirmation();
+const state = { 
+    balance: 5720.50, isAutoBot: false, isSubscribed: true, calcMode: 2,
+    safety: JSON.parse(localStorage.getItem('suretrack_safety')) || { slippage: 0.05, stopLoss: 10 }
+};
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
-    let state = { mode: 2, isBot: false };
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
+// 키보드 감지
+window.addEventListener('resize', () => {
+    if (window.innerHeight < 550) document.body.classList.add('keyboard-open');
+    else document.body.classList.remove('keyboard-open');
+});
 
-    // 키보드 대응
-    window.addEventListener('resize', () => {
-        if (window.innerHeight < 550) document.body.classList.add('keyboard-open');
-        else document.body.classList.remove('keyboard-open');
-    });
+function switchTab(t, el) { 
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
+    document.getElementById(t+'-tab').classList.add('active'); el.classList.add('active');
+    if(t === 'history') renderHistory();
+    window.scrollTo(0,0);
+}
 
-    function switchTab(id, el) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(id + '-tab').classList.add('active');
-        el.classList.add('active');
-        if(id === 'history') renderHistory();
-        window.scrollTo(0,0);
+function openProfile() { document.getElementById('profile-overlay').style.display = 'block'; }
+function closeProfile() { document.getElementById('profile-overlay').style.display = 'none'; }
+
+function saveSafetyComplete() {
+    state.safety = { slippage: parseFloat(document.getElementById('safety-slippage').value), stopLoss: parseFloat(document.getElementById('safety-stop-loss').value) };
+    localStorage.setItem('suretrack_safety', JSON.stringify(state.safety));
+    alert("Safety Settings Applied.");
+    closeProfile();
+}
+
+function toggleBot() {
+    state.isAutoBot = !state.isAutoBot;
+    const sub = document.getElementById('bot-sub');
+    const ind = document.getElementById('bot-status-indicator');
+    if(state.isAutoBot) {
+        sub.innerText = "Engine Running: Real-time Analysis";
+        sub.classList.replace('text-slate-500', 'text-indigo-400');
+        ind.style.color = "#818cf8";
+    } else {
+        sub.innerText = "Bot is currently Stand-by";
+        sub.classList.replace('text-indigo-400', 'text-slate-500');
+        ind.style.color = "#475569";
     }
+}
 
-    function openProfile() { document.getElementById('profile-page').style.display = 'block'; }
-    function closeProfile() { document.getElementById('profile-page').style.display = 'none'; }
-    function saveSettings() { alert("Settings Saved!"); closeProfile(); }
-
-    function toggleBot() {
-        state.isBot = !state.isBot;
-        const sub = document.getElementById('bot-sub');
-        const ind = document.getElementById('bot-indicator');
-        if(state.isBot) {
-            sub.innerText = "Running: Live Analysis";
-            sub.className = "text-[9px] text-indigo-400 font-black mt-1 uppercase";
-            ind.style.color = "#818cf8"; ind.style.borderColor = "#818cf8";
-        } else {
-            sub.innerText = "Ready to Sync";
-            sub.className = "text-[9px] text-slate-500 font-bold mt-1 uppercase";
-            ind.style.color = "#475569"; ind.style.borderColor = "rgba(255,255,255,0.05)";
-        }
-    }
-
-    async function loadMatches() {
-        const list = document.getElementById('match-list');
-        list.innerHTML = '<div class="text-center py-10 text-[10px] font-black animate-pulse uppercase tracking-widest text-slate-500">Master Stream Connecting...</div>';
-        try {
-            const res = await fetch(GAS_URL);
-            const data = await res.json();
-            list.innerHTML = '';
-            data.forEach(m => {
-                const card = document.createElement('div');
-                card.className = 'match-card';
-                card.innerHTML = `
-                    <div class="flex justify-between items-center mb-3"><span class="text-[9px] font-black text-indigo-400 uppercase italic">${m['리그명']}</span><span class="text-green-400 font-black text-xs">+${m['수익률(%)']}%</span></div>
-                    <div class="text-[15px] font-900 mb-4 italic uppercase tracking-tighter">${m['경기명']}</div>
-                    <div class="flex gap-2">
-                        <div class="odds-box"><div class="text-[7px] text-slate-500 uppercase mb-1">Book A</div><div class="font-black">${m['배당A']}</div></div>
-                        <div class="odds-box"><div class="text-[7px] text-slate-500 uppercase mb-1">Book B</div><div class="font-black">${m['배당B']}</div></div>
-                        <button onclick="goCalc(${m['배당A']}, ${m['배당B']})" class="w-12 bg-indigo-600 rounded-xl flex items-center justify-center active:scale-90 transition-transform"><i class="fa-solid fa-calculator"></i></button>
+async function fetchMatches() {
+    const container = document.getElementById('api-match-container');
+    container.innerHTML = '<div class="text-center py-10 text-[10px] font-black animate-pulse uppercase">Syncing Master Stream...</div>';
+    try {
+        const res = await fetch(GAS_URL);
+        const data = await res.json();
+        container.innerHTML = '';
+        data.forEach(m => {
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            card.innerHTML = `
+                <div class="text-[10px] font-black text-slate-500 uppercase mb-2">⚽ ${m['리그명']}</div>
+                <div class="text-lg font-900 italic mb-4">${m['경기명']}</div>
+                <div class="flex gap-2">
+                    <div class="odds-column"><span class="text-[8px] font-black text-slate-500 uppercase">Book A</span><span class="font-900">${m['배당A']}</span></div>
+                    <div class="odds-column"><span class="text-[8px] font-black text-slate-500 uppercase">Book B</span><span class="font-900">${m['배당B']}</span></div>
+                    <div class="flex flex-col items-center justify-center ml-auto pl-4 border-l border-white/5">
+                        <div class="text-green-400 font-black italic">+${m['수익률(%)']}%</div>
+                        <button onclick="prepareCalc(${m['배당A']}, ${m['배당B']})" class="w-8 h-8 bg-indigo-600 rounded-lg mt-1 flex items-center justify-center"><i class="fa-solid fa-calculator text-xs"></i></button>
                     </div>
-                `;
-                list.appendChild(card);
-            });
-        } catch(e) { list.innerHTML = '<div class="text-center py-10 text-red-500 font-black">API OFFLINE</div>'; }
-    }
-
-    function calculate() {
-        const s = parseFloat(document.getElementById('seed').value) || 0;
-        const a = parseFloat(document.getElementById('o-a').value) || 0;
-        const b = parseFloat(document.getElementById('o-b').value) || 0;
-        const c = parseFloat(document.getElementById('o-c').value) || 0;
-        const resDiv = document.getElementById('results');
-
-        if(s <= 0 || a <= 0 || b <= 0) { resDiv.style.opacity = "0.3"; return; }
-        resDiv.style.opacity = "1";
-
-        let invP = (1/a) + (1/b);
-        if(state.mode === 3 && c > 0) invP += (1/c);
-
-        document.getElementById('r-a').innerText = Math.floor((s/a)/invP).toLocaleString();
-        document.getElementById('r-b').innerText = Math.floor((s/b)/invP).toLocaleString();
-        if(state.mode === 3) document.getElementById('r-c').innerText = Math.floor((s/c)/invP).toLocaleString();
-
-        const profit = (s/invP) - s;
-        document.getElementById('res-profit').innerText = Math.floor(profit).toLocaleString();
-        document.getElementById('res-roi').innerText = (((1/invP)-1)*100).toFixed(2) + "%";
-    }
-
-    function setMode(m) {
-        state.mode = m;
-        document.getElementById('btn-2way').className = m===2 ? 'flex-1 py-3 rounded-xl font-black text-xs bg-indigo-600' : 'flex-1 py-3 rounded-xl font-black text-xs bg-transparent text-slate-500';
-        document.getElementById('btn-3way').className = m===3 ? 'flex-1 py-3 rounded-xl font-black text-xs bg-indigo-600' : 'flex-1 py-3 rounded-xl font-black text-xs bg-transparent text-slate-500';
-        document.getElementById('row-c').classList.toggle('hidden', m===2);
-        calculate();
-    }
-
-    function goCalc(a, b) {
-        switchTab('calc', document.querySelectorAll('.nav-item')[1]);
-        document.getElementById('o-a').value = a;
-        document.getElementById('o-b').value = b;
-        setMode(2);
-    }
-
-    function renderHistory() {
-        const list = document.getElementById('history-list');
-        const items = [{m:'Man City vs Arsenal', p:142.5, s:'SUCCESS'}, {m:'Lakers vs Clippers', p:-100, s:'FAILED'}];
-        list.innerHTML = items.map(i => `
-            <div class="glass p-4 rounded-2xl border-l-4 ${i.s==='SUCCESS'?'border-green-500':'border-red-500'}">
-                <div class="flex justify-between items-center">
-                    <div><div class="text-[9px] text-slate-500 font-black">2026-04-02</div><div class="font-black italic">${i.m}</div></div>
-                    <div class="${i.s==='SUCCESS'?'text-green-400':'text-red-400'} font-black italic">${i.p > 0 ? '+':''}${i.p}</div>
                 </div>
-            </div>
-        `).join('');
-    }
+            `;
+            container.appendChild(card);
+        });
+    } catch(e) { container.innerHTML = '<div class="text-center py-10 text-red-500">SYNC ERROR</div>'; }
+}
 
-    window.onload = () => { loadMatches(); };
+function runCalculation() { 
+    const s = parseFloat(document.getElementById('calc-seed').value) || 0;
+    const a = parseFloat(document.getElementById('odds-a').value) || 0;
+    const b = parseFloat(document.getElementById('odds-b').value) || 0;
+    const c = parseFloat(document.getElementById('odds-c').value) || 0; 
+    if(s<=0 || a<=0 || b<=0) return;
+    document.getElementById('calc-results').style.opacity = "1";
+    let tP = (1/a) + (1/b);
+    if(state.calcMode === 3 && c > 0) tP += (1/c);
+    
+    document.getElementById('res-a').innerText = Math.floor((s/a)/tP).toLocaleString();
+    document.getElementById('res-b').innerText = Math.floor((s/b)/tP).toLocaleString();
+    if(state.calcMode === 3) document.getElementById('res-c').innerText = Math.floor((s/c)/tP).toLocaleString();
+    
+    const profit = (s/tP) - s;
+    document.getElementById('res-profit').innerText = Math.floor(profit).toLocaleString();
+    document.getElementById('res-roi').innerText = (((1/tP)-1)*100).toFixed(2) + "%";
+}
+
+function setCalcMode(m) {
+    state.calcMode = m;
+    document.getElementById('mode-2way').className = m===2 ? 'flex-1 py-3 rounded-xl font-black bg-indigo-600' : 'flex-1 py-3 rounded-xl font-black bg-slate-800';
+    document.getElementById('mode-3way').className = m===3 ? 'flex-1 py-3 rounded-xl font-black bg-indigo-600' : 'flex-1 py-3 rounded-xl font-black bg-slate-800';
+    document.getElementById('row-c').classList.toggle('hidden', m===2);
+    runCalculation();
+}
+
+function prepareCalc(a, b) {
+    switchTab('calc', document.querySelectorAll('.nav-item')[1]);
+    document.getElementById('odds-a').value = a;
+    document.getElementById('odds-b').value = b;
+    setCalcMode(2);
+}
+
+function renderHistory() {
+    const list = document.getElementById('history-list');
+    const mocks = [{m:'Man City vs Arsenal', p:142.5, s:'SUCCESS'}, {m:'Lakers vs Clippers', p:-100, s:'FAILED'}];
+    list.innerHTML = mocks.map(h => `
+        <div class="glass p-4 rounded-2xl border-l-4 ${h.s==='SUCCESS'?'border-green-500':'border-red-500'}">
+            <div class="flex justify-between items-center">
+                <div><div class="text-[10px] text-slate-500 font-black uppercase">2026-04-02</div><div class="font-black italic">${h.m}</div></div>
+                <div class="text-right"><div class="${h.s==='SUCCESS'?'text-green-400':'text-red-400'} font-black text-sm">${h.p > 0 ? '+':''}${h.p}</div></div>
+            </div>
+        </div>
+    `).join('');
+}
+
+window.onload = () => { fetchMatches(); };
 </script>
 </body>
 </html>
