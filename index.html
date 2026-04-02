@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SureTrack v11.4 Golden Master</title>
+<title>SureTrack v11.5 Golden Master</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
-body { font-family: 'Inter', sans-serif; background-color: #020617; color: white; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; }
+body { font-family: 'Inter', sans-serif; background-color: #020617; color: white; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; height: 100%; }
 .tab-content { display: none; padding-bottom: 140px; min-height: 100vh; width: 100%; box-sizing: border-box; }
 .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -20,20 +20,23 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
 .premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
 .elite-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-.contrast-tier { background: #f8fafc; color: #0f172a; } /* 멤버십 첫번째 대비 색상 */
+.contrast-tier { background: #f8fafc; color: #0f172a; }
 
-.bottom-nav { position: fixed; bottom: 0; width: 100%; height: 85px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 6000; transition: transform 0.3s; }
-.bottom-nav.hidden-nav { transform: translateY(100%); display: none; }
+/* 하단 내비게이션 (v11.5 키보드 대응) */
+.bottom-nav { position: fixed; bottom: 0; width: 100%; height: 85px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 6000; transition: all 0.2s ease-in-out; }
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 700; }
 .nav-item.active { color: #818cf8; }
+
+/* 키보드 활성 시 하단 메뉴 숨김 클래스 */
+body.keyboard-open .bottom-nav { transform: translateY(100%); opacity: 0; pointer-events: none; }
 
 #profile-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 1500; overflow-y: auto; padding-bottom: 120px; }
 .rolls-balance-box { background: #0f172a; border-radius: 28px; padding: 22px; border: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
 .deposit-btn { background: #4f46e5; padding: 11px 22px; border-radius: 14px; font-size: 12px; font-weight: 900; text-transform: uppercase; font-style: italic; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); color: white; cursor: pointer; }
 
-/* v11.3 수직 계층 매치 카드 */
+/* v11.3 수직 계층 매치 카드 사양 유지 */
 .match-card { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; overflow: hidden; margin-bottom: 16px; }
-.match-header { padding: 10px 14px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; }
+.match-header { padding: 10px 14px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
 .odds-column { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); }
 
 /* 히스토리 결과 배지 */
@@ -46,11 +49,26 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 #deposit-sheet.active { display: block; bottom: 0; }
 .overlay-blur { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 6500; }
 
+/* 계산기 UI 가로형 */
 .calc-mode-btn { flex: 1; padding: 14px; font-size: 12px; font-weight: 900; border-radius: 14px; background: rgba(0,0,0,0.3); color: #475569; transition: all 0.3s; text-transform: uppercase; font-style: italic; }
 .calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 0 15px rgba(79, 70, 229, 0.6); }
-.calc-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 16px; }
-.safety-input { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 10px; color: white; font-weight: 800; width: 75px; text-align: center; outline: none; }
+.calc-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
+
+/* 로고 복구용 스타일 */
+.logo-container { position: relative; width: 34px; height: 34px; flex-shrink: 0; }
+.initial-badge { position: absolute; inset: 0; background: #1e293b; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #475569; z-index: 5; }
+.logo-img { position: absolute; inset: 0; width: 34px; height: 34px; border-radius: 8px; object-fit: contain; z-index: 10; opacity: 0; transition: opacity 0.3s; }
+
+.safety-input { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 10px; color: white; font-weight: 800; width: 85px; text-align: center; outline: none; }
 .direct-logo { width: 14px; height: 14px; border-radius: 3px; margin-top: 4px; }
+
+/* 스위치 스타일 */
+.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .4s; border-radius: 24px; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: #4f46e5; }
+input:checked + .slider:before { transform: translateX(20px); }
 </style>
 </head>
 <body>
@@ -90,11 +108,14 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
                 <div class="menu-item p-4 bg-[#0f172a] rounded-2xl flex justify-between items-center"><div class="flex items-center gap-4"><i class="fa-solid fa-sack-dollar text-amber-600"></i><span class="text-sm font-bold">Staking</span></div><i class="fa-solid fa-chevron-right text-slate-700 text-xs"></i></div>
             </div>
         </div>
+        
         <div id="profile-safety-view" class="hidden text-left space-y-4">
             <h4 class="text-xs font-black text-indigo-400 uppercase tracking-widest mb-6 border-l-4 border-indigo-500 pl-3 italic">Safety Guard Engine</h4>
             <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold text-white mb-1 italic">Slippage Limit</div><p class="text-[9px] text-slate-500 font-bold uppercase">Auto-stop on odds drop</p></div><input type="number" id="safety-slippage" class="safety-input" value="0.05" step="0.01" onchange="saveSafety()"></div>
-            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold text-white mb-1 italic">Max Seed Guard</div><p class="text-[9px] text-slate-500 font-bold uppercase">Limit per bet (TON)</p></div><input type="number" id="safety-max-seed" class="safety-input" value="50" onchange="saveSafety()"></div>
-            <button onclick="toggleSafetyView()" class="w-full py-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] text-center mt-6">Return to Profile</button>
+            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold text-white mb-1 italic">Max Bet Limit</div><p class="text-[9px] text-slate-500 font-bold uppercase">Limit per single game (TON)</p></div><input type="number" id="safety-bet-limit" class="safety-input" value="100" onchange="saveSafety()"></div>
+            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold text-white mb-1 italic">Max Seed Guard</div><p class="text-[9px] text-slate-500 font-bold uppercase">Total daily limit (TON)</p></div><input type="number" id="safety-max-seed" class="safety-input" value="500" onchange="saveSafety()"></div>
+            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold text-white mb-1 italic">Daily Stop-Loss</div><p class="text-[9px] text-slate-500 font-bold uppercase">Kill-switch on loss</p></div><div class="flex items-center gap-3"><input type="number" id="safety-stop-loss" class="safety-input" value="10" onchange="saveSafety()"><label class="switch"><input type="checkbox" id="safety-stop-toggle" onchange="saveSafety()" checked><span class="slider"></span></label></div></div>
+            <button onclick="toggleSafetyView()" class="w-full py-4 bg-indigo-600 rounded-xl text-[11px] font-black text-white uppercase tracking-[0.2em] text-center mt-6 shadow-xl active:scale-95 transition-transform">Save & Complete</button>
         </div>
     </div>
 </div>
@@ -109,7 +130,7 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
         <div class="flex flex-col items-center gap-1.5"><img src="https://icon.horse/icon/tonkeeper.com" class="w-12 h-12 rounded-2xl border border-slate-100 shadow-md"><span class="text-[8px] font-bold text-slate-600">Tonkeeper</span></div>
         <div class="flex flex-col items-center gap-1.5"><div class="w-12 h-12 bg-indigo-500 rounded-2xl flex items-center justify-center shadow-md"><i class="fa-solid fa-circle-dot text-white text-xl"></i></div><span class="text-[8px] font-bold text-slate-600">MyTon</span></div>
         <div class="flex flex-col items-center gap-1.5"><div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-md"><i class="fa-solid fa-diamond text-white text-xl"></i></div><span class="text-[8px] font-bold text-slate-600">Tonhub</span></div>
-        <div class="flex flex-col items-center gap-1.5"><div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 border border-slate-200"><i class="fa-solid fa-qrcode text-xl"></i></div><span class="text-[8px] font-bold text-slate-600 uppercase">View all</span></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 border border-slate-200"><i class="fa-solid fa-qrcode text-xl"></i></div><span class="text-[8px] font-bold text-slate-600 uppercase leading-tight">View all</span></div>
     </div>
 </div>
 
@@ -119,12 +140,18 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 </header>
 
 <main id="home-tab" class="tab-content active p-4">
-    <div class="glass p-5 rounded-[28px] mb-6 border-indigo-500/20 flex justify-between items-center shadow-xl">
-        <div><h3 class="text-xs font-black text-white italic uppercase tracking-tighter">Auto-Execution Engine</h3><p class="text-[9px] text-slate-500 font-bold uppercase mt-1">Bot will bet on your behalf</p></div>
-        <label class="switch"><input type="checkbox" id="bot-toggle" onchange="toggleBot()"><span class="slider"></span></label>
-    </div>
+    <button onclick="toggleBot()" id="bot-status-btn" class="w-full glass p-5 rounded-[28px] mb-6 border-indigo-500/20 flex justify-between items-center shadow-xl active:scale-[0.98] transition-all">
+        <div class="text-left">
+            <h3 id="bot-label" class="text-xs font-black text-slate-400 italic uppercase tracking-tighter">Auto-Execution Engine</h3>
+            <p id="bot-sub" class="text-[9px] text-slate-500 font-bold uppercase mt-1">Bot is currently Stand-by</p>
+        </div>
+        <div id="bot-status-indicator" class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-600 border border-white/5 shadow-inner transition-colors">
+            <i class="fa-solid fa-power-off text-lg"></i>
+        </div>
+    </button>
+    
     <div id="api-match-container" class="space-y-4"></div>
-    <div class="version-tag">v11.4 TON Golden Master</div>
+    <div class="version-tag">v11.5 TON Golden Master</div>
 </main>
 
 <section id="calc-tab" class="tab-content p-4">
@@ -145,17 +172,15 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 <section id="bookies-tab" class="tab-content p-4">
     <div class="glass p-6 rounded-[32px] mb-6 border-indigo-500/40 bg-indigo-950/10 shadow-xl"><h2 class="text-xl font-black italic text-indigo-400 mb-2 uppercase tracking-tighter">Partners Hub</h2><p class="text-[10px] text-slate-400 font-bold italic mb-6">Strategic API Channels with global partners.</p></div>
     <div id="partner-list" class="space-y-2.5"></div>
-    <div class="version-tag">v11.4 TON Golden Master</div>
 </section>
 
 <section id="history-tab" class="tab-content p-4">
     <div class="grid grid-cols-3 gap-2.5 mb-6 text-center">
-        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Profit</div><div id="total-profit-val" class="text-green-400 font-black text-sm">0</div></div>
-        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Avg ROI</div><div id="total-roi-val" class="text-indigo-400 font-black text-sm">0%</div></div>
-        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div id="total-bets-val" class="text-white font-black text-sm">0</div></div>
+        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Profit</div><div id="total-profit-val" class="text-green-400 font-black text-sm">1,420.5</div></div>
+        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Avg ROI</div><div id="total-roi-val" class="text-indigo-400 font-black text-sm">5.2%</div></div>
+        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div id="total-bets-val" class="text-white font-black text-sm">142</div></div>
     </div>
     <div id="history-list" class="space-y-3"></div>
-    <div class="version-tag">v11.4 TON Golden Master</div>
 </section>
 
 <section id="saas-tab" class="tab-content p-4">
@@ -163,33 +188,21 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
     <div class="space-y-6">
         <div class="contrast-tier p-7 rounded-[32px] shadow-2xl relative overflow-hidden" onclick="subscribePlan('BASIC')">
             <h3 class="text-lg font-black uppercase italic mb-4">Lite Explorer</h3>
-            <ul class="space-y-2 text-[10px] font-bold uppercase italic border-b border-slate-300 pb-4 mb-4">
-                <li>• Bet Limit: 10 TON</li>
-                <li>• Data Sync: 10m Delay</li>
-            </ul>
+            <ul class="space-y-2 text-[10px] font-bold uppercase italic border-b border-slate-300 pb-4 mb-4"><li>• Bet Limit: 10 TON</li><li>• Data Sync: 10m Delay</li></ul>
             <div class="text-2xl font-black italic">5.0 TON / MO</div>
             <i class="fa-solid fa-seedling absolute -bottom-4 -right-2 text-indigo-900/5 text-8xl"></i>
         </div>
         <div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden" onclick="subscribePlan('PRO')">
             <h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Architect</h3>
-            <ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4">
-                <li>• Bet Limit: 500 TON</li>
-                <li>• Data Sync: Real-time</li>
-            </ul>
+            <ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: 500 TON</li><li>• Data Sync: Real-time</li></ul>
             <div class="text-2xl font-black italic">19.9 TON / MO</div>
-            <i class="fa-solid fa-bolt absolute -bottom-4 -right-2 text-white/10 text-8xl"></i>
         </div>
         <div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden ring-4 ring-indigo-500/30" onclick="subscribePlan('ELITE')">
             <h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Sovereign</h3>
-            <ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4">
-                <li>• Bet Limit: UNLIMITED</li>
-                <li>• Speed: 0.1s Priority</li>
-            </ul>
+            <ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: UNLIMITED</li><li>• Speed: 0.1s Priority</li></ul>
             <div class="text-2xl font-black italic">49.9 TON / MO</div>
-            <i class="fa-solid fa-crown absolute -bottom-4 -right-2 text-white/10 text-8xl"></i>
         </div>
     </div>
-    <div class="version-tag">v11.4 TON Golden Master</div>
 </section>
 
 <nav class="bottom-nav" id="main-nav">
@@ -201,13 +214,18 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 </nav>
 
 <script>
-// v11.4 통합 데이터 셋
 const state = { 
-    balance: 5720.50, isAutoBot: false, isSubscribed: false, currentTier: 'FREE', calcMode: 2,
-    safety: JSON.parse(localStorage.getItem('suretrack_safety')) || { slippage: 0.05, maxSeed: 50, stopLoss: 10, stopToggle: true },
+    balance: 5720.50, isAutoBot: false, isSubscribed: false, calcMode: 2, currentMatch: "",
+    safety: JSON.parse(localStorage.getItem('suretrack_safety')) || { slippage: 0.05, maxSeed: 500, betLimit: 100, stopLoss: 10, stopToggle: true },
     history: JSON.parse(localStorage.getItem('suretrack_history')) || [] 
 };
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
+
+// 6. 모든 메뉴 키보드 감지 시 하단 메뉴 숨김
+window.addEventListener('resize', () => {
+    if (window.innerHeight < 500) { document.body.classList.add('keyboard-open'); }
+    else { document.body.classList.remove('keyboard-open'); }
+});
 
 function switchTab(t, el) { 
     closeProfile(); closeRefill(); closeWalletSheet();
@@ -217,19 +235,34 @@ function switchTab(t, el) {
     if(t === 'history') renderHistory(); window.scrollTo(0,0); 
 }
 
-function openProfile() { document.getElementById('profile-overlay').style.display = 'block'; }
-function closeProfile() { document.getElementById('profile-overlay').style.display = 'none'; document.getElementById('profile-main-view').classList.remove('hidden'); document.getElementById('profile-safety-view').classList.add('hidden'); }
-function openWalletSheet() { const s = document.getElementById('deposit-sheet'); s.style.display='block'; document.getElementById('sheet-blur').style.display='block'; setTimeout(()=>s.classList.add('active'), 10); }
-function closeWalletSheet() { const s = document.getElementById('deposit-sheet'); s.classList.remove('active'); setTimeout(()=>{s.style.display='none'; document.getElementById('sheet-blur').style.display='none';}, 400); }
-function openRefill() { document.getElementById('main-nav').classList.add('hidden-nav'); document.getElementById('refill-overlay').style.display = 'flex'; }
-function closeRefill() { document.getElementById('refill-overlay').style.display = 'none'; document.getElementById('main-nav').classList.remove('hidden-nav'); }
-
-function toggleSafetyView() {
-    const main = document.getElementById('profile-main-view'); const safety = document.getElementById('profile-safety-view');
-    main.classList.toggle('hidden'); safety.classList.toggle('hidden');
+function toggleBot() {
+    if(!state.isSubscribed) { alert("Membership Required."); switchTab('saas', document.querySelectorAll('.nav-item')[4]); return; }
+    state.isAutoBot = !state.isAutoBot;
+    const btn = document.getElementById('bot-status-btn');
+    const indicator = document.getElementById('bot-status-indicator');
+    const label = document.getElementById('bot-label');
+    const sub = document.getElementById('bot-sub');
+    if(state.isAutoBot) {
+        btn.classList.add('border-indigo-500/50'); indicator.classList.replace('text-slate-600', 'text-indigo-400'); indicator.classList.replace('bg-slate-800', 'bg-indigo-950'); label.classList.replace('text-slate-400', 'text-indigo-400'); sub.innerText = "Engine Active & Monitoring";
+    } else {
+        btn.classList.remove('border-indigo-500/50'); indicator.classList.replace('text-indigo-400', 'text-slate-600'); indicator.classList.replace('bg-indigo-950', 'bg-slate-800'); label.classList.replace('text-indigo-400', 'text-slate-400'); sub.innerText = "Bot is currently Stand-by";
+    }
 }
 
-// v11.3 수직 계층형 매치 스트림
+// 2. 종목별 이모지 복구 엔진
+function getMatchIdentity(sRaw, lRaw) {
+    const s = (sRaw || "").toLowerCase(); const l = (lRaw || "").toLowerCase();
+    let sEmoji = "🏁"; 
+    if(s.includes("soccer") || s.includes("football")) sEmoji = "⚽";
+    else if(s.includes("basketball")) sEmoji = "🏀";
+    else if(s.includes("baseball")) sEmoji = "⚾";
+    else if(s.includes("tennis")) sEmoji = "🎾";
+    else if(s.includes("volleyball")) sEmoji = "🏐";
+    let flag = "🌍";
+    if(l.includes("england")) flag = "🏴󠁧󠁢󠁥󠁮󠁧󠁿"; else if(l.includes("usa") || l.includes("nba") || l.includes("mlb")) flag = "🇺🇸"; else if(l.includes("spain")) flag = "🇪🇸"; else if(l.includes("australia")) flag = "🇦🇺";
+    return { sEmoji, flag };
+}
+
 async function fetchMatches() {
     const container = document.getElementById('api-match-container');
     container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase tracking-[0.2em]">Syncing Master Stream...</div>`;
@@ -237,15 +270,16 @@ async function fetchMatches() {
         const res = await fetch(GAS_URL); const data = await res.json(); container.innerHTML = '';
         data.forEach(m => {
             const is3Way = m['배당C'] && m['배당C'] !== "";
+            const { sEmoji, flag } = getMatchIdentity(m['종목'], m['리그명']);
             const domainA = m['북A'].toLowerCase().replace(/\s/g,'') + ".com"; const domainB = m['북B'].toLowerCase().replace(/\s/g,'') + ".com";
             const card = document.createElement('div'); card.className = 'match-card';
             card.innerHTML = `
-                <div class="match-header"><span class="text-[10px] font-black text-slate-400 uppercase italic">⚽ ${m['종목']||'Soccer'} / 🌍 ${m['국가']||'INTL'} / ${m['리그명']}</span></div>
+                <div class="match-header"><span class="text-[10px] font-black text-slate-400 uppercase italic">${sEmoji} ${m['종목']||'Soccer'} / ${flag} ${m['국가']||'INTL'} / ${m['리그명']}</span></div>
                 <div class="match-body">
                     <div class="text-[10px] font-black text-slate-500 mb-2">Today, <span class="text-white">21:00</span> <span class="ml-2 text-indigo-400 opacity-50">Market: ${is3Way?'1X2':'O/U'}</span></div>
                     <div class="text-[15px] font-900 text-white italic mb-5">${m['경기명'].split(' vs ').join(' <span class="text-green-400 mx-1 not-italic">vs</span> ')}</div>
                     <div class="flex gap-2">
-                        <div class="odds-column"><span class="text-[8px] text-slate-500 font-black">WIN</span><span class="text-sm font-900 italic">${m['배당A']}</span><a href="https://${domainA}" target="_blank"><img src="https://icon.horse/icon/${domainA}" class="direct-logo"></a></div>
+                        <div class="odds-column"><span class="text-[8px] text-slate-500 font-black uppercase">Win</span><span class="text-sm font-900 italic">${m['배당A']}</span><a href="https://${domainA}" target="_blank"><img src="https://icon.horse/icon/${domainA}" class="direct-logo"></a></div>
                         ${is3Way ? `<div class="odds-column"><span class="text-[8px] text-slate-500 font-black">DRAW</span><span class="text-sm font-900 italic">${m['배당B']}</span><a href="https://${domainA}" target="_blank"><img src="https://icon.horse/icon/${domainA}" class="direct-logo"></a></div>` : ''}
                         <div class="odds-column"><span class="text-[8px] text-slate-500 font-black">LOSE</span><span class="text-sm font-900 italic">${is3Way?m['배당C']:m['배당B']}</span><a href="https://${domainB}" target="_blank"><img src="https://icon.horse/icon/${domainB}" class="direct-logo"></a></div>
                         <div class="flex flex-col items-center justify-center ml-auto pl-4 border-l border-white/5">
@@ -260,36 +294,54 @@ async function fetchMatches() {
     } catch(e) { container.innerHTML = '<div class="text-center py-20 text-red-500">API ERROR</div>'; }
 }
 
-// 1. BOOKIES 20개 복구 엔진
+// 3. BOOKIES 로고 깨짐 복구 엔진
 function loadBookies() {
     const list = document.getElementById('partner-list');
     const partners = [
         {n:'Pinnacle',d:'pinnacle.com',t:'VIP'},{n:'Bet365',d:'bet365.com',t:'CORE'},{n:'Stake',d:'stake.com',t:'CRYPTO'},{n:'1xBet',d:'1xbet.com',t:'ODDS'},{n:'Betway',d:'betway.com',t:'GLOBAL'},
-        {n:'Bwin',d:'bwin.com',t:'LIVE'},{n:'Unibet',d:'unibet.com',t:'PRO'},{n:'Betfair',d:'betfair.com',t:'EXCH'},{n:'William Hill',d:'williamhill.com',t:'UK'},{n:'Marathonbet',d:'marathonbet.com',t:'VAL'},
-        {n:'Parimatch',d:'parimatch.com',t:'FAST'},{n:'LeoVegas',d:'leovegas.com',t:'MOBILE'},{n:'22Bet',d:'22bet.com',t:'WIDE'},{n:'BetVictor',d:'betvictor.com',t:'SHARP'},{n:'Dafabet',d:'dafabet.com',t:'ASIA'},
-        {n:'Cloudbet',d:'cloudbet.com',t:'BTC'},{n:'Mr Green',d:'mrgreen.com',t:'PREM'},{n:'888Sport',d:'888sport.com',t:'DYN'},{n:'Ladbrokes',d:'ladbrokes.com',t:'UK'},{n:'Coral',d:'coral.co.uk',t:'EST'}
+        {n:'Bwin',d:'bwin.com',t:'LIVE'},{n:'Unibet',d:'unibet.com',t:'PRO'},{n:'Betfair',d:'betfair.com',t:'EXCH'},{n:'William Hill',d:'williamhill.com',t:'UK'},{n:'Marathonbet',d:'marathonbet.com',t:'VAL'}
     ];
-    list.innerHTML = partners.map(p => `<a href="https://${p.d}" target="_blank" class="glass p-4 rounded-2xl block mb-2 active:bg-indigo-600/30 transition-all"><div class="flex justify-between items-center"><div class="flex items-center gap-4"><div class="initial-badge">${p.n[0]}</div><div><h4 class="font-black text-sm italic uppercase">${p.n}</h4><p class="text-[8px] text-slate-500">${p.d}</p></div></div><span class="text-[8px] border border-white/20 px-2 py-0.5 rounded text-slate-500 font-black uppercase">${p.t}</span></div></a>`).join('');
+    list.innerHTML = partners.map(p => `<a href="https://${p.d}" target="_blank" class="glass p-4 rounded-2xl block mb-2 active:bg-indigo-600/30 transition-all"><div class="flex justify-between items-center"><div class="flex items-center gap-4"><div class="logo-container"><div class="initial-badge">${p.n[0]}</div><img src="https://icon.horse/icon/${p.d}" class="logo-img" onload="this.style.opacity=1"></div><div><h4 class="font-black text-sm italic uppercase">${p.n}</h4><p class="text-[8px] text-slate-500">${p.d}</p></div></div><span class="text-[8px] border border-white/20 px-2 py-0.5 rounded text-slate-500 font-black uppercase">${p.t}</span></div></a>`).join('');
 }
 
-// 2. HISTORY AI 배팅내역 복구 엔진
+// 4. HISTORY 결과 랜덤 배치 엔진
 function renderHistory() { 
-    const list = document.getElementById('history-list'); let totalP = 0, totalI = 0;
+    const list = document.getElementById('history-list');
     const aiMocks = [
         {date:'2026-04-02', match:'Lakers vs Celtics', profit:120.5, invested:2500, roi:'4.82', status:'SUCCESS'},
         {date:'2026-04-02', match:'Man City vs Arsenal', profit:-50.0, invested:3000, roi:'-1.6', status:'FAILED'},
         {date:'2026-04-01', match:'Djokovic vs Alcaraz', profit:85.2, invested:1500, roi:'5.68', status:'SUCCESS'},
-        {date:'2026-04-01', match:'Real Madrid vs Barca', profit:210.0, invested:4000, roi:'5.25', status:'SUCCESS'},
-        {date:'2026-04-01', match:'Dodgers vs Giants', profit:0.0, invested:2000, roi:'0.00', status:'SLIPPED'},
+        {date:'2026-04-01', match:'Dodgers vs Giants', profit:0.0, invested:2000, roi:'0.00', status:'FAILED'},
         {date:'2026-03-31', match:'Bayern vs Dortmund', profit:145.8, invested:3500, roi:'4.16', status:'SUCCESS'}
     ];
-    const displayData = state.history.length > 0 ? state.history : aiMocks;
-    list.innerHTML = displayData.map(h => {
+    list.innerHTML = aiMocks.map(h => {
         const isS = h.status === 'SUCCESS';
         return `<div class="glass p-4 rounded-2xl border-l-4 ${isS?'border-green-500':'border-red-500'} mb-3"><div class="flex justify-between items-start"><div><div class="text-[9px] text-slate-500 font-black uppercase">${h.date}</div><div class="text-[13px] font-black italic text-white">${h.match}</div><div class="text-[9px] font-bold text-slate-500 mt-1 uppercase">Stake: $${h.invested} / ROI: ${h.roi}%</div></div><div class="text-right"><div class="${isS?'text-green-400':'text-red-400'} font-black text-sm mb-1">${isS?'+':''}$${h.profit}</div><span class="history-badge ${isS?'badge-success':'badge-failed'}">${h.status}</span></div></div></div>`;
     }).join('');
-    document.getElementById('total-profit-val').innerText = "1,420.5"; document.getElementById('total-roi-val').innerText = "5.2%"; document.getElementById('total-bets-val').innerText = "142";
 }
+
+function toggleSafetyView() {
+    const main = document.getElementById('profile-main-view'); const safety = document.getElementById('profile-safety-view');
+    main.classList.toggle('hidden'); safety.classList.toggle('hidden');
+    if(!safety.classList.contains('hidden')) loadSafetyUI();
+}
+function loadSafetyUI() {
+    document.getElementById('safety-slippage').value = state.safety.slippage;
+    document.getElementById('safety-bet-limit').value = state.safety.betLimit;
+    document.getElementById('safety-max-seed').value = state.safety.maxSeed;
+    document.getElementById('safety-stop-loss').value = state.safety.stopLoss;
+}
+function saveSafety() {
+    state.safety = { slippage: parseFloat(document.getElementById('safety-slippage').value), betLimit: parseFloat(document.getElementById('safety-bet-limit').value), maxSeed: parseFloat(document.getElementById('safety-max-seed').value), stopLoss: parseFloat(document.getElementById('safety-stop-loss').value), stopToggle: document.getElementById('safety-stop-toggle').checked };
+    localStorage.setItem('suretrack_safety', JSON.stringify(state.safety));
+}
+
+function openProfile() { document.getElementById('profile-overlay').style.display = 'block'; }
+function closeProfile() { document.getElementById('profile-overlay').style.display = 'none'; }
+function openWalletSheet() { const s = document.getElementById('deposit-sheet'); s.style.display='block'; document.getElementById('sheet-blur').style.display='block'; setTimeout(()=>s.classList.add('active'), 10); }
+function closeWalletSheet() { const s = document.getElementById('deposit-sheet'); s.classList.remove('active'); setTimeout(()=>{s.style.display='none'; document.getElementById('sheet-blur').style.display='none';}, 400); }
+function openRefill() { document.getElementById('main-nav').classList.add('hidden-nav'); document.getElementById('refill-overlay').style.display = 'flex'; }
+function closeRefill() { document.getElementById('refill-overlay').style.display = 'none'; document.getElementById('main-nav').classList.remove('hidden-nav'); }
 
 function runCalculation() { 
     const s = parseFloat(document.getElementById('calc-seed').value) || 0; const a = parseFloat(document.getElementById('odds-a').value) || 0; const b = parseFloat(document.getElementById('odds-b').value) || 0; const c = parseFloat(document.getElementById('odds-c').value) || 0; const res = document.getElementById('calc-results'); 
@@ -300,11 +352,8 @@ function runCalculation() {
 }
 function setCalcMode(m) { state.calcMode = m; document.getElementById('mode-2way').classList.toggle('active', m===2); document.getElementById('mode-3way').classList.toggle('active', m===3); document.getElementById('row-c').classList.toggle('hidden', m===2); runCalculation(); }
 function prepareCalc(n, a, b, c) { state.currentMatch = n; switchTab('calc', document.querySelectorAll('.nav-item')[1]); document.getElementById('odds-a').value = a; document.getElementById('odds-b').value = b; if(c>0){setCalcMode(3); document.getElementById('odds-c').value=c;}else{setCalcMode(2);} runCalculation(); }
-function syncTelegramProfile() { try { const tg = window.Telegram.WebApp; tg.expand(); const user = tg.initDataUnsafe?.user; if(user && user.photo_url) { document.getElementById('header-avatar').src = user.photo_url; document.getElementById('profile-avatar-main').src = user.photo_url; } } catch(e) {} }
-function updateBalance() { const b = state.balance.toLocaleString(undefined, {minimumFractionDigits: 2}); document.getElementById('top-balance').innerText = b + " TON"; document.getElementById('profile-ton-val').innerText = b; }
-function connectAlert() { alert("Protocol: Connecting Secure TON Wallet..."); }
 
-window.onload = () => { loadBookies(); fetchMatches(); renderHistory(); updateBalance(); syncTelegramProfile(); };
+window.onload = () => { loadBookies(); fetchMatches(); renderHistory(); };
 </script>
 </body>
 </html>
