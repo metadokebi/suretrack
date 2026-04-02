@@ -20,98 +20,62 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
 .premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
 .elite-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-
-/* 4. Lite Explorer 곤색 배경 적용 */
-.lite-navy-tier { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); }
+.navy-tier { background: #0f172a; border: 1px solid rgba(255,255,255,0.1); }
 
 .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 85px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 6000; transition: transform 0.2s ease-in-out; }
 body.keyboard-open .bottom-nav { transform: translateY(100%); display: none !important; }
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 700; }
 .nav-item.active { color: #818cf8; }
 
-.live-version-tag { text-align: right; font-size: 5px; color: #475569; font-weight: bold; padding: 20px 15px; opacity: 0.5; letter-spacing: 1px; }
+.version-tag { text-align: center; font-size: 7px; color: #475569; font-weight: bold; padding: 20px 0; opacity: 0.6; letter-spacing: 2px; }
 #profile-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 8500; overflow-y: auto; padding-bottom: 120px; }
-.rolls-balance-box { background: #0f172a; border-radius: 28px; padding: 22px; border: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
-
-/* Match Card 사양 */
-.match-card { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; overflow: hidden; margin-bottom: 16px; }
-.odds-column { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); }
-
-/* 3. Calc 버튼 색상 복구 */
-.calc-mode-btn { flex: 1; padding: 12px; border-radius: 14px; font-size: 11px; font-weight: 900; color: #64748b; transition: all 0.3s; }
-.calc-mode-btn.active { background: #4f46e5; color: white; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4); }
-
 .safety-input { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 10px; color: white; font-weight: 800; width: 85px; text-align: center; outline: none; }
-.deposit-btn { background: #4f46e5; padding: 8px 16px; border-radius: 12px; font-weight: 900; font-size: 11px; color: white; }
+
+.calc-mode-btn { flex: 1; py: 3; border-radius: 12px; font-weight: 900; transition: all 0.3s; background: #1e293b; color: #64748b; }
+.calc-mode-btn.active { background: #4f46e5; color: white; }
 </style>
 </head>
 <body>
 
-<div id="profile-overlay">
-    <header class="p-6 flex justify-between items-center"><h2 class="text-sm neon-logo italic tracking-tighter">SURETRACK</h2><button onclick="closeProfile()" class="text-white opacity-50"><i class="fa-solid fa-xmark text-xl"></i></button></header>
-    <div class="p-6 text-center">
-        <div class="relative inline-block mb-4">
-            <img id="profile-avatar-main" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-24 h-24 rounded-full border-2 border-indigo-500/30 object-cover bg-slate-800">
-            <button onclick="toggleSafetyView()" class="absolute -top-1 -right-1 bg-indigo-950 p-2.5 rounded-full border border-white/10 text-xs text-indigo-400 shadow-xl active:scale-90 transition-transform"><i class="fa-solid fa-gear"></i></button>
-        </div>
-        <h3 id="profile-handle" class="text-xl font-black text-white italic mb-8">@User</h3>
-        
-        <div id="profile-main-view">
-            <div class="rolls-balance-box mb-8">
-                <div class="text-left">
-                    <div class="text-[9px] text-slate-500 font-black uppercase mb-1.5 italic tracking-wider">Asset balance</div>
-                    <div class="text-[17px] font-black italic text-white flex items-center gap-2"><i class="fa-solid fa-gem text-indigo-400 text-xs"></i> <span id="profile-ton-val">5,720.50</span> TON</div>
-                </div>
-                <button class="deposit-btn">Deposit</button>
-            </div>
-            <div class="space-y-2 text-left">
-                <div class="menu-item p-4 bg-[#0f172a] rounded-2xl flex justify-between items-center"><div class="flex items-center gap-4"><i class="fa-solid fa-gift text-red-400"></i><span class="text-sm font-bold">Gift inventory</span></div><i class="fa-solid fa-chevron-right text-slate-700 text-xs"></i></div>
-                <div class="menu-item p-4 bg-[#0f172a] rounded-2xl flex justify-between items-center"><div class="flex items-center gap-4"><i class="fa-solid fa-sack-dollar text-amber-600"></i><span class="text-sm font-bold">Staking</span></div><i class="fa-solid fa-chevron-right text-slate-700 text-xs"></i></div>
-            </div>
-        </div>
-
-        <div id="profile-safety-view" class="hidden text-left space-y-4">
-            <h4 class="text-xs font-black text-indigo-400 uppercase tracking-widest mb-6 border-l-4 border-indigo-500 pl-3 italic">Safety Guard Engine</h4>
-            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold text-white mb-1 italic">Slippage Limit</div><p class="text-[9px] text-slate-500 font-bold uppercase">Auto-stop on odds drop</p></div><input type="number" id="safety-slippage" class="safety-input" value="0.05" step="0.01"></div>
-            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold text-white mb-1 italic">Max Bet Limit</div><p class="text-[9px] text-slate-500 font-bold uppercase">Limit per Single Game (TON)</p></div><input type="number" id="safety-bet-limit" class="safety-input" value="100"></div>
-            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold text-white mb-1 italic">Daily Stop-Loss</div><p class="text-[9px] text-slate-500 font-bold uppercase">Kill-switch on loss</p></div><input type="number" id="safety-stop-loss" class="safety-input" value="10"></div>
-            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold text-white mb-1 italic">Language</div><p class="text-[9px] text-slate-500 font-bold uppercase">System Locale</p></div><select class="safety-input bg-transparent border-none"><option>KO</option><option>EN</option></select></div>
-            <button onclick="saveSafetyComplete()" class="w-full py-4 bg-indigo-600 rounded-xl text-[11px] font-black text-white uppercase tracking-[0.3em] text-center mt-6 shadow-xl active:scale-95 transition-transform">Complete Setup</button>
-        </div>
-    </div>
-</div>
-
 <header class="p-4 flex justify-between items-center glass sticky top-0 z-50">
     <div class="flex items-center gap-3"><div class="live-dot"></div><h1 class="text-2xl neon-logo tracking-tighter">SURETRACK</h1></div>
-    <div class="flex items-center gap-3 cursor-pointer" onclick="openProfile()"><div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 italic tracking-tighter">5,720.50 TON</div><img id="header-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-9 h-9 rounded-full border border-indigo-500/50 object-cover bg-slate-800"></div>
+    <div class="flex items-center gap-3 cursor-pointer" onclick="openProfile()">
+        <div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 italic">5,720.50 TON</div>
+        <img id="header-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-9 h-9 rounded-full border border-indigo-500/50 bg-slate-800 object-cover">
+    </div>
 </header>
 
 <main id="home-tab" class="tab-content active p-4">
-    <button onclick="toggleBot()" id="bot-status-btn" class="w-full glass p-5 rounded-[28px] mb-6 flex justify-between items-center active:scale-[0.98] transition-all">
+    <div id="bot-status-btn" onclick="toggleBot()" class="glass p-5 rounded-[28px] mb-6 flex justify-between items-center shadow-xl active:scale-95 transition-all">
         <div class="text-left">
-            <h3 id="bot-label" class="text-xs font-black text-slate-400 italic uppercase">Auto-Execution Engine</h3>
+            <h3 class="text-xs font-black text-slate-400 italic uppercase">Auto-Execution Engine</h3>
             <p id="bot-sub" class="text-[9px] text-slate-500 font-bold uppercase mt-1">Bot is currently Stand-by</p>
         </div>
-        <div id="bot-status-indicator" class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-600 border border-white/5 shadow-inner transition-colors"><i class="fa-solid fa-power-off text-lg"></i></div>
-    </button>
+        <div id="bot-status-indicator" class="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-slate-600 border border-white/5"><i class="fa-solid fa-power-off text-lg"></i></div>
+    </div>
     <div id="api-match-container" class="space-y-4"></div>
-    <div class="live-version-tag">v11.6 TON GOLDEN MASTER</div>
+    <div class="version-tag">v11.6 TON GOLDEN MASTER</div>
 </main>
 
 <section id="calc-tab" class="tab-content p-4">
-    <div class="glass rounded-[32px] p-5 border-indigo-500/20 shadow-2xl">
-        <div class="flex gap-2 mb-6 bg-black/40 p-1.5 rounded-2xl"><button id="mode-2way" onclick="setCalcMode(2)" class="calc-mode-btn active">2-Way</button><button id="mode-3way" onclick="setCalcMode(3)" class="calc-mode-btn">3-Way</button></div>
+    <div class="glass rounded-[32px] p-6 shadow-2xl">
+        <div class="flex gap-2 mb-6 bg-slate-900/50 p-1.5 rounded-2xl">
+            <button id="mode-2way" onclick="setCalcMode(2)" class="calc-mode-btn active">2-Way</button>
+            <button id="mode-3way" onclick="setCalcMode(3)" class="calc-mode-btn">3-Way</button>
+        </div>
         <div class="space-y-4">
-            <div class="bg-black/30 p-4 rounded-xl border border-white/5"><label class="text-[9px] font-black text-slate-500 uppercase italic mb-1 block">Investment Seed</label><input type="number" id="calc-seed" oninput="runCalculation()" placeholder="0.00" class="w-full bg-transparent border-none outline-none text-2xl font-black text-white"></div>
-            <div class="space-y-3" id="calc-input-rows">
+            <div class="bg-black/30 p-4 rounded-xl border border-white/5"><label class="text-[9px] font-black text-slate-500 uppercase block mb-1">Seed Investment</label><input type="number" id="calc-seed" oninput="runCalculation()" placeholder="0.00" class="w-full bg-transparent border-none outline-none text-2xl font-black text-white"></div>
+            <div id="calc-input-rows" class="space-y-3">
                 <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5"><input type="number" id="odds-a" oninput="runCalculation()" step="0.01" placeholder="Odds A" class="bg-transparent flex-1 font-black text-indigo-400 outline-none"><div class="text-right"><span class="text-[8px] text-slate-500 block uppercase">Stake A</span><span id="res-a" class="font-black text-white">0</span></div></div>
                 <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5"><input type="number" id="odds-b" oninput="runCalculation()" step="0.01" placeholder="Odds B" class="bg-transparent flex-1 font-black text-indigo-400 outline-none"><div class="text-right"><span class="text-[8px] text-slate-500 block uppercase">Stake B</span><span id="res-b" class="font-black text-white">0</span></div></div>
                 <div id="row-c" class="hidden flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5"><input type="number" id="odds-c" oninput="runCalculation()" step="0.01" placeholder="Odds C" class="bg-transparent flex-1 font-black text-indigo-400 outline-none"><div class="text-right"><span class="text-[8px] text-slate-500 block uppercase">Stake C</span><span id="res-c" class="font-black text-white">0</span></div></div>
             </div>
-            <div id="calc-results" class="opacity-20 mt-6"><div class="premium-gradient p-5 rounded-2xl"><div class="flex justify-between text-[10px] font-black opacity-60 uppercase"><span>ROI %</span><span id="res-roi">0.00%</span></div><div class="flex justify-between text-2xl font-black mt-1 italic tracking-tighter"><span>Net Profit</span><span id="res-profit">0</span></div></div></div>
+            <div id="calc-results" class="mt-6 opacity-40"><div class="premium-gradient p-5 rounded-2xl flex justify-between items-center"><div><div class="text-[10px] font-black uppercase opacity-60">ROI %</div><div id="res-roi" class="text-2xl font-black">0.00%</div></div><div class="text-right"><div class="text-[10px] font-black uppercase opacity-60">Net Profit</div><div id="res-profit" class="text-2xl font-black">0</div></div></div></div>
         </div>
     </div>
 </section>
+
+<section id="bookies-tab" class="tab-content p-4"><div id="partner-list" class="space-y-2.5"></div></section>
 
 <section id="history-tab" class="tab-content p-4">
     <div class="grid grid-cols-3 gap-2.5 mb-6 text-center">
@@ -119,29 +83,50 @@ body.keyboard-open .bottom-nav { transform: translateY(100%); display: none !imp
         <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Avg ROI</div><div class="text-indigo-400 font-black text-sm">5.2%</div></div>
         <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div class="text-white font-black text-sm">142</div></div>
     </div>
-    <div id="history-list" class="space-y-3 pb-20"></div>
-    <div class="live-version-tag">v11.6 TON GOLDEN MASTER</div>
+    <div id="history-list" class="space-y-3"></div>
+    <div class="version-tag">[통계] v11.6 TON GOLDEN MASTER</div>
 </section>
 
 <section id="saas-tab" class="tab-content p-4">
-    <h2 class="text-2xl font-black text-center mb-8 italic uppercase tracking-tighter">Membership</h2>
-    <div class="space-y-6 pb-20">
-        <div class="lite-navy-tier p-7 rounded-[32px] shadow-2xl relative overflow-hidden">
-            <h3 class="text-lg font-black uppercase italic mb-4">Lite Explorer</h3>
-            <ul class="space-y-2 text-[10px] font-bold uppercase italic border-b border-slate-300 pb-4 mb-4"><li>• Bet Limit: 10 TON</li><li>• Data Sync: 10m Delay</li></ul>
+    <div class="space-y-6">
+        <div class="navy-tier p-7 rounded-[32px] shadow-2xl relative overflow-hidden">
+            <h3 class="text-lg font-black uppercase italic mb-4 text-indigo-300">Lite Explorer</h3>
+            <ul class="space-y-2 text-[10px] font-bold uppercase italic border-b border-white/5 pb-4 mb-4"><li>• Bet Limit: 10 TON</li><li>• Data Sync: 10m Delay</li></ul>
             <div class="text-2xl font-black italic">5.0 TON / MO</div>
         </div>
-        <div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden">
-            <h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Architect</h3>
-            <ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: 500 TON</li><li>• Data Sync: Real-time</li></ul>
-            <div class="text-2xl font-black italic">19.9 TON / MO</div>
-        </div>
+        <div class="premium-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden"><h3 class="text-lg font-black text-white uppercase italic mb-4">Pro Architect</h3><ul class="space-y-2 text-[10px] text-white/90 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: 500 TON</li><li>• Data Sync: Real-time</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div></div>
+        <div class="elite-gradient p-7 rounded-[32px] shadow-2xl relative overflow-hidden ring-4 ring-indigo-500/30"><h3 class="text-xl font-black text-white uppercase italic mb-4">Elite Sovereign</h3><ul class="space-y-2 text-[10px] text-white/95 font-bold uppercase italic border-b border-white/10 pb-4 mb-4"><li>• Bet Limit: UNLIMITED</li><li>• Speed: 0.1s Priority</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div></div>
     </div>
 </section>
+
+<div id="profile-overlay">
+    <div class="p-6">
+        <header class="flex justify-between items-center mb-10"><h2 class="neon-logo italic">SURETRACK SETTINGS</h2><button onclick="closeProfile()" class="text-slate-500"><i class="fa-solid fa-xmark text-2xl"></i></button></header>
+        <div class="text-center mb-8">
+            <div class="relative inline-block">
+                <img id="profile-avatar-main" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-24 h-24 rounded-full border-4 border-indigo-500/20 mb-4 bg-slate-800 object-cover">
+                <button onclick="toggleSafetyView()" class="absolute -top-1 -right-1 bg-indigo-950 p-2.5 rounded-full border border-white/10 text-xs text-indigo-400 shadow-xl"><i class="fa-solid fa-gear"></i></button>
+            </div>
+            <h3 id="profile-handle" class="text-xl font-black italic">@haku82</h3>
+        </div>
+        <div id="profile-main-view" class="space-y-2">
+            <div class="glass p-4 rounded-2xl flex justify-between items-center italic font-bold"><span>Balance</span><span class="text-indigo-400">5,720.50 TON</span></div>
+            <div class="glass p-4 rounded-2xl flex justify-between items-center"><span>Staking</span><i class="fa-solid fa-chevron-right opacity-30"></i></div>
+        </div>
+        <div id="profile-safety-view" class="hidden space-y-4">
+            <h4 class="text-xs font-black text-indigo-400 uppercase tracking-widest italic border-l-4 border-indigo-500 pl-3">Safety Guard Engine</h4>
+            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Slippage Limit</div><p class="text-[9px] text-slate-500 font-bold uppercase">Auto-stop on odds drop</p></div><input type="number" id="safety-slippage" class="safety-input" value="0.05"></div>
+            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Max Bet Limit</div><p class="text-[9px] text-slate-500 font-bold uppercase">Limit per Single Game</p></div><input type="number" id="safety-bet-limit" class="safety-input" value="100"></div>
+            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Daily Stop-Loss</div><p class="text-[9px] text-slate-500 font-bold uppercase">Kill-switch on loss</p></div><input type="number" id="safety-stop-loss" class="safety-input" value="10"></div>
+            <button onclick="saveSafetyComplete()" class="w-full py-4 bg-indigo-600 rounded-xl font-black text-white uppercase mt-6">Complete Setup</button>
+        </div>
+    </div>
+</div>
 
 <nav class="bottom-nav">
     <div class="nav-item active" onclick="switchTab('home', this)"><i class="fa-solid fa-bolt-lightning text-xl mb-1.5"></i><span>Live</span></div>
     <div class="nav-item" onclick="switchTab('calc', this)"><i class="fa-solid fa-calculator text-xl mb-1.5"></i><span>Calc</span></div>
+    <div class="nav-item" onclick="switchTab('bookies', this)"><i class="fa-solid fa-globe text-xl mb-1.5"></i><span>Bookies</span></div>
     <div class="nav-item" onclick="switchTab('history', this)"><i class="fa-solid fa-chart-bar text-xl mb-1.5"></i><span>History</span></div>
     <div class="nav-item" onclick="switchTab('saas', this)"><i class="fa-solid fa-gem text-xl mb-1.5"></i><span>Member</span></div>
 </nav>
@@ -153,20 +138,19 @@ const state = {
 };
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
-// 1. 텔레그램 프로필 연동 로직
 function syncTelegramProfile() {
     try {
         const tg = window.Telegram.WebApp;
         tg.expand();
         const user = tg.initDataUnsafe?.user;
         if(user) {
-            document.getElementById('profile-handle').innerText = user.username ? `@${user.username}` : user.first_name;
             if(user.photo_url) {
                 document.getElementById('header-avatar').src = user.photo_url;
                 document.getElementById('profile-avatar-main').src = user.photo_url;
             }
+            if(user.username) document.getElementById('profile-handle').innerText = '@' + user.username;
         }
-    } catch(e) { console.error("TG SDK Error", e); }
+    } catch(e) { console.error("TG Profile Sync Error", e); }
 }
 
 function switchTab(t, el) { 
@@ -174,48 +158,57 @@ function switchTab(t, el) {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
     document.getElementById(t+'-tab').classList.add('active'); if(el) el.classList.add('active');
     if(t === 'history') renderHistory();
+    if(t === 'bookies') loadBookies();
     window.scrollTo(0,0);
 }
 
 function openProfile() { document.getElementById('profile-overlay').style.display = 'block'; }
-function closeProfile() { document.getElementById('profile-overlay').style.display = 'none'; document.getElementById('profile-main-view').classList.remove('hidden'); document.getElementById('profile-safety-view').classList.add('hidden'); }
-function toggleSafetyView() { document.getElementById('profile-main-view').classList.toggle('hidden'); document.getElementById('profile-safety-view').classList.toggle('hidden'); }
-
-function saveSafetyComplete() {
-    state.safety = { slippage: parseFloat(document.getElementById('safety-slippage').value), betLimit: parseFloat(document.getElementById('safety-bet-limit').value), stopLoss: parseFloat(document.getElementById('safety-stop-loss').value) };
-    localStorage.setItem('suretrack_safety', JSON.stringify(state.safety));
-    alert("Protocol Settings Saved!");
-    toggleSafetyView();
+function closeProfile() { document.getElementById('profile-overlay').style.display = 'none'; toggleSafetyView(true); }
+function toggleSafetyView(forceMain) {
+    const m = document.getElementById('profile-main-view');
+    const s = document.getElementById('profile-safety-view');
+    if(forceMain) { m.classList.remove('hidden'); s.classList.add('hidden'); }
+    else { m.classList.toggle('hidden'); s.classList.toggle('hidden'); }
 }
 
-function setCalcMode(m) {
-    state.calcMode = m;
-    document.getElementById('mode-2way').classList.toggle('active', m===2);
-    document.getElementById('mode-3way').classList.toggle('active', m===3);
-    document.getElementById('row-c').classList.toggle('hidden', m===2);
-    runCalculation();
+function saveSafetyComplete() {
+    state.safety = { 
+        slippage: parseFloat(document.getElementById('safety-slippage').value), 
+        betLimit: parseFloat(document.getElementById('safety-bet-limit').value), 
+        stopLoss: parseFloat(document.getElementById('safety-stop-loss').value) 
+    };
+    localStorage.setItem('suretrack_safety', JSON.stringify(state.safety));
+    alert("Golden Master Safety Applied!");
+    closeProfile();
+}
+
+function toggleBot() {
+    state.isAutoBot = !state.isAutoBot;
+    const btn = document.getElementById('bot-status-indicator');
+    btn.style.color = state.isAutoBot ? "#818cf8" : "#475569";
+    document.getElementById('bot-sub').innerText = state.isAutoBot ? "Engine Running: Real-time Analysis" : "Bot is currently Stand-by";
 }
 
 async function fetchMatches() {
     const container = document.getElementById('api-match-container');
-    container.innerHTML = `<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase tracking-[0.2em]">Syncing Master Stream...</div>`;
+    container.innerHTML = '<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase tracking-[0.2em]">Syncing Master Stream...</div>';
     try {
         const res = await fetch(GAS_URL);
         const data = await res.json();
         container.innerHTML = '';
         data.forEach(m => {
             const card = document.createElement('div');
-            card.className = 'match-card p-5';
+            card.className = 'glass p-5 rounded-[24px] mb-4';
             card.innerHTML = `
-                <div class="flex justify-between items-center mb-3">
-                    <span class="text-[9px] font-black text-slate-500 uppercase italic">⚽ ${m['리그명']}</span>
-                    <span class="text-green-400 font-black text-xs">+${m['수익률(%)']}%</span>
-                </div>
-                <div class="text-[14px] font-900 text-white italic mb-4">${m['경기명']}</div>
+                <div class="text-[10px] font-black text-slate-500 uppercase mb-2">⚽ ${m['리그명']}</div>
+                <div class="text-lg font-900 italic mb-4">${m['경기명']}</div>
                 <div class="flex gap-2">
-                    <div class="odds-column"><span class="text-[8px] text-slate-500 font-black uppercase">Book A</span><span class="font-900 italic">${m['배당A']}</span></div>
-                    <div class="odds-column"><span class="text-[8px] text-slate-500 font-black uppercase">Book B</span><span class="font-900 italic">${m['배당B']}</span></div>
-                    <button onclick="prepareCalc(${m['배당A']}, ${m['배당B']})" class="bg-indigo-600 px-4 rounded-xl active:scale-90"><i class="fa-solid fa-calculator"></i></button>
+                    <div class="flex-1 bg-black/20 p-3 rounded-xl text-center border border-white/5"><span class="text-[8px] text-slate-500 block uppercase">Book A</span><span class="font-900">${m['배당A']}</span></div>
+                    <div class="flex-1 bg-black/20 p-3 rounded-xl text-center border border-white/5"><span class="text-[8px] text-slate-500 block uppercase">Book B</span><span class="font-900">${m['배당B']}</span></div>
+                    <div class="flex flex-col items-center justify-center ml-auto pl-4 border-l border-white/5">
+                        <div class="text-green-400 font-black italic">+${m['수익률(%)']}%</div>
+                        <button onclick="prepareCalc(${m['배당A']}, ${m['배당B']})" class="w-10 h-10 bg-indigo-600 rounded-xl mt-1 flex items-center justify-center shadow-lg"><i class="fa-solid fa-calculator text-white"></i></button>
+                    </div>
                 </div>
             `;
             container.appendChild(card);
@@ -239,18 +232,26 @@ function runCalculation() {
     document.getElementById('res-roi').innerText = (((1/tP)-1)*100).toFixed(2) + "%";
 }
 
-function prepareCalc(a, b) {
-    switchTab('calc', document.querySelectorAll('.nav-item')[1]);
-    document.getElementById('odds-a').value = a;
-    document.getElementById('odds-b').value = b;
-    setCalcMode(2);
+function setCalcMode(m) {
+    state.calcMode = m;
+    document.getElementById('mode-2way').classList.toggle('active', m===2);
+    document.getElementById('mode-3way').classList.toggle('active', m===3);
+    document.getElementById('row-c').classList.toggle('hidden', m===2);
+    runCalculation();
 }
 
-function toggleBot() {
-    state.isAutoBot = !state.isAutoBot;
-    const indicator = document.getElementById('bot-status-indicator');
-    indicator.style.color = state.isAutoBot ? "#818cf8" : "#475569";
-    document.getElementById('bot-sub').innerText = state.isAutoBot ? "Engine Running: Real-time Analysis" : "Bot is currently Stand-by";
+function prepareCalc(a, b) { switchTab('calc', document.querySelectorAll('.nav-item')[1]); document.getElementById('odds-a').value = a; document.getElementById('odds-b').value = b; setCalcMode(2); }
+
+function loadBookies() {
+    const list = document.getElementById('partner-list');
+    const partners = [{n:'Pinnacle',d:'pinnacle.com'},{n:'Stake',d:'stake.com'},{n:'Bet365',d:'bet365.com'}];
+    list.innerHTML = partners.map(p => `<div class="glass p-4 rounded-2xl flex justify-between items-center"><div><h4 class="font-black italic uppercase">${p.n}</h4><p class="text-[8px] text-slate-500">${p.d}</p></div><i class="fa-solid fa-arrow-up-right-from-square text-xs opacity-30"></i></div>`).join('');
+}
+
+function renderHistory() {
+    const list = document.getElementById('history-list');
+    const mocks = [{m:'Man City vs Arsenal', p:142.5, s:'SUCCESS'}, {m:'Lakers vs Clippers', p:-100, s:'FAILED'}];
+    list.innerHTML = mocks.map(h => `<div class="glass p-4 rounded-2xl border-l-4 ${h.s==='SUCCESS'?'border-green-500':'border-red-500'} flex justify-between items-center"><div><div class="text-[9px] text-slate-500 font-black uppercase">2026-04-02</div><div class="text-[13px] font-black italic">${h.m}</div></div><div class="${h.s==='SUCCESS'?'text-green-400':'text-red-400'} font-black">${h.p > 0 ? '+':''}${h.p}</div></div>`).join('');
 }
 
 window.onload = () => { fetchMatches(); syncTelegramProfile(); };
