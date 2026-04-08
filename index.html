@@ -1,1 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SureTrack v11.6 Golden Master</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+body { font-family: 'Inter', sans-serif; background-color: #020617; color: white; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; overflow-x: hidden; scroll-behavior: smooth; height: 100%; }
+.tab-content { display: none; padding-bottom: 160px; min-height: 100vh; width: 100%; box-sizing: border-box; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+/* 디자인 가이드 */
+.neon-logo { color: #f59e0b; text-shadow: 0 0 5px #f59e0b, 0 0 15px #d97706; font-weight: 900; font-style: italic; }
+.live-dot { width: 10px; height: 10px; border-radius: 50%; animation: pulse-rg 1.5s infinite; }
+@keyframes pulse-rg { 0% { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; } 50% { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; } 100% { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; } }
+.glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
+.premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
+.elite-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+
+/* 내비게이션 */
+.bottom-nav { position: fixed; bottom: 0; width: 100%; height: 85px; background: #0f172a; border-top: 1px solid #1e293b; display: flex; justify-content: space-around; align-items: center; z-index: 6000; transition: transform 0.2s ease-in-out; }
+body.keyboard-open .bottom-nav { transform: translateY(100%); display: none !important; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 700; }
+.nav-item.active { color: #818cf8; }
+
+/* 토글 스위치 (iOS Style) */
+.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; inset: 0; background-color: #334155; transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: #4f46e5; }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* 매치 카드 */
+.match-card { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; overflow: hidden; margin-bottom: 16px; }
+.odds-column { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); }
+.direct-logo { width: 14px; height: 14px; border-radius: 3px; margin-top: 4px; }
+
+#profile-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 8500; overflow-y: auto; padding-bottom: 120px; }
+.calc-mode-btn { flex: 1; padding: 12px; border-radius: 12px; font-weight: 900; background: #1e293b; color: #64748b; }
+.calc-mode-btn.active { background: #4f46e5; color: white; }
+.safety-input { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 10px; color: white; font-weight: 800; width: 85px; text-align: center; outline: none; }
+</style>
+</head>
+<body onclick="if(event.target.tagName !== 'INPUT') document.activeElement.blur()">
+
+<header class="p-4 flex justify-between items-center glass sticky top-0 z-50">
+    <div class="flex items-center gap-3"><div class="live-dot"></div><h1 class="text-2xl neon-logo tracking-tighter">SURETRACK</h1></div>
+    <div class="flex items-center gap-3 cursor-pointer" onclick="openProfile()">
+        <div id="top-balance" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 italic tracking-tighter">5,720.50 TON</div>
+        <img id="header-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-9 h-9 rounded-full border border-indigo-500/50 bg-slate-800 object-cover">
+    </div>
+</header>
+
+<main id="home-tab" class="tab-content active p-4">
+    <div class="glass p-5 rounded-[28px] mb-6 flex justify-between items-center shadow-xl">
+        <div class="text-left">
+            <h3 class="text-xs font-black text-slate-400 italic uppercase">Auto-Execution Engine</h3>
+            <p id="bot-sub" class="text-[9px] text-slate-500 font-bold uppercase mt-1">Stand-by mode</p>
+        </div>
+        <label class="switch"><input type="checkbox" onchange="toggleBot(this)"><span class="slider"></span></label>
+    </div>
+    <div id="api-match-container" class="space-y-4"></div>
+    <div class="text-center opacity-30 text-[8px] font-black py-10 tracking-[0.3em]">v11.6 TON GOLDEN MASTER</div>
+</main>
+
+<section id="calc-tab" class="tab-content p-4">
+    <div class="glass rounded-[32px] p-6 shadow-2xl">
+        <div class="flex gap-2 mb-6 bg-slate-900/50 p-1.5 rounded-2xl">
+            <button id="mode-2way" onclick="setCalcMode(2)" class="calc-mode-btn active">2-Way (O/U)</button>
+            <button id="mode-3way" onclick="setCalcMode(3)" class="calc-mode-btn">3-Way (1X2)</button>
+        </div>
+        <div class="space-y-4">
+            <div class="bg-black/30 p-5 rounded-2xl border border-white/5">
+                <label class="text-[10px] font-black text-indigo-400 uppercase italic mb-2 block">Seed Investment (TON)</label>
+                <input type="number" id="calc-seed" oninput="runCalculation()" onkeydown="if(event.key==='Enter') this.blur()" placeholder="0.00" class="w-full bg-transparent border-none outline-none text-3xl font-black text-white" inputmode="decimal">
+            </div>
+            <div id="calc-input-rows" class="space-y-3">
+                <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
+                    <div class="flex-1"><span class="text-[8px] text-slate-500 block uppercase font-black mb-1">Odds A</span><input type="number" id="odds-a" oninput="runCalculation()" step="0.01" class="bg-transparent w-full font-black text-xl text-indigo-400 outline-none"></div>
+                    <div class="text-right border-l border-white/10 pl-4"><span class="text-[8px] text-slate-500 block uppercase font-black">Stake A</span><span id="res-a" class="font-black text-white text-lg">0</span></div>
+                </div>
+                <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
+                    <div class="flex-1"><span class="text-[8px] text-slate-500 block uppercase font-black mb-1">Odds B</span><input type="number" id="odds-b" oninput="runCalculation()" step="0.01" class="bg-transparent w-full font-black text-xl text-indigo-400 outline-none"></div>
+                    <div class="text-right border-l border-white/10 pl-4"><span class="text-[8px] text-slate-500 block uppercase font-black">Stake B</span><span id="res-b" class="font-black text-white text-lg">0</span></div>
+                </div>
+                <div id="row-c" class="hidden flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
+                    <div class="flex-1"><span class="text-[8px] text-slate-500 block uppercase font-black mb-1">Odds C</span><input type="number" id="odds-c" oninput="runCalculation()" step="0.01" class="bg-transparent w-full font-black text-xl text-indigo-400 outline-none"></div>
+                    <div class="text-right border-l border-white/10 pl-4"><span class="text-[8px] text-slate-500 block uppercase font-black">Stake C</span><span id="res-c" class="font-black text-white text-lg">0</span></div>
+                </div>
+            </div>
+            <div id="calc-results" class="mt-8 opacity-20">
+                <div class="premium-gradient p-6 rounded-3xl shadow-xl">
+                    <div class="flex justify-between items-center mb-1"><span class="text-[10px] font-black uppercase opacity-60 italic">Expected ROI</span><span id="res-roi" class="text-xl font-black">0.00%</span></div>
+                    <div class="flex justify-between items-end"><span class="text-[10px] font-black uppercase opacity-60 italic">Net Profit</span><span id="res-profit" class="text-3xl font-black italic">0</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="bookies-tab" class="tab-content p-4"><div id="partner-list" class="grid grid-cols-1 gap-2 pb-20"></div></section>
+
+<section id="history-tab" class="tab-content p-4">
+    <div class="grid grid-cols-3 gap-2.5 mb-6 text-center">
+        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Profit</div><div class="text-green-400 font-black text-sm">1,420.5</div></div>
+        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Avg ROI</div><div class="text-indigo-400 font-black text-sm">5.2%</div></div>
+        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Total Bets</div><div class="text-white font-black text-sm">142</div></div>
+    </div>
+    <div id="history-list" class="space-y-3 pb-20"></div>
+    <div class="text-center opacity-30 text-[8px] font-black py-5 uppercase tracking-[0.2em]">[통계] v11.6 Golden Master</div>
+</section>
+
+<section id="saas-tab" class="tab-content p-4"><div id="saas-list" class="space-y-4 pb-20"></div></section>
+
+<div id="profile-overlay">
+    <div class="p-6">
+        <header class="flex justify-between items-center mb-10"><h2 class="neon-logo italic tracking-tighter">SURETRACK PROFILE</h2><button onclick="closeProfile()" class="text-slate-500"><i class="fa-solid fa-xmark text-2xl"></i></button></header>
+        <div class="text-center mb-8">
+            <div class="relative inline-block">
+                <img id="profile-avatar-main" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-24 h-24 rounded-full border-4 border-indigo-500/20 mb-4 bg-slate-800 object-cover">
+                <button onclick="toggleSafetyView()" class="absolute -top-1 -right-1 bg-indigo-950 p-2.5 rounded-full border border-white/10 text-xs text-indigo-400 shadow-xl"><i class="fa-solid fa-gear"></i></button>
+            </div>
+            <h3 id="profile-handle" class="text-xl font-black italic mb-8">@haku82</h3>
+        </div>
+        
+        <div id="profile-main-view" class="space-y-6">
+            <div class="rolls-balance-box bg-[#0f172a] rounded-[28px] p-6 border border-white/5 flex justify-between items-center shadow-xl">
+                <div class="text-left">
+                    <div class="text-[9px] text-slate-500 font-black uppercase mb-2 italic">Asset balance</div>
+                    <div class="space-y-1.5">
+                        <div class="text-[17px] font-black italic text-white flex items-center gap-2"><i class="fa-solid fa-gem text-indigo-400 text-xs"></i> 5,720.50 TON</div>
+                        <div class="text-[14px] font-black italic text-slate-400 flex items-center gap-2"><i class="fa-solid fa-coins text-slate-500 text-xs"></i> 1,240.00 USDT</div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <button class="bg-indigo-600 px-4 py-2 rounded-xl text-[10px] font-black uppercase">Deposit</button>
+                    <div class="flex gap-2 justify-end"><i class="fa-solid fa-wallet text-slate-600"></i><i class="fa-solid fa-qrcode text-slate-600"></i></div>
+                </div>
+            </div>
+            <div class="space-y-2">
+                <div class="glass p-4 rounded-2xl flex justify-between items-center font-bold"><span>Inventory</span><i class="fa-solid fa-chevron-right opacity-30 text-xs"></i></div>
+                <div class="glass p-4 rounded-2xl flex justify-between items-center font-bold"><span>Staking Rewards</span><i class="fa-solid fa-chevron-right opacity-30 text-xs"></i></div>
+            </div>
+        </div>
+
+        <div id="profile-safety-view" class="hidden space-y-4">
+            <h4 class="text-xs font-black text-indigo-400 uppercase tracking-widest italic border-l-4 border-indigo-500 pl-3 mb-6">Safety Guard Engine</h4>
+            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Slippage Limit</div><p class="text-[9px] text-slate-500 font-bold">Odds fluctuation limit</p></div><input type="number" id="safety-slippage" class="safety-input" value="0.05"></div>
+            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Max Seed Limit</div><p class="text-[9px] text-slate-500 font-bold">Limit per single bet</p></div><input type="number" id="safety-bet-limit" class="safety-input" value="100"></div>
+            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Daily Stop-Loss</div><p class="text-[9px] text-slate-500 font-bold">Safety kill-switch</p></div><input type="number" id="safety-stop-loss" class="safety-input" value="10"></div>
+            <button onclick="saveSafetyComplete()" class="w-full py-4 bg-indigo-600 rounded-xl font-black uppercase mt-6 shadow-xl">Update Guard</button>
+        </div>
+    </div>
+</div>
+
+<nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('home', this)"><i class="fa-solid fa-bolt-lightning text-xl mb-1.5"></i><span>Live</span></div>
+    <div class="nav-item" onclick="switchTab('calc', this)"><i class="fa-solid fa-calculator text-xl mb-1.5"></i><span>Calc</span></div>
+    <div class="nav-item" onclick="switchTab('bookies', this)"><i class="fa-solid fa-globe text-xl mb-1.5"></i><span>Bookies</span></div>
+    <div class="nav-item" onclick="switchTab('history', this)"><i class="fa-solid fa-chart-bar text-xl mb-1.5"></i><span>History</span></div>
+    <div class="nav-item" onclick="switchTab('saas', this)"><i class="fa-solid fa-gem text-xl mb-1.5"></i><span>Member</span></div>
+</nav>
+
+<script>
+const state = { 
+    balance: 5720.50, isAutoBot: false, calcMode: 2,
+    safety: JSON.parse(localStorage.getItem('suretrack_safety')) || { slippage: 0.05, betLimit: 100, stopLoss: 10 }
+};
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
+
+// 키보드 감지 로직
+window.addEventListener('resize', () => {
+    if (window.innerHeight < 550) document.body.classList.add('keyboard-open');
+    else document.body.classList.remove('keyboard-open');
+});
+
+function syncTelegramProfile() {
+    try {
+        const tg = window.Telegram.WebApp;
+        const user = tg.initDataUnsafe?.user;
+        if(user && user.photo_url) {
+            document.getElementById('header-avatar').src = user.photo_url;
+            document.getElementById('profile-avatar-main').src = user.photo_url;
+        }
+    } catch(e) {}
+}
+
+function switchTab(t, el) { 
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
+    document.getElementById(t+'-tab').classList.add('active'); if(el) el.classList.add('active');
+    if(t === 'history') renderHistory();
+    if(t === 'bookies') loadBookies();
+    if(t === 'saas') renderSaas();
+    window.scrollTo(0,0);
+}
+
+function openProfile() { document.getElementById('profile-overlay').style.display = 'block'; }
+function closeProfile() { document.getElementById('profile-overlay').style.display = 'none'; toggleSafetyView(true); }
+function toggleSafetyView(forceMain) {
+    const m = document.getElementById('profile-main-view');
+    const s = document.getElementById('profile-safety-view');
+    if(forceMain) { m.classList.remove('hidden'); s.classList.add('hidden'); }
+    else { m.classList.toggle('hidden'); s.classList.toggle('hidden'); }
+}
+
+function saveSafetyComplete() {
+    state.safety = { slippage: parseFloat(document.getElementById('safety-slippage').value), betLimit: parseFloat(document.getElementById('safety-bet-limit').value), stopLoss: parseFloat(document.getElementById('safety-stop-loss').value) };
+    localStorage.setItem('suretrack_safety', JSON.stringify(state.safety));
+    alert("Safety Configuration Fixed.");
+    closeProfile();
+}
+
+function toggleBot(el) {
+    state.isAutoBot = el.checked;
+    document.getElementById('bot-sub').innerText = state.isAutoBot ? "Engine Active: Auto-Trading" : "Stand-by mode";
+}
+
+async function fetchMatches() {
+    const container = document.getElementById('api-match-container');
+    container.innerHTML = '<div class="text-center py-20 text-[10px] font-black animate-pulse uppercase tracking-widest">Master Syncing...</div>';
+    try {
+        const res = await fetch(GAS_URL);
+        const data = await res.json();
+        container.innerHTML = '';
+        data.forEach(m => {
+            const is3Way = m['배당C'] && m['배당C'] !== "";
+            const domainA = (m['북A'] || "pinnacle").toLowerCase().replace(/\s/g,'') + ".com";
+            const domainB = (m['북B'] || "stake").toLowerCase().replace(/\s/g,'') + ".com";
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            card.innerHTML = `
+                <div class="p-4 border-b border-white/5 flex justify-between items-center">
+                    <span class="text-[10px] font-black text-slate-400 italic">⚽ ${m['리그명']}</span>
+                    <span class="text-[9px] font-black text-indigo-400 uppercase">${is3Way ? 'Market: 1X2' : 'Market: O/U'}</span>
+                </div>
+                <div class="p-5">
+                    <div class="text-[11px] font-black text-slate-500 mb-1">2026-04-04 22:00 (UTC)</div>
+                    <div class="text-[17px] font-900 italic mb-6 text-center">${m['경기명']}</div>
+                    <div class="flex gap-2">
+                        <div class="odds-column"><span class="text-[8px] text-slate-500 font-black">WIN A</span><span class="text-sm font-900 italic">${m['배당A']}</span><a href="https://${domainA}" target="_blank"><img src="https://icon.horse/icon/${domainA}" class="direct-logo"></a></div>
+                        <div class="odds-column"><span class="text-[8px] text-slate-500 font-black">${is3Way ? 'DRAW' : 'WIN B'}</span><span class="text-sm font-900 italic">${m['배당B']}</span><a href="https://${domainB}" target="_blank"><img src="https://icon.horse/icon/${domainB}" class="direct-logo"></a></div>
+                        ${is3Way ? `<div class="odds-column"><span class="text-[8px] text-slate-500 font-black">WIN C</span><span class="text-sm font-900 italic">${m['배당C']}</span><img src="https://icon.horse/icon/bet365.com" class="direct-logo"></div>` : ''}
+                        <div class="flex flex-col items-center justify-center ml-auto pl-4 border-l border-white/5">
+                            <div class="text-green-400 font-black italic">${m['수익률(%)']}%</div>
+                            <button onclick="prepareCalc(${m['배당A']}, ${m['배당B']}, ${m['배당C']||0})" class="w-10 h-10 bg-indigo-600 rounded-xl mt-1 flex items-center justify-center shadow-lg"><i class="fa-solid fa-calculator text-white"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    } catch(e) { container.innerHTML = '<div class="text-center py-20 text-red-500 font-black">SYNC ERROR</div>'; }
+}
+
+function runCalculation() { 
+    const s = parseFloat(document.getElementById('calc-seed').value) || 0;
+    const a = parseFloat(document.getElementById('odds-a').value) || 0;
+    const b = parseFloat(document.getElementById('odds-b').value) || 0;
+    const c = parseFloat(document.getElementById('odds-c').value) || 0; 
+    if(s<=0 || a<=0 || b<=0) { document.getElementById('calc-results').style.opacity="0.2"; return; }
+    document.getElementById('calc-results').style.opacity="1";
+    let tP = (1/a) + (1/b);
+    if(state.calcMode === 3 && c > 0) tP += (1/c);
+    document.getElementById('res-a').innerText = Math.floor((s/a)/tP).toLocaleString();
+    document.getElementById('res-b').innerText = Math.floor((s/b)/tP).toLocaleString();
+    if(state.calcMode === 3) document.getElementById('res-c').innerText = Math.floor((s/c)/tP).toLocaleString();
+    document.getElementById('res-profit').innerText = Math.floor((s/tP)-s).toLocaleString();
+    // ROI 기호 제거: 순수 수치만 표시
+    document.getElementById('res-roi').innerText = (((1/tP)-1)*100).toFixed(2) + "%";
+}
+
+function setCalcMode(m) {
+    state.calcMode = m;
+    document.getElementById('mode-2way').classList.toggle('active', m===2);
+    document.getElementById('mode-3way').classList.toggle('active', m===3);
+    document.getElementById('row-c').classList.toggle('hidden', m===2);
+    runCalculation();
+}
+
+function prepareCalc(a, b, c) {
+    switchTab('calc', document.querySelectorAll('.nav-item')[1]);
+    document.getElementById('odds-a').value = a;
+    document.getElementById('odds-b').value = b;
+    if(c > 0) { document.getElementById('odds-c').value = c; setCalcMode(3); }
+    else { setCalcMode(2); }
+    runCalculation();
+}
+
+function loadBookies() {
+    const list = document.getElementById('partner-list');
+    const ps = ['Pinnacle','Stake','Bet365','1xBet','Betway','Bwin','Unibet','Betfair','William Hill','Marathonbet','Parimatch','LeoVegas','22Bet','BetVictor','Dafabet','888sport','Betano','Coral','Ladbrokes','Interwetten'];
+    list.innerHTML = ps.map(p => `<div class="glass p-4 rounded-2xl flex justify-between items-center"><div class="flex items-center gap-3"><img src="https://icon.horse/icon/${p.toLowerCase().replace(/\s/g,'')}.com" class="w-6 h-6 rounded-md"><div><h4 class="font-black italic text-sm uppercase">${p}</h4><p class="text-[7px] text-slate-500 uppercase">Tier-1 Partner</p></div></div><i class="fa-solid fa-chevron-right opacity-20 text-xs"></i></div>`).join('');
+}
+
+function renderHistory() {
+    const list = document.getElementById('history-list');
+    const mocks = [
+        {m:'Man City vs Arsenal', p:142.5, s:'SUCCESS'}, {m:'Lakers vs Clippers', p:-100, s:'FAILED'},
+        {m:'Djokovic vs Nadal', p:210.2, s:'SUCCESS'}, {m:'Bayern vs Real', p:-50, s:'FAILED'},
+        {m:'Yankees vs Red Sox', p:-150, s:'FAILED'}, {m:'Warriors vs Suns', p:185, s:'SUCCESS'},
+        {m:'PSG vs Chelsea', p:-120, s:'FAILED'}, {m:'Dodgers vs Giants', p:-80, s:'FAILED'},
+        {m:'Nadal vs Alcaraz', p:105, s:'SUCCESS'}, {m:'Bulls vs Nets', p:-80, s:'FAILED'}
+    ];
+    list.innerHTML = mocks.map(h => `<div class="glass p-4 rounded-2xl border-l-4 ${h.s==='SUCCESS'?'border-green-500':'border-red-500'} flex justify-between items-center"><div><div class="text-[9px] text-slate-500 font-black uppercase">2026-04-04</div><div class="text-[13px] font-black italic">${h.m}</div></div><div class="${h.s==='SUCCESS'?'text-green-400':'text-red-400'} font-black italic">${h.p > 0 ? '+':''}${h.p}</div></div>`).join('');
+}
+
+function renderSaas() {
+    const list = document.getElementById('saas-list');
+    list.innerHTML = `
+        <div class="bg-[#0f172a] p-7 rounded-[32px] border border-white/5"><h3 class="text-lg font-black uppercase italic mb-4 text-indigo-300">Lite Explorer</h3><ul class="text-[10px] space-y-2 opacity-60 mb-6 font-bold"><li>• 10 TON BET LIMIT</li><li>• 10M DATA DELAY</li></ul><div class="text-2xl font-black italic">5.0 TON / MO</div></div>
+        <div class="premium-gradient p-7 rounded-[32px] shadow-2xl"><h3 class="text-lg font-black uppercase italic mb-4">Pro Architect</h3><ul class="text-[10px] space-y-2 opacity-80 mb-6 font-bold"><li>• 500 TON BET LIMIT</li><li>• REAL-TIME DATA SYNC</li></ul><div class="text-2xl font-black italic">19.9 TON / MO</div></div>
+        <div class="elite-gradient p-7 rounded-[32px] shadow-2xl"><h3 class="text-xl font-black uppercase italic mb-4 text-white">Elite Sovereign</h3><ul class="text-[10px] space-y-2 opacity-90 mb-6 font-bold"><li>• UNLIMITED CAPACITY</li><li>• 0.1S PRIORITY EXECUTION</li></ul><div class="text-2xl font-black italic">49.9 TON / MO</div></div>
+    `;
+}
+
+window.onload = () => { fetchMatches(); syncTelegramProfile(); };
+</script>
+</body>
+</html>
