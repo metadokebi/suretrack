@@ -15,8 +15,6 @@ body { font-family: 'Inter', sans-serif; background-color: #020617; color: white
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 .neon-logo { color: #f59e0b; text-shadow: 0 0 5px #f59e0b, 0 0 15px #d97706; font-weight: 900; font-style: italic; }
-.live-dot { width: 10px; height: 10px; border-radius: 50%; animation: pulse-rg 1.5s infinite; }
-@keyframes pulse-rg { 0% { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; } 50% { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; } 100% { background-color: #22c55e; box-shadow: 0 0 5px #22c55e; } }
 .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
 .premium-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
 .elite-gradient { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
@@ -26,6 +24,7 @@ body.keyboard-open .bottom-nav { transform: translateY(100%); display: none !imp
 .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #64748b; cursor: pointer; text-transform: uppercase; font-weight: 700; }
 .nav-item.active { color: #818cf8; }
 
+/* iOS Toggle Switch */
 .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; inset: 0; background-color: #334155; transition: .4s; border-radius: 34px; }
@@ -33,47 +32,41 @@ body.keyboard-open .bottom-nav { transform: translateY(100%); display: none !imp
 input:checked + .slider { background-color: #4f46e5; }
 input:checked + .slider:before { transform: translateX(20px); }
 
-.match-card { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; overflow: hidden; margin-bottom: 16px; }
-.odds-column { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); }
-
-#profile-overlay, #trans-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 8500; overflow-y: auto; padding-bottom: 120px; }
-.lang-item { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; }
-.lang-item:last-child { border-bottom: none; }
-.lang-item.active { color: #818cf8; }
+#profile-overlay, #trans-overlay { display: none; position: fixed; inset: 0; background: #020617; z-index: 8500; padding-bottom: 120px; }
 .safety-input { background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 10px; color: white; font-weight: 800; width: 85px; text-align: center; outline: none; }
+.lang-item { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; }
 </style>
 </head>
 <body onclick="if(event.target.tagName !== 'INPUT') document.activeElement.blur()">
 
 <header class="p-4 flex justify-between items-center glass sticky top-0 z-50">
-    <div class="flex items-center gap-3"><div class="live-dot"></div><h1 class="text-2xl neon-logo tracking-tighter">SURETRACK</h1></div>
+    <div class="flex items-center gap-3"><div class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div><h1 class="text-2xl neon-logo tracking-tighter">SURETRACK</h1></div>
     <div class="flex items-center gap-3 cursor-pointer">
-        <div id="top-balance" onclick="openTransactions()" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 italic tracking-tighter shadow-[0_0_10px_rgba(79,70,229,0.2)]">1,240.00 USDT</div>
+        <div id="top-balance" onclick="openTransactions()" class="bg-indigo-950/40 border border-indigo-500/30 px-3 py-1 rounded-full text-[11px] font-black text-indigo-300 italic">1,240.00 USDT</div>
         <img onclick="openProfile()" id="header-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=haku82" class="w-9 h-9 rounded-full border border-indigo-500/50 bg-slate-800 object-cover">
     </div>
 </header>
 
 <main id="home-tab" class="tab-content active p-4">
-    <div class="glass p-5 rounded-[28px] mb-6 flex justify-between items-center shadow-xl">
-        <div class="text-left"><h3 class="text-xs font-black text-slate-400 italic uppercase">Auto-Execution Engine</h3><p id="bot-sub" class="text-[9px] text-slate-500 font-bold uppercase mt-1">Stand-by mode</p></div>
+    <div class="glass p-5 rounded-[28px] mb-6 flex justify-between items-center">
+        <div class="text-left"><h3 class="text-xs font-black text-slate-400 uppercase">Auto-Execution</h3><p id="bot-sub" class="text-[9px] text-slate-500 font-bold uppercase mt-1">Stand-by mode</p></div>
         <label class="switch"><input type="checkbox" onchange="toggleBot(this)"><span class="slider"></span></label>
     </div>
     <div id="api-match-container" class="space-y-4"></div>
-    <div class="text-center opacity-30 text-[8px] font-black py-10 tracking-[0.3em]">v11.6 TON GOLDEN MASTER</div>
+    <div class="text-center opacity-30 text-[8px] font-black py-10 tracking-[0.3em]">v11.6 GOLDEN MASTER</div>
 </main>
 
 <section id="calc-tab" class="tab-content p-4">
     <div class="glass rounded-[32px] p-6 shadow-2xl">
         <div class="flex gap-2 mb-6 bg-slate-900/50 p-1.5 rounded-2xl">
-            <button id="mode-2way" onclick="setCalcMode(2)" class="calc-mode-btn p-3 flex-1 rounded-xl font-black bg-indigo-600 active text-white">2-Way</button>
-            <button id="mode-3way" onclick="setCalcMode(3)" class="calc-mode-btn p-3 flex-1 rounded-xl font-black bg-slate-800 text-slate-500">3-Way</button>
+            <button id="mode-2way" onclick="setCalcMode(2)" class="p-3 flex-1 rounded-xl font-black bg-indigo-600 text-white">2-Way</button>
+            <button id="mode-3way" onclick="setCalcMode(3)" class="p-3 flex-1 rounded-xl font-black bg-slate-800 text-slate-500">3-Way</button>
         </div>
         <div class="space-y-4">
-            <div class="bg-black/30 p-5 rounded-2xl border border-white/5"><label class="text-[10px] font-black text-indigo-400 uppercase italic mb-2 block">Investment Seed (USDT)</label><input type="number" id="calc-seed" oninput="runCalculation()" onkeydown="if(event.key==='Enter') this.blur()" placeholder="0.00" class="w-full bg-transparent border-none outline-none text-3xl font-black text-white" inputmode="decimal"></div>
+            <div class="bg-black/30 p-5 rounded-2xl border border-white/5"><label class="text-[10px] font-black text-indigo-400 uppercase italic mb-2 block">Seed Investment (USDT)</label><input type="number" id="calc-seed" oninput="runCalculation()" onkeydown="if(event.key==='Enter') this.blur()" placeholder="0.00" class="w-full bg-transparent border-none outline-none text-3xl font-black text-white" inputmode="decimal"></div>
             <div id="calc-input-rows" class="space-y-3">
                 <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5"><div class="flex-1"><span class="text-[8px] text-slate-500 block uppercase font-black mb-1">Odds A</span><input type="number" id="odds-a" oninput="runCalculation()" step="0.01" class="bg-transparent w-full font-black text-xl text-indigo-400 outline-none"></div><div class="text-right border-l border-white/10 pl-4"><span class="text-[8px] text-slate-500 block uppercase font-black">Stake A</span><span id="res-a" class="font-black text-white text-lg">0</span></div></div>
                 <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5"><div class="flex-1"><span class="text-[8px] text-slate-500 block uppercase font-black mb-1">Odds B</span><input type="number" id="odds-b" oninput="runCalculation()" step="0.01" class="bg-transparent w-full font-black text-xl text-indigo-400 outline-none"></div><div class="text-right border-l border-white/10 pl-4"><span class="text-[8px] text-slate-500 block uppercase font-black">Stake B</span><span id="res-b" class="font-black text-white text-lg">0</span></div></div>
-                <div id="row-c" class="hidden flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5"><div class="flex-1"><span class="text-[8px] text-slate-500 block uppercase font-black mb-1">Odds C</span><input type="number" id="odds-c" oninput="runCalculation()" step="0.01" class="bg-transparent w-full font-black text-xl text-indigo-400 outline-none"></div><div class="text-right border-l border-white/10 pl-4"><span class="text-[8px] text-slate-500 block uppercase font-black">Stake C</span><span id="res-c" class="font-black text-white text-lg">0</span></div></div>
             </div>
             <div id="calc-results" class="mt-8 opacity-20"><div class="premium-gradient p-6 rounded-3xl shadow-xl"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-black uppercase opacity-60 italic">ROI %</span><span id="res-roi" class="text-xl font-black">0.00%</span></div><div class="flex justify-between items-end"><span class="text-[10px] font-black uppercase opacity-60 italic">Profit (USDT)</span><span id="res-profit" class="text-3xl font-black italic">0</span></div></div></div>
         </div>
@@ -81,43 +74,41 @@ input:checked + .slider:before { transform: translateX(20px); }
 </section>
 
 <section id="bookies-tab" class="tab-content p-4"><div id="partner-list" class="grid grid-cols-1 gap-2 pb-20"></div></section>
-<section id="history-tab" class="tab-content p-4"><div id="history-list" class="space-y-3 pb-20"></div></section>
+
+<section id="history-tab" class="tab-content p-4">
+    <div class="grid grid-cols-3 gap-2.5 mb-6 text-center">
+        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Weekly Profit</div><div class="text-green-400 font-black text-sm">1,420.50</div></div>
+        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Avg ROI</div><div class="text-indigo-400 font-black text-sm">5.25%</div></div>
+        <div class="glass p-4 rounded-2xl"><div class="text-[8px] font-black text-slate-500 uppercase">Settled</div><div class="text-white font-black text-sm">20 / 142</div></div>
+    </div>
+    <div id="history-list" class="space-y-3 pb-20"></div>
+</section>
+
 <section id="saas-tab" class="tab-content p-4"><div id="saas-list" class="space-y-4 pb-20"></div></section>
 
-<div id="trans-overlay">
-    <div class="p-6">
-        <header class="flex justify-between items-center mb-10"><h2 class="neon-logo italic tracking-tighter">USDT TRANSACTIONS</h2><button onclick="closeTransactions()" class="text-slate-500"><i class="fa-solid fa-xmark text-2xl"></i></button></header>
-        <div id="transaction-list" class="space-y-3">
-            <div class="glass p-4 rounded-2xl flex justify-between items-center"><div><div class="text-[9px] text-slate-500 font-black mb-1">2026-04-10 14:22</div><div class="text-[11px] font-black italic text-indigo-400">Sent: 0x8a...d9e2</div></div><div class="text-green-400 font-black">+500.00</div></div>
-            <div class="glass p-4 rounded-2xl flex justify-between items-center"><div><div class="text-[9px] text-slate-500 font-black mb-1">2026-04-05 09:15</div><div class="text-[11px] font-black italic text-indigo-400">Sent: 0x3c...f4a1</div></div><div class="text-red-400 font-black">-200.00</div></div>
-            <div class="glass p-4 rounded-2xl flex justify-between items-center"><div><div class="text-[9px] text-slate-500 font-black mb-1">2026-04-01 18:40</div><div class="text-[11px] font-black italic text-indigo-400">Sent: 0x7e...b5c6</div></div><div class="text-green-400 font-black">+540.00</div></div>
-        </div>
-    </div>
+<div id="trans-overlay" class="p-6 overflow-y-auto">
+    <header class="flex justify-between items-center mb-10"><h2 class="neon-logo italic">TRANSACTIONS</h2><button onclick="closeTransactions()"><i class="fa-solid fa-xmark text-2xl text-slate-500"></i></button></header>
+    <div id="transaction-list" class="space-y-3"></div>
 </div>
 
-<div id="profile-overlay">
-    <div class="p-6">
-        <header class="flex justify-between items-center mb-10"><h2 class="neon-logo italic tracking-tighter">SYSTEM SETTINGS</h2><button onclick="closeProfile()" class="text-slate-500"><i class="fa-solid fa-xmark text-2xl"></i></button></header>
-        
-        <div class="mb-8">
-            <h4 class="text-xs font-black text-indigo-400 uppercase tracking-widest italic border-l-4 border-indigo-500 pl-3 mb-4">Language Select</h4>
-            <div class="glass rounded-2xl overflow-hidden" id="lang-accordion">
-                <div class="lang-item active" onclick="setLanguage('ko')"><span>한국어 (Korean)</span><i class="fa-solid fa-check text-xs"></i></div>
-                <div class="lang-item" onclick="setLanguage('en')"><span>English</span></div>
-                <div class="lang-item" onclick="setLanguage('fr')"><span>Français</span></div>
-                <div class="lang-item" onclick="setLanguage('ru')"><span>Русский</span></div>
-                <div class="lang-item" onclick="setLanguage('zh')"><span>中国 (Chinese)</span></div>
-                <div class="lang-item" onclick="setLanguage('hi')"><span>हिन्दी (Hindi)</span></div>
-                <div class="lang-item" onclick="setLanguage('ja')"><span>日本語 (Japanese)</span></div>
-            </div>
+<div id="profile-overlay" class="p-6 overflow-y-auto">
+    <header class="flex justify-between items-center mb-10"><h2 class="neon-logo italic">SETTINGS</h2><button onclick="closeProfile()"><i class="fa-solid fa-xmark text-2xl text-slate-500"></i></button></header>
+    <div class="mb-8">
+        <h4 class="text-xs font-black text-indigo-400 uppercase italic border-l-4 border-indigo-500 pl-3 mb-4">Language</h4>
+        <div class="glass rounded-2xl overflow-hidden">
+            <div class="lang-item text-indigo-400" onclick="setLang('ko')"><span>한국어</span><i class="fa-solid fa-check"></i></div>
+            <div class="lang-item" onclick="setLang('en')"><span>English</span></div>
+            <div class="lang-item" onclick="setLang('fr')"><span>Français</span></div>
+            <div class="lang-item" onclick="setLang('ru')"><span>Русский</span></div>
+            <div class="lang-item" onclick="setLang('zh')"><span>中国 (Chinese)</span></div>
+            <div class="lang-item" onclick="setLang('hi')"><span>हिन्दी (Hindi)</span></div>
+            <div class="lang-item" onclick="setLang('ja')"><span>日本語</span></div>
         </div>
-
-        <div class="space-y-4">
-            <h4 class="text-xs font-black text-amber-500 uppercase tracking-widest italic border-l-4 border-amber-500 pl-3 mb-4">Safety Engine</h4>
-            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Slippage Limit</div><p class="text-[9px] text-slate-500 font-bold uppercase">Auto-stop on odds drop</p></div><input type="number" id="safety-slippage" class="safety-input" value="0.05"></div>
-            <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Max Seed Limit</div><p class="text-[9px] text-slate-500 font-bold uppercase">Limit per Single Game</p></div><input type="number" id="safety-bet-limit" class="safety-input" value="100"></div>
-            <button onclick="saveSafetyComplete()" class="w-full py-4 bg-indigo-600 rounded-xl font-black text-white uppercase mt-6 shadow-xl">Save Configuration</button>
-        </div>
+    </div>
+    <div class="space-y-4">
+        <h4 class="text-xs font-black text-amber-500 uppercase italic border-l-4 border-amber-500 pl-3 mb-4">Safety Engine</h4>
+        <div class="glass p-5 rounded-2xl flex justify-between items-center"><div><div class="text-sm font-bold italic">Slippage Limit</div><p class="text-[8px] text-slate-500 font-bold uppercase">Auto-stop on odds drop</p></div><input type="number" id="safety-slippage" class="safety-input" value="0.05"></div>
+        <button onclick="saveSafetyComplete()" class="w-full py-4 bg-indigo-600 rounded-xl font-black text-white uppercase mt-6">Save</button>
     </div>
 </div>
 
@@ -130,31 +121,13 @@ input:checked + .slider:before { transform: translateX(20px); }
 </nav>
 
 <script>
-const state = { 
-    balanceUSDT: 1240.00, isAutoBot: false, currentLang: 'ko',
-    safety: JSON.parse(localStorage.getItem('suretrack_safety')) || { slippage: 0.05, betLimit: 100 }
-};
+const state = { balanceUSDT: 1240.00, isAutoBot: false, currentLang: 'ko' };
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbx6yjWtdnE06qGtnW95xAtQnSyCgjYIBGBzm6n9e945tUeYPeULg71Tp_5CEImbYBAO/exec';
 
-function openTransactions() { document.getElementById('trans-overlay').style.display = 'block'; }
+function openTransactions() { document.getElementById('trans-overlay').style.display = 'block'; renderTransactions(); }
 function closeTransactions() { document.getElementById('trans-overlay').style.display = 'none'; }
 function openProfile() { document.getElementById('profile-overlay').style.display = 'block'; }
 function closeProfile() { document.getElementById('profile-overlay').style.display = 'none'; }
-
-function setLanguage(lang) {
-    state.currentLang = lang;
-    document.querySelectorAll('.lang-item').forEach(i => i.classList.remove('active', 'text-indigo-400'));
-    event.currentTarget.classList.add('active', 'text-indigo-400');
-    // 실제 로직 연동 시 다국어 맵핑 객체 호출부
-    console.log("Language changed to:", lang);
-}
-
-function saveSafetyComplete() {
-    state.safety = { slippage: parseFloat(document.getElementById('safety-slippage').value), betLimit: parseFloat(document.getElementById('safety-bet-limit').value) };
-    localStorage.setItem('suretrack_safety', JSON.stringify(state.safety));
-    alert("System Language & Safety Integrated!");
-    closeProfile();
-}
 
 function switchTab(t, el) { 
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
@@ -162,31 +135,57 @@ function switchTab(t, el) {
     document.getElementById(t+'-tab').classList.add('active'); if(el) el.classList.add('active');
     if(t === 'history') renderHistory();
     if(t === 'bookies') loadBookies();
+    if(t === 'saas') renderSaas();
     window.scrollTo(0,0);
 }
 
-function runCalculation() { 
-    const s = parseFloat(document.getElementById('calc-seed').value) || 0;
-    const a = parseFloat(document.getElementById('odds-a').value) || 0;
-    const b = parseFloat(document.getElementById('odds-b').value) || 0;
-    if(s<=0 || a<=0 || b<=0) return;
-    document.getElementById('calc-results').style.opacity="1";
-    let tP = (1/a) + (1/b);
-    document.getElementById('res-a').innerText = Math.floor((s/a)/tP).toLocaleString();
-    document.getElementById('res-b').innerText = Math.floor((s/b)/tP).toLocaleString();
-    document.getElementById('res-profit').innerText = Math.floor((s/tP)-s).toLocaleString();
-    document.getElementById('res-roi').innerText = (((1/tP)-1)*100).toFixed(2) + "%";
+function renderHistory() {
+    const list = document.getElementById('history-list');
+    const mocks = Array.from({length: 20}, (_, i) => ({
+        match: i % 2 === 0 ? 'Man City vs Arsenal' : 'Lakers vs Clippers',
+        odds: (1.85 + Math.random()).toFixed(2),
+        stake: (100 + Math.random() * 400).toFixed(2),
+        success: i % 3 === 0 ? 'FAILED' : 'SUCCESS',
+        date: '2026-04-15'
+    }));
+    list.innerHTML = mocks.map(h => {
+        const isS = h.success === 'SUCCESS';
+        const payout = isS ? (h.stake * h.odds).toFixed(2) : '0.00';
+        const roi = isS ? ((h.odds - 1) * 100).toFixed(2) : '-100.00';
+        return `
+            <div class="glass p-4 rounded-2xl border-l-4 ${isS?'border-green-500':'border-red-500'}">
+                <div class="flex justify-between items-start mb-2">
+                    <div><div class="text-[9px] text-slate-500 font-black uppercase">${h.date}</div><div class="text-[13px] font-black italic">${h.match}</div></div>
+                    <div class="text-right"><span class="px-2 py-0.5 rounded text-[8px] font-black ${isS?'bg-green-500 text-black':'bg-red-500 text-white'}">${h.success}</span></div>
+                </div>
+                <div class="grid grid-cols-4 gap-2 border-t border-white/5 pt-3 text-center">
+                    <div><p class="text-[7px] text-slate-500 font-black">ODDS</p><p class="text-[11px] font-black">${h.odds}</p></div>
+                    <div><p class="text-[7px] text-slate-500 font-black">STAKE</p><p class="text-[11px] font-black">${h.stake}</p></div>
+                    <div><p class="text-[7px] text-slate-500 font-black">PAYOUT</p><p class="text-[11px] font-black ${isS?'text-green-400':''}">${payout}</p></div>
+                    <div><p class="text-[7px] text-slate-500 font-black">ROI</p><p class="text-[11px] font-black ${isS?'text-indigo-400':'text-red-400'}">${roi}%</p></div>
+                </div>
+            </div>`;
+    }).join('');
 }
 
-function setCalcMode(m) {
-    document.getElementById('mode-2way').className = m===2 ? 'p-3 flex-1 rounded-xl font-black bg-indigo-600 active text-white' : 'p-3 flex-1 rounded-xl font-black bg-slate-800 text-slate-500';
-    document.getElementById('mode-3way').className = m===3 ? 'p-3 flex-1 rounded-xl font-black bg-indigo-600 active text-white' : 'p-3 flex-1 rounded-xl font-black bg-slate-800 text-slate-500';
-    document.getElementById('row-c').classList.toggle('hidden', m===2);
+function loadBookies() {
+    const list = document.getElementById('partner-list');
+    const ps = ['Pinnacle','Stake','Bet365','1xBet','Betway','Bwin','Unibet','Betfair','William Hill','Marathonbet','Parimatch','LeoVegas','22Bet','BetVictor','Dafabet','888sport','Betano','Coral','Ladbrokes','Interwetten','Betfred','Sbobet','Vbet','Betsson','Betsafe','NordicBet','ComeOn','Cloudbet','BC.Game','Sportsbet.io','Bovada','Bodog','Nitrogen','Thunderpick','GG.Bet','Luckbox','Cyber.bet','Pixel.bet','Midnite','Buff.bet'];
+    list.innerHTML = ps.map(p => `<div class="glass p-4 rounded-2xl flex justify-between items-center"><div class="flex items-center gap-3"><img src="https://icon.horse/icon/${p.toLowerCase().replace(/\s/g,'')}.com" class="w-6 h-6 rounded-md"><div><h4 class="font-black italic text-sm uppercase">${p}</h4></div></div><i class="fa-solid fa-chevron-right opacity-20 text-xs"></i></div>`).join('');
 }
 
-function toggleBot(el) {
-    state.isAutoBot = el.checked;
-    document.getElementById('bot-sub').innerText = state.isAutoBot ? "Engine Active: Auto-Trading" : "Stand-by mode";
+function renderTransactions() {
+    const list = document.getElementById('transaction-list');
+    const tx = [{d:'2026-04-10', w:'0x8a...d9e2', a:500},{d:'2026-04-05', w:'0x3c...f4a1', a:-200},{d:'2026-04-01', w:'0x7e...b5c6', a:540}];
+    list.innerHTML = tx.map(t => `<div class="glass p-4 rounded-2xl flex justify-between items-center"><div><div class="text-[9px] text-slate-500 font-black mb-1">${t.d}</div><div class="text-[11px] font-black italic text-indigo-400">Wallet: ${t.w}</div></div><div class="${t.a>0?'text-green-400':'text-red-400'} font-black">${t.a>0?'+':''}${t.a.toFixed(2)}</div></div>`).join('');
+}
+
+function renderSaas() {
+    const list = document.getElementById('saas-list');
+    list.innerHTML = `
+        <div class="bg-[#0f172a] p-7 rounded-[32px] border border-white/5"><h3 class="text-lg font-black uppercase italic mb-4 text-indigo-300">Lite Explorer</h3><ul class="text-[10px] space-y-2 opacity-60 mb-6 font-bold"><li>• 100 USDT BET LIMIT</li><li>• 10M DATA DELAY</li></ul><div class="text-2xl font-black italic">10.00 USDT / MO</div></div>
+        <div class="premium-gradient p-7 rounded-[32px] shadow-2xl"><h3 class="text-lg font-black uppercase italic mb-4">Pro Architect</h3><ul class="text-[10px] space-y-2 opacity-80 mb-6 font-bold"><li>• 5000 USDT BET LIMIT</li><li>• REAL-TIME DATA SYNC</li></ul><div class="text-2xl font-black italic">49.90 USDT / MO</div></div>
+        <div class="elite-gradient p-7 rounded-[32px] shadow-2xl"><h3 class="text-xl font-black uppercase italic mb-4 text-white">Elite Sovereign</h3><ul class="text-[10px] space-y-2 opacity-90 mb-6 font-bold"><li>• UNLIMITED CAPACITY</li><li>• 0.1S PRIORITY EXECUTION</li></ul><div class="text-2xl font-black italic">149.90 USDT / MO</div></div>`;
 }
 
 async function fetchMatches() {
@@ -199,34 +198,10 @@ async function fetchMatches() {
         data.forEach(m => {
             const card = document.createElement('div');
             card.className = 'match-card';
-            card.innerHTML = `
-                <div class="p-4 border-b border-white/5 flex justify-between items-center"><span class="text-[10px] font-black text-slate-400 italic">⚽ ${m['리그명']}</span></div>
-                <div class="p-5">
-                    <div class="text-[17px] font-900 italic mb-6 text-center">${m['경기명']}</div>
-                    <div class="flex gap-2">
-                        <div class="odds-column"><span class="text-[8px] text-slate-500 font-black">WIN A</span><span class="text-sm font-900 italic">${m['배당A']}</span></div>
-                        <div class="odds-column"><span class="text-[8px] text-slate-500 font-black">WIN B</span><span class="text-sm font-900 italic">${m['배당B']}</span></div>
-                        <div class="flex flex-col items-center justify-center ml-auto pl-4 border-l border-white/5">
-                            <div class="text-green-400 font-black italic">${m['수익률(%)']}%</div>
-                            <button onclick="switchTab('calc')" class="w-10 h-10 bg-indigo-600 rounded-xl mt-1 flex items-center justify-center shadow-lg"><i class="fa-solid fa-calculator text-white"></i></button>
-                        </div>
-                    </div>
-                </div>`;
+            card.innerHTML = `<div class="p-4 border-b border-white/5 flex justify-between items-center"><span class="text-[10px] font-black text-slate-400 italic">⚽ ${m['리그명']}</span></div><div class="p-5"><div class="text-[17px] font-900 italic mb-6 text-center">${m['경기명']}</div><div class="flex gap-2"><div class="odds-column"><span class="text-[8px] text-slate-500 font-black">WIN A</span><span class="text-sm font-900 italic">${m['배당A']}</span></div><div class="odds-column"><span class="text-[8px] text-slate-500 font-black">WIN B</span><span class="text-sm font-900 italic">${m['배당B']}</span></div><div class="flex flex-col items-center justify-center ml-auto pl-4 border-l border-white/5"><div class="text-green-400 font-black italic">${m['수익률(%)']}%</div><button onclick="switchTab('calc')" class="w-10 h-10 bg-indigo-600 rounded-xl mt-1 flex items-center justify-center shadow-lg"><i class="fa-solid fa-calculator text-white"></i></button></div></div></div>`;
             container.appendChild(card);
         });
     } catch(e) { container.innerHTML = '<div class="text-center py-20 text-red-500">SYNC ERROR</div>'; }
-}
-
-function loadBookies() {
-    const list = document.getElementById('partner-list');
-    const ps = ['Pinnacle','Stake','Bet365','1xBet','Betway','Bwin','Unibet','Betfair','William Hill','Marathonbet','Parimatch','LeoVegas','22Bet','BetVictor','Dafabet','888sport','Betano','Coral','Ladbrokes','Interwetten'];
-    list.innerHTML = ps.map(p => `<div class="glass p-4 rounded-2xl flex justify-between items-center"><div class="flex items-center gap-3"><img src="https://icon.horse/icon/${p.toLowerCase().replace(/\s/g,'')}.com" class="w-6 h-6 rounded-md"><div><h4 class="font-black italic text-sm uppercase">${p}</h4></div></div><i class="fa-solid fa-chevron-right opacity-20 text-xs"></i></div>`).join('');
-}
-
-function renderHistory() {
-    const list = document.getElementById('history-list');
-    const mocks = [{m:'Man City vs Arsenal', p:142.5, s:'SUCCESS'}, {m:'Lakers vs Clippers', p:-100, s:'FAILED'},{m:'Djokovic vs Nadal', p:210.2, s:'SUCCESS'}, {m:'Bayern vs Real', p:-50, s:'FAILED'},{m:'Yankees vs Red Sox', p:-150, s:'FAILED'}, {m:'Warriors vs Suns', p:185, s:'SUCCESS'},{m:'PSG vs Chelsea', p:-120, s:'FAILED'}, {m:'Dodgers vs Giants', p:-80, s:'FAILED'},{m:'Nadal vs Alcaraz', p:105, s:'SUCCESS'}, {m:'Bulls vs Nets', p:-80, s:'FAILED'}];
-    list.innerHTML = mocks.map(h => `<div class="glass p-4 rounded-2xl border-l-4 ${h.s==='SUCCESS'?'border-green-500':'border-red-500'} flex justify-between items-center"><div><div class="text-[9px] text-slate-500 font-black uppercase">2026-04-15</div><div class="text-[13px] font-black italic">${h.m}</div></div><div class="${h.s==='SUCCESS'?'text-green-400':'text-red-400'} font-black">${h.p}</div></div>`).join('');
 }
 
 window.addEventListener('resize', () => {
